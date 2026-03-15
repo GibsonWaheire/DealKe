@@ -28,7 +28,7 @@ export default function About() {
     <div className="bg-white">
       <PageHeader
         label="About"
-        title="I built DealKe because I was tired of watching small businesses get ripped off."
+        title="I built DealFlow because I was tired of watching small businesses get ripped off."
         subtitle="Good digital work doesn't have to cost a fortune."
         images={[
           { src: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1600&q=80', alt: 'Modern office' },
@@ -56,7 +56,7 @@ export default function About() {
                 getting the wrong advice, and leaving without it done.
               </p>
               <p>
-                DealKe started as a side project to fix both of those things. Now it's my full-time
+                DealFlow started as a side project to fix both of those things. Now it's my full-time
                 work. I build every website personally — no subcontracting, no templates, no agency
                 overhead. For KRA and document work, I've done it enough times that I handle it in hours.
               </p>
@@ -74,7 +74,7 @@ export default function About() {
                   </div>
                   <div>
                     <p className="text-slate-900 font-bold text-sm">Gibson Waheire</p>
-                    <p className="text-slate-400 text-xs">Founder, DealKe</p>
+                    <p className="text-slate-400 text-xs">Founder, DealFlow</p>
                   </div>
                   <span className="ml-auto bg-emerald-50 text-emerald-600 text-xs px-2 py-0.5 rounded-full border border-emerald-100 font-medium">
                     Available
@@ -121,7 +121,7 @@ export default function About() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-10">
             <p className="text-emerald-600 text-xs font-semibold uppercase tracking-widest mb-2">Why us</p>
-            <h2 className="text-2xl font-bold text-slate-900">What makes DealKe different</h2>
+            <h2 className="text-2xl font-bold text-slate-900">What makes DealFlow different</h2>
             <p className="text-slate-500 text-sm mt-1">Compared to a random freelancer on Facebook or a Nairobi agency.</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

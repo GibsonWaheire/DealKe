@@ -11,7 +11,7 @@ import { useState } from 'react'
 
 const BACKEND = import.meta.env.VITE_BACKEND_URL || 'http://localhost:4000'
 
-export default function MpesaModal({ open, onClose, serviceLabel = 'DealKe Service', amount }) {
+export default function MpesaModal({ open, onClose, serviceLabel = 'DealFlow Service', amount }) {
   const [phone,   setPhone]   = useState('')
   const [status,  setStatus]  = useState('idle')  // idle | loading | success | error
   const [message, setMessage] = useState('')
@@ -31,7 +31,7 @@ export default function MpesaModal({ open, onClose, serviceLabel = 'DealKe Servi
           phone,
           amount,
           serviceLabel,
-          accountRef: 'DealKe',
+          accountRef: 'DealFlow',
         }),
       })
 

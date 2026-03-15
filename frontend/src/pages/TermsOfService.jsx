@@ -17,15 +17,15 @@ export default function TermsOfService() {
           <div>
             <h2 className="text-slate-900 font-bold text-lg mb-3">1. Agreement</h2>
             <p>
-              By using this website or engaging DealKe for any service, you agree to these Terms of
-              Service. DealKe is operated by a sole proprietor based in Nairobi, Kenya.
+              By using this website or engaging DealFlow for any service, you agree to these Terms of
+              Service. DealFlow is operated by a sole proprietor based in Nairobi, Kenya.
             </p>
           </div>
 
           <div>
             <h2 className="text-slate-900 font-bold text-lg mb-3">2. Services</h2>
             <p>
-              DealKe provides website development, KRA registration, government agency assistance
+              DealFlow provides website development, KRA registration, government agency assistance
               (NTSA, eCitizen, NSSF, SHA, TSC, HELB/HEF), business registration, document drafting,
               and related digital services. Prices and service details are as listed on our Services
               and Packages pages. All prices are quoted in Kenyan Shillings (KES).
@@ -66,7 +66,7 @@ export default function TermsOfService() {
             <h2 className="text-slate-900 font-bold text-lg mb-3">6. Intellectual property</h2>
             <p>
               For website projects, full ownership of the completed website is transferred to you
-              upon final payment. DealKe retains the right to display completed work in a portfolio
+              upon final payment. DealFlow retains the right to display completed work in a portfolio
               unless you request otherwise in writing.
             </p>
           </div>
@@ -74,7 +74,7 @@ export default function TermsOfService() {
           <div>
             <h2 className="text-slate-900 font-bold text-lg mb-3">7. Limitation of liability</h2>
             <p>
-              DealKe is not liable for delays or failures caused by government system outages,
+              DealFlow is not liable for delays or failures caused by government system outages,
               changes in government policy, incorrect information provided by the client, or
               circumstances beyond our reasonable control. Our liability is limited to the fee
               paid for the specific service in question.
@@ -93,7 +93,7 @@ export default function TermsOfService() {
             <h2 className="text-slate-900 font-bold text-lg mb-3">9. Contact</h2>
             <p>
               Questions about these terms?{' '}
-              <a href="mailto:hello@dealke.co.ke" className="text-emerald-600 underline">hello@dealke.co.ke</a>
+              <a href="mailto:hello@dealflow.co.ke" className="text-emerald-600 underline">hello@dealflow.co.ke</a>
               {' '}· +254 726 899 113
             </p>
           </div>

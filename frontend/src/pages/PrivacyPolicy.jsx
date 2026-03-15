@@ -17,9 +17,9 @@ export default function PrivacyPolicy() {
           <div>
             <h2 className="text-slate-900 font-bold text-lg mb-3">1. Who we are</h2>
             <p>
-              DealKe is a sole-proprietor digital services business based in Nairobi, Kenya.
+              DealFlow is a sole-proprietor digital services business based in Nairobi, Kenya.
               We provide website development, KRA services, eCitizen services, and related digital
-              assistance. Contact: <a href="mailto:hello@dealke.co.ke" className="text-emerald-600 underline">hello@dealke.co.ke</a> · +254 726 899 113.
+              assistance. Contact: <a href="mailto:hello@dealflow.co.ke" className="text-emerald-600 underline">hello@dealflow.co.ke</a> · +254 726 899 113.
             </p>
           </div>
 
@@ -50,7 +50,7 @@ export default function PrivacyPolicy() {
               We retain your contact and order details for a minimum of 12 months for record-keeping
               purposes. Service-specific documents (e.g., KRA certificates) are deleted from our
               devices once delivered to you. You may request deletion of your data at any time by
-              emailing <a href="mailto:hello@dealke.co.ke" className="text-emerald-600 underline">hello@dealke.co.ke</a>.
+              emailing <a href="mailto:hello@dealflow.co.ke" className="text-emerald-600 underline">hello@dealflow.co.ke</a>.
             </p>
           </div>
 
@@ -68,7 +68,7 @@ export default function PrivacyPolicy() {
             <p>
               You have the right to access, correct, or request deletion of any personal data we
               hold about you. To exercise any of these rights, contact us at{' '}
-              <a href="mailto:hello@dealke.co.ke" className="text-emerald-600 underline">hello@dealke.co.ke</a>.
+              <a href="mailto:hello@dealflow.co.ke" className="text-emerald-600 underline">hello@dealflow.co.ke</a>.
             </p>
           </div>
 

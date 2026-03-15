@@ -1,7 +1,7 @@
 {
-  "name": "dealke-backend",
+  "name": "dealflow-backend",
   "version": "1.0.0",
-  "description": "DealKe backend — M-Pesa STK Push, order handling",
+  "description": "DealFlow backend — M-Pesa STK Push, order handling",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

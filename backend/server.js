@@ -21,6 +21,6 @@ app.get('/health', (_req, res) => res.json({ status: 'ok', env: process.env.MPES
 
 // ── Start ────────────────────────────────────────────────
 app.listen(PORT, () => {
-  console.log(`DealKe backend running on http://localhost:${PORT}`)
+  console.log(`DealFlow backend running on http://localhost:${PORT}`)
   console.log(`M-Pesa env: ${process.env.MPESA_ENV || 'sandbox'}`)
 })

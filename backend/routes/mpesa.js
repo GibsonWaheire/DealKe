@@ -42,7 +42,7 @@ function getPassword(timestamp) {
 // ── POST /api/mpesa/stk-push ─────────────────────────────
 // Body: { phone, amount, serviceLabel, accountRef }
 router.post('/stk-push', async (req, res) => {
-  const { phone, amount, serviceLabel = 'DealKe Service', accountRef = 'DealKe' } = req.body
+  const { phone, amount, serviceLabel = 'DealFlow Service', accountRef = 'DealFlow' } = req.body
 
   if (!phone || !amount) {
     return res.status(400).json({ error: 'phone and amount are required' })

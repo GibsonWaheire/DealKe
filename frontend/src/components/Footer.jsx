@@ -62,7 +62,7 @@ export default function Footer() {
             <h4 className="text-white font-semibold mb-4 text-sm uppercase tracking-wide">Contact</h4>
             <ul className="space-y-2.5 text-slate-400 text-sm">
               <li>+254 726 899 113</li>
-              <li>hello@dealke.co.ke</li>
+              <li>hello@dealflow.co.ke</li>
               <li>Nairobi, Kenya</li>
               <li className="text-slate-500 text-xs pt-1">Mon–Sat · 8am–8pm</li>
             </ul>
@@ -83,7 +83,7 @@ export default function Footer() {
 
       <div className="border-t border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row items-center justify-between gap-2">
-          <p className="text-slate-500 text-sm">© 2026 DealKe. All rights reserved.</p>
+          <p className="text-slate-500 text-sm">© 2026 DealFlow. All rights reserved.</p>
           <p className="text-slate-500 text-sm">Made in Kenya 🇰🇪</p>
         </div>
       </div>

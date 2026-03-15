@@ -30,16 +30,16 @@ const RouteTitleManager = () => {
   const { pathname } = useLocation()
   useEffect(() => {
     const titles = {
-      '/':         'DealKe | Affordable Web & Digital Services in Kenya',
-      '/packages': 'Website Packages | DealKe',
-      '/services': 'Other Services | DealKe',
-      '/about':    'About Us | DealKe',
-      '/contact':  'Get a Quote | DealKe',
-      '/privacy':  'Privacy Policy | DealKe',
-      '/terms':    'Terms of Service | DealKe',
-      '/refund':   'Refund Policy | DealKe',
+      '/':         'DealFlow | Affordable Web & Digital Services in Kenya',
+      '/packages': 'Website Packages | DealFlow',
+      '/services': 'Other Services | DealFlow',
+      '/about':    'About Us | DealFlow',
+      '/contact':  'Get a Quote | DealFlow',
+      '/privacy':  'Privacy Policy | DealFlow',
+      '/terms':    'Terms of Service | DealFlow',
+      '/refund':   'Refund Policy | DealFlow',
     }
-    document.title = titles[pathname] || 'DealKe | Digital Solutions Kenya'
+    document.title = titles[pathname] || 'DealFlow | Digital Solutions Kenya'
   }, [pathname])
   return null
 }
