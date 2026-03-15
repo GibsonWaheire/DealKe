@@ -5,14 +5,14 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '../ui/tabs'
 
 const services = [
   // KRA
-  { name: 'KRA PIN Registration', price: 500, turnaround: 'Same day', category: 'KRA', description: 'New KRA PIN for individuals and businesses via iTax portal.' },
-  { name: 'KRA PIN Retrieval', price: 300, turnaround: 'Same day', category: 'KRA', description: 'Recover or reprint your existing KRA PIN certificate.' },
+  { name: 'KRA PIN Registration', price: 500, turnaround: 'Same day', category: 'KRA', description: 'New PIN via iTax. Send your ID, we handle the rest.', note: 'Most requested' },
+  { name: 'KRA PIN Retrieval', price: 300, turnaround: 'Same day', category: 'KRA', description: 'Lost or forgotten your PIN? We locate and resend the certificate.' },
   // Contracts
-  { name: 'Car Sale Agreement', price: 800, turnaround: 'Same day', category: 'Contracts', description: 'Legally worded agreement for private vehicle transactions.' },
-  { name: 'Simple Business Contract', price: 1000, turnaround: '1 business day', category: 'Contracts', description: 'General purpose business service or supply contract.' },
-  { name: 'Affidavit / Statutory Declaration', price: 1200, turnaround: '1 business day', category: 'Contracts', description: 'Sworn statement prepared and ready for commissioner.' },
+  { name: 'Car Sale Agreement', price: 800, turnaround: 'Same day', category: 'Contracts', description: 'Legally worded agreement for private vehicle sales.', note: 'Same day' },
+  { name: 'Simple Business Contract', price: 1000, turnaround: '1 business day', category: 'Contracts', description: 'General service or supply contract, ready to sign.' },
+  { name: 'Affidavit / Statutory Declaration', price: 1200, turnaround: '1 business day', category: 'Contracts', description: 'Sworn statement prepared and ready for the commissioner.' },
   // Business
-  { name: 'Business Name Search', price: 400, turnaround: 'Same day', category: 'Business', description: 'Check name availability on the eCitizen / Bizna portal.' },
+  { name: 'Business Name Search', price: 400, turnaround: 'Same day', category: 'Business', description: 'Check name availability on eCitizen before you register.' },
 ]
 
 const tabs = [
@@ -23,9 +23,9 @@ const tabs = [
 ]
 
 const steps = [
-  { num: '1', title: 'Choose your service', detail: 'Browse the options above and select what you need.' },
-  { num: '2', title: 'Send us your details', detail: 'Reach out via WhatsApp or the contact form with your information.' },
-  { num: '3', title: 'Receive your document', detail: "We'll deliver your document or confirmation — usually same day." },
+  { num: '1', title: 'Pick what you need', detail: 'Choose from the list above. If you\'re not sure, just ask.' },
+  { num: '2', title: 'Send your details via WhatsApp', detail: 'We\'ll tell you exactly what we need. Usually just your ID and a few details.' },
+  { num: '3', title: 'Get your document', detail: 'We handle it and send you the result — usually the same day.' },
 ]
 
 export default function Services() {
@@ -33,8 +33,8 @@ export default function Services() {
     <div>
       <PageHeader
         label="Other Services"
-        title="Quick Digital Solutions"
-        subtitle="Fast, affordable digital services for individuals and businesses — KRA, contracts, and more."
+        title="KRA, contracts, and business docs — sorted fast."
+        subtitle="Most of these take less than a day. You don't need to visit any office."
       />
 
       {/* Services tabs */}
@@ -75,9 +75,9 @@ export default function Services() {
       {/* How it works */}
       <section className="py-16 bg-zinc-50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-10">
-            <span className="text-emerald-600 text-sm font-semibold uppercase tracking-wide">Simple Process</span>
-            <h2 className="text-2xl font-bold text-zinc-900 mt-2">How it works</h2>
+          <div className="mb-10">
+            <span className="text-emerald-600 text-sm font-semibold uppercase tracking-wide">How it works</span>
+            <h2 className="text-2xl font-bold text-zinc-900 mt-1">Three steps. That's it.</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {steps.map((step) => (

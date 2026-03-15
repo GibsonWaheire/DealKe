@@ -92,9 +92,9 @@ export default function Contact() {
   return (
     <div>
       <PageHeader
-        label="Get in Touch"
-        title="Let's Build Something Together"
-        subtitle="Get a free quote or ask us anything — we'll get back to you same day."
+        label="Contact"
+        title="Drop us a message."
+        subtitle="We check messages throughout the day. Most people get a reply within a few hours."
       />
 
       <section className="py-16 bg-white">
@@ -196,9 +196,9 @@ export default function Contact() {
 
               {/* WhatsApp card */}
               <div className="bg-zinc-900 rounded-xl p-6">
-                <p className="text-white font-semibold text-sm mb-1">Prefer WhatsApp?</p>
+                <p className="text-white font-semibold text-sm mb-1">Most clients use WhatsApp.</p>
                 <p className="text-zinc-400 text-sm mb-4">
-                  Chat with us directly for a faster response.
+                  It's faster and we're genuinely on it. Most questions get answered within the hour.
                 </p>
                 <a
                   href="https://wa.me/254700000000"

@@ -22,7 +22,7 @@ export default function Footer() {
               <span className="text-emerald-400">Ke</span>
             </Link>
             <p className="text-zinc-400 text-sm mt-2 max-w-xs leading-relaxed">
-              Affordable websites and digital services for Kenyan businesses.
+              Built and run from Nairobi. Every project done personally.
             </p>
           </div>
 

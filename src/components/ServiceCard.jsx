@@ -8,12 +8,20 @@ export default function ServiceCard({
   description,
   turnaround,
   category,
+  note,
 }) {
   return (
     <div className="bg-white border border-zinc-200 rounded-xl p-5 flex flex-col gap-3 transition-shadow hover:shadow-md">
       <div className="flex items-start justify-between gap-2">
         <div>
-          <h3 className="text-sm font-semibold text-zinc-900">{name}</h3>
+          <div className="flex items-center gap-2 flex-wrap">
+            <h3 className="text-sm font-semibold text-zinc-900">{name}</h3>
+            {note && (
+              <span className="text-xs bg-zinc-900 text-zinc-100 px-2 py-0.5 rounded-full font-medium shrink-0">
+                {note}
+              </span>
+            )}
+          </div>
           {description && (
             <p className="text-xs text-zinc-500 mt-0.5">{description}</p>
           )}

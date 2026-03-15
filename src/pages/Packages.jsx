@@ -54,8 +54,8 @@ export default function Packages() {
     <div>
       <PageHeader
         label="Website Packages"
-        title="Websites That Work for Your Business"
-        subtitle="Clean, fast, mobile-first websites built for Kenyan businesses — at prices that make sense."
+        title="Websites built by a developer, not a template."
+        subtitle="Fixed prices. Real turnaround times. No agency markup, no hidden fees."
       />
 
       {/* Package cards */}
@@ -73,8 +73,9 @@ export default function Packages() {
       <section className="bg-zinc-50 py-8">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <p className="text-zinc-500 text-sm max-w-2xl mx-auto">
-            All packages include free domain advice, mobile-first design, and a{' '}
-            <span className="text-zinc-700 font-medium">1-month post-launch support window</span>.
+            Every package includes free domain advice, mobile-first design, and{' '}
+            <span className="text-zinc-700 font-medium">30 days of support after launch</span>.
+            You won't be left figuring it out alone.
           </p>
         </div>
       </section>
@@ -82,9 +83,9 @@ export default function Packages() {
       {/* CTA row */}
       <section className="py-12 bg-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-center gap-4 text-center">
-          <p className="text-zinc-600 text-sm">Not sure which package is right for you?</p>
+          <p className="text-zinc-600 text-sm">Not sure which one fits? Message on WhatsApp — we'll help you choose.</p>
           <Button asChild className="bg-emerald-500 hover:bg-emerald-600 text-white font-medium h-auto py-2.5 px-6 rounded-lg">
-            <Link to="/contact">Talk to Us</Link>
+            <Link to="/contact">Chat with Us</Link>
           </Button>
         </div>
       </section>
