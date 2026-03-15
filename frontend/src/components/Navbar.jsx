@@ -22,8 +22,13 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
 
         {/* Logo */}
-        <Link to="/" className="text-xl font-bold tracking-tight shrink-0">
-          <span className="text-slate-900">Deal</span><span className="text-emerald-500">Ke</span>
+        <Link to="/" className="flex items-center gap-2 shrink-0">
+          <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-emerald-500">
+            <span className="text-white font-bold text-sm tracking-tight">DF</span>
+          </span>
+          <span className="text-xl font-bold tracking-tight">
+            <span className="text-slate-900">Deal</span><span className="text-emerald-500">Flow</span>
+          </span>
         </Link>
 
         {/* Desktop: links + CTA right */}
