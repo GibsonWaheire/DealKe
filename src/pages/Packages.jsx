@@ -2,12 +2,12 @@
 import { Link } from 'react-router-dom'
 import PageHeader from '../components/PageHeader'
 import PackageCard from '../components/PackageCard'
-import { Button } from '../ui/button'
 
 const packages = [
   {
     name: 'Starter',
     price: 15000,
+    turnaround: '5–7 days',
     popular: false,
     description: 'Everything you need to get online fast.',
     features: [
@@ -21,6 +21,7 @@ const packages = [
   {
     name: 'Business',
     price: 35000,
+    turnaround: '7–10 days',
     popular: true,
     description: 'The most popular choice for growing businesses.',
     features: [
@@ -35,6 +36,7 @@ const packages = [
   {
     name: 'Premium',
     price: 65000,
+    turnaround: '10–14 days',
     popular: false,
     description: 'Full-featured website with content management.',
     features: [
@@ -49,9 +51,16 @@ const packages = [
   },
 ]
 
+const includedInAll = [
+  'Free domain advice',
+  'Mobile-first design',
+  '30 days post-launch support',
+  'WhatsApp handover call',
+]
+
 export default function Packages() {
   return (
-    <div>
+    <div className="bg-white">
       <PageHeader
         label="Website Packages"
         title="Websites built by a developer, not a template."
@@ -59,7 +68,7 @@ export default function Packages() {
       />
 
       {/* Package cards */}
-      <section className="py-16 bg-zinc-950">
+      <section className="py-16 bg-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {packages.map((pkg) => (
@@ -69,24 +78,30 @@ export default function Packages() {
         </div>
       </section>
 
-      {/* Reassurance strip */}
-      <section className="bg-zinc-900 py-8">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-zinc-400 text-sm max-w-2xl mx-auto">
-            Every package includes free domain advice, mobile-first design, and{' '}
-            <span className="text-zinc-200 font-medium">30 days of support after launch</span>.
-            You won't be left figuring it out alone.
-          </p>
+      {/* Included in all */}
+      <section className="bg-slate-50 border-y border-gray-100 py-10">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <p className="text-slate-500 text-xs font-semibold uppercase tracking-widest mb-4 text-center">Included in every package</p>
+          <div className="flex flex-wrap justify-center gap-3">
+            {includedInAll.map((item) => (
+              <span key={item} className="inline-flex items-center gap-1.5 bg-white border border-gray-200 text-slate-700 text-sm px-4 py-2 rounded-full shadow-sm">
+                <span className="text-emerald-500">✓</span> {item}
+              </span>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* CTA row */}
-      <section className="py-12 bg-zinc-950">
+      <section className="py-12 bg-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-center gap-4 text-center">
-          <p className="text-zinc-300 text-sm">Not sure which one fits? Message on WhatsApp — we'll help you choose.</p>
-          <Button asChild className="bg-white text-zinc-900 hover:bg-zinc-100 font-medium h-auto py-2.5 px-6 rounded-lg">
-            <Link to="/contact">Chat with Us</Link>
-          </Button>
+          <p className="text-slate-600 text-sm">Not sure which one fits? Message on WhatsApp — I'll help you choose.</p>
+          <Link
+            to="/contact"
+            className="bg-slate-900 hover:bg-slate-800 text-white font-medium py-2.5 px-6 rounded-xl transition-colors text-sm"
+          >
+            Chat with Us
+          </Link>
         </div>
       </section>
     </div>

@@ -1,6 +1,6 @@
 // src/pages/Services.jsx
+import { useState } from 'react'
 import PageHeader from '../components/PageHeader'
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '../ui/tabs'
 
 const services = [
   { name: 'New KRA PIN Registration', price: 'KES 500', turnaround: 'Same day', category: 'KRA', note: 'Most requested' },
@@ -58,7 +58,7 @@ const services = [
   { name: 'AGPO Approval Application', price: 'KES 1,000', turnaround: '2 business days', category: 'Business' },
   { name: 'CRB Clearance (Metropol / Transunion)', price: 'KES 600', turnaround: 'Same day', category: 'Business' },
 
-  { name: 'Car Sale Agreement', price: 'KES 800', turnaround: 'Same day', category: 'Documents', note: 'Same day' },
+  { name: 'Car Sale Agreement', price: 'KES 800', turnaround: 'Same day', category: 'Documents', note: 'Fast' },
   { name: 'Simple Business Contract', price: 'KES 1,000', turnaround: '1 business day', category: 'Documents' },
   { name: 'Affidavit / Statutory Declaration', price: 'KES 1,200', turnaround: '1 business day', category: 'Documents' },
   { name: 'Lost / Duplicate ID Application', price: 'KES 400', turnaround: '1 business day', category: 'Documents' },
@@ -72,13 +72,12 @@ const services = [
   { name: 'KJSEA Results Check', price: 'KES 30', turnaround: 'Same day', category: 'Documents' },
   { name: 'KJSEA Placement Check', price: 'KES 30', turnaround: 'Same day', category: 'Documents' },
 
-  { name: 'Starter Website Package', price: 'KES 15,000', turnaround: '5-7 days', category: 'Websites' },
-  { name: 'Business Website Package', price: 'KES 35,000', turnaround: '7-10 days', category: 'Websites' },
-  { name: 'Premium Website Package', price: 'KES 65,000', turnaround: '10-14 days', category: 'Websites' },
+  { name: 'Starter Website Package', price: 'KES 15,000', turnaround: '5–7 days', category: 'Websites' },
+  { name: 'Business Website Package', price: 'KES 35,000', turnaround: '7–10 days', category: 'Websites' },
+  { name: 'Premium Website Package', price: 'KES 65,000', turnaround: '10–14 days', category: 'Websites' },
 ]
 
 const tabs = [
-  { value: 'all', label: 'All' },
   { value: 'KRA', label: 'KRA' },
   { value: 'NTSA', label: 'NTSA' },
   { value: 'eCitizen', label: 'eCitizen' },
@@ -90,120 +89,94 @@ const tabs = [
   { value: 'Websites', label: 'Websites' },
 ]
 
-const getOrderLink = (serviceName) =>
-  `https://wa.me/254700000000?text=${encodeURIComponent(`Hi, I need ${serviceName}`)}`
-
 export default function Services() {
+  const [active, setActive] = useState('KRA')
+  const filtered = services.filter((s) => s.category === active)
+
   return (
-    <div>
+    <div className="bg-white">
       <PageHeader
-        label="Other Services"
-        title="KRA, contracts, and business docs — sorted fast."
+        label="Services"
+        title="KRA, NTSA, contracts, and more — sorted fast."
         subtitle="Most of these take less than a day. You don't need to visit any office."
       />
 
-      <section className="py-16 bg-zinc-950">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <Tabs defaultValue="all">
-            <TabsList className="mb-8 bg-zinc-900 p-1 rounded-lg h-auto flex-wrap gap-1">
-              {tabs.map((t) => (
-                <TabsTrigger
-                  key={t.value}
-                  value={t.value}
-                  className="text-sm px-4 py-1.5 rounded-md bg-zinc-800 text-zinc-400 hover:text-white data-[state=active]:bg-white data-[state=active]:text-zinc-900 data-[state=active]:shadow-none"
+      <section className="py-12 bg-white">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+
+          {/* Tab strip */}
+          <div className="flex flex-wrap gap-2 mb-8">
+            {tabs.map((t) => (
+              <button
+                key={t.value}
+                onClick={() => setActive(t.value)}
+                className={`text-sm px-4 py-1.5 rounded-full border transition-colors font-medium ${
+                  active === t.value
+                    ? 'bg-slate-900 text-white border-slate-900'
+                    : 'bg-white text-slate-600 border-gray-200 hover:border-slate-400 hover:text-slate-800'
+                }`}
+              >
+                {t.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Service count */}
+          <p className="text-slate-400 text-xs mb-4">{filtered.length} services in this category</p>
+
+          {/* List table */}
+          <div className="border border-gray-100 rounded-xl overflow-hidden">
+            {/* Header */}
+            <div className="grid grid-cols-[1fr_auto_auto_auto] gap-4 px-5 py-2.5 bg-slate-50 border-b border-gray-100">
+              <span className="text-xs font-semibold text-slate-400 uppercase tracking-wide">Service</span>
+              <span className="text-xs font-semibold text-slate-400 uppercase tracking-wide text-right">Price</span>
+              <span className="text-xs font-semibold text-slate-400 uppercase tracking-wide text-right hidden sm:block">Turnaround</span>
+              <span className="text-xs font-semibold text-slate-400 uppercase tracking-wide text-right">Order</span>
+            </div>
+
+            {/* Rows */}
+            {filtered.map((svc, i) => (
+              <div
+                key={svc.name}
+                className={`grid grid-cols-[1fr_auto_auto_auto] gap-4 px-5 py-3.5 items-center hover:bg-slate-50 transition-colors ${i > 0 ? 'border-t border-gray-100' : ''}`}
+              >
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0" />
+                  <span className="text-slate-800 text-sm font-medium truncate">{svc.name}</span>
+                  {svc.note && (
+                    <span className="hidden sm:inline bg-emerald-50 text-emerald-700 text-xs px-2 py-0.5 rounded-full border border-emerald-100 shrink-0">
+                      {svc.note}
+                    </span>
+                  )}
+                </div>
+                <span className="text-slate-900 font-bold text-sm text-right whitespace-nowrap">{svc.price}</span>
+                <span className="text-slate-400 text-xs text-right whitespace-nowrap hidden sm:block">{svc.turnaround}</span>
+                <a
+                  href={`https://wa.me/254700000000?text=${encodeURIComponent(`Hi, I need ${svc.name}`)}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-emerald-600 hover:text-emerald-700 text-xs font-semibold whitespace-nowrap text-right"
                 >
-                  {t.label}
-                </TabsTrigger>
-              ))}
-            </TabsList>
-
-            <TabsContent value="all">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {services.map((service) => (
-                  <div
-                    key={service.name}
-                    className="bg-zinc-900 border border-zinc-700 rounded-xl p-4 hover:border-zinc-500 hover:shadow-sm transition"
-                  >
-                    <div className="flex items-center justify-between gap-2">
-                      <p className="text-zinc-100 font-semibold text-sm">{service.name}</p>
-                      {service.note ? (
-                        <span className="bg-white text-zinc-900 text-xs px-2 py-0.5 rounded-full">
-                          {service.note}
-                        </span>
-                      ) : null}
-                    </div>
-                    <div className="flex justify-between items-center gap-3 mt-2">
-                      <p className="text-white font-bold">{service.price}</p>
-                      <span className="bg-zinc-700 text-zinc-300 text-xs px-2 py-0.5 rounded-full">
-                        {service.turnaround}
-                      </span>
-                    </div>
-                    <a
-                      href={getOrderLink(service.name)}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-zinc-300 hover:text-white text-xs font-medium mt-3 block"
-                    >
-                      Order via WhatsApp →
-                    </a>
-                  </div>
-                ))}
+                  Order →
+                </a>
               </div>
-            </TabsContent>
+            ))}
+          </div>
 
-            {tabs
-              .filter((tab) => tab.value !== 'all')
-              .map((tab) => (
-                <TabsContent key={tab.value} value={tab.value}>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {services
-                      .filter((service) => service.category === tab.value)
-                      .map((service) => (
-                        <div
-                          key={service.name}
-                          className="bg-zinc-900 border border-zinc-700 rounded-xl p-4 hover:border-zinc-500 hover:shadow-sm transition"
-                        >
-                          <div className="flex items-center justify-between gap-2">
-                            <p className="text-zinc-100 font-semibold text-sm">{service.name}</p>
-                            {service.note ? (
-                              <span className="bg-white text-zinc-900 text-xs px-2 py-0.5 rounded-full">
-                                {service.note}
-                              </span>
-                            ) : null}
-                          </div>
-                          <div className="flex justify-between items-center gap-3 mt-2">
-                            <p className="text-white font-bold">{service.price}</p>
-                            <span className="bg-zinc-700 text-zinc-300 text-xs px-2 py-0.5 rounded-full">
-                              {service.turnaround}
-                            </span>
-                          </div>
-                          <a
-                            href={getOrderLink(service.name)}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="text-zinc-300 hover:text-white text-xs font-medium mt-3 block"
-                          >
-                            Order via WhatsApp →
-                          </a>
-                        </div>
-                      ))}
-                  </div>
-                </TabsContent>
-              ))}
-          </Tabs>
         </div>
       </section>
 
-      <section className="bg-zinc-900 py-8 text-center">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <p className="text-zinc-300 text-sm">
-            Don&apos;t see what you need? We handle more than what&apos;s listed here.
+      {/* Bottom CTA */}
+      <section className="bg-slate-50 border-t border-gray-100 py-10 text-center">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <p className="text-slate-600 text-sm">
+            Don&apos;t see what you need? I handle more than what&apos;s listed here.
           </p>
           <a
             href="https://wa.me/254700000000"
             target="_blank"
             rel="noreferrer"
-            className="inline-block bg-green-500 text-white mt-4 px-5 py-2.5 rounded-lg font-medium"
+            className="inline-block bg-emerald-500 hover:bg-emerald-600 text-white mt-4 px-6 py-2.5 rounded-xl font-medium transition-colors"
           >
             Chat on WhatsApp
           </a>
