@@ -68,20 +68,23 @@ const websitePackages = [
     name: 'Landing Page',
     price: 'KES 12,000',
     turnaround: '3–5 days',
-    items: ['1 page', 'WhatsApp CTA', 'Mobile ready', '2 revisions'],
+    bestFor: 'Campaigns, single products, events',
+    items: ['1 scrollable page', 'WhatsApp / CTA button', 'Mobile responsive', '2 revision rounds'],
   },
   {
     name: 'Business Website',
     price: 'KES 40,000',
     turnaround: '7–10 days',
-    items: ['Up to 8 pages', 'Full SEO', 'WhatsApp integration', '3 revisions'],
+    bestFor: 'Growing businesses, services, restaurants',
+    items: ['Up to 8 pages', 'Full SEO + Analytics', 'WhatsApp chat integration', '3 revision rounds'],
     popular: true,
   },
   {
     name: 'E-commerce',
     price: 'KES 80,000',
     turnaround: '14–21 days',
-    items: ['Online store', 'M-Pesa integration', 'Admin dashboard', 'Priority support'],
+    bestFor: 'Shops, retailers, online stores',
+    items: ['Full online store', 'M-Pesa STK push', 'Admin dashboard', 'Priority support'],
   },
 ]
 
@@ -326,60 +329,104 @@ export default function Home() {
       </section>
 
       {/* ── Website packages ───────────────────────────────── */}
-      <section className="py-16 bg-slate-50">
+      <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <p className="text-emerald-600 text-xs font-semibold uppercase tracking-widest mb-3">Website packages</p>
-          <h2 className="text-2xl md:text-3xl font-bold text-slate-900 mb-2">Fixed scope. Visible pricing.</h2>
-          <p className="text-slate-500 text-sm mb-10">No surprise costs halfway through. You know the price before we start.</p>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          {/* Header */}
+          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-12">
+            <div>
+              <p className="text-emerald-600 text-xs font-semibold uppercase tracking-widest mb-2">Website packages</p>
+              <h2 className="text-2xl md:text-3xl font-bold text-slate-900">Fixed scope. Visible pricing.</h2>
+              <p className="text-slate-500 text-sm mt-1">You know the exact price before we start. No hidden charges.</p>
+            </div>
+            <Link
+              to="/packages"
+              className="text-sm text-slate-600 hover:text-slate-900 font-medium underline underline-offset-2 whitespace-nowrap"
+            >
+              Compare all details →
+            </Link>
+          </div>
+
+          {/* Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
             {websitePackages.map((pkg) => (
               <div
                 key={pkg.name}
-                className={`rounded-2xl p-6 flex flex-col ${
+                className={`relative flex flex-col rounded-2xl bg-white transition-shadow ${
                   pkg.popular
-                    ? 'bg-emerald-500 shadow-lg ring-2 ring-emerald-400'
-                    : 'bg-white border border-gray-200'
+                    ? 'border-2 border-emerald-500 shadow-xl shadow-emerald-100'
+                    : 'border border-gray-200 shadow-sm hover:shadow-md'
                 }`}
               >
+                {/* Popular ribbon */}
                 {pkg.popular && (
-                  <span className="self-start bg-white text-emerald-600 text-xs font-semibold px-2 py-0.5 rounded-full mb-3">
-                    Most Popular
-                  </span>
+                  <div className="absolute -top-px left-0 right-0 h-1 rounded-t-2xl bg-emerald-500" />
                 )}
-                <h3 className={`text-xl font-bold ${pkg.popular ? 'text-white' : 'text-slate-900'}`}>{pkg.name}</h3>
-                <p className={`text-2xl font-bold mt-1 ${pkg.popular ? 'text-white' : 'text-slate-900'}`}>{pkg.price}</p>
-                <p className={`text-xs mt-0.5 ${pkg.popular ? 'text-emerald-100' : 'text-slate-400'}`}>{pkg.turnaround}</p>
-                <ul className="mt-4 space-y-2 flex-1">
-                  {pkg.items.map((item) => (
-                    <li key={item} className={`flex items-center gap-2 text-sm ${pkg.popular ? 'text-emerald-50' : 'text-slate-600'}`}>
-                      <span className={`w-4 h-4 rounded-full flex items-center justify-center text-xs shrink-0 ${pkg.popular ? 'bg-white/20 text-white' : 'bg-emerald-50 text-emerald-600'}`}>✓</span>
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-                <a
-                  href={waLink(`Hi, I'm interested in the ${pkg.name} website package (${pkg.price}). Please confirm and share M-Pesa payment details.`)}
-                  target="_blank"
-                  rel="noreferrer"
-                  className={`mt-6 flex items-center justify-center gap-2 font-semibold text-sm px-4 py-2.5 rounded-xl transition-colors ${
-                    pkg.popular
-                      ? 'bg-white text-emerald-600 hover:bg-emerald-50'
-                      : 'bg-slate-900 text-white hover:bg-slate-800'
-                  }`}
-                >
-                  <WaIcon /> Get started
-                </a>
+
+                <div className="p-7 flex flex-col flex-1">
+                  {/* Badge */}
+                  {pkg.popular && (
+                    <span className="self-start bg-emerald-50 text-emerald-700 text-xs font-bold px-2.5 py-1 rounded-full border border-emerald-200 mb-4">
+                      Most Popular
+                    </span>
+                  )}
+
+                  {/* Name + best for */}
+                  <h3 className="text-lg font-bold text-slate-900">{pkg.name}</h3>
+                  <p className="text-slate-400 text-xs mt-0.5">{pkg.bestFor}</p>
+
+                  {/* Price */}
+                  <div className="mt-5 pb-5 border-b border-gray-100">
+                    <span className="text-4xl font-extrabold text-slate-900 tracking-tight">{pkg.price}</span>
+                    <div className="flex items-center gap-1.5 mt-1">
+                      <svg className="text-emerald-500 shrink-0" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                        <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                      </svg>
+                      <span className="text-slate-400 text-xs">{pkg.turnaround}</span>
+                    </div>
+                  </div>
+
+                  {/* Features */}
+                  <ul className="mt-5 space-y-3 flex-1">
+                    {pkg.items.map((item) => (
+                      <li key={item} className="flex items-start gap-2.5 text-sm text-slate-600">
+                        <span className="mt-0.5 w-4 h-4 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-600 flex items-center justify-center text-xs shrink-0 font-bold">✓</span>
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+
+                  {/* CTA */}
+                  <a
+                    href={waLink(`Hi, I'm interested in the ${pkg.name} (${pkg.price}). Please confirm and share M-Pesa payment details.`)}
+                    target="_blank"
+                    rel="noreferrer"
+                    className={`mt-7 flex items-center justify-center gap-2 font-semibold text-sm px-4 py-3 rounded-xl transition-colors ${
+                      pkg.popular
+                        ? 'bg-emerald-500 hover:bg-emerald-600 text-white shadow-sm'
+                        : 'bg-slate-900 hover:bg-slate-800 text-white'
+                    }`}
+                  >
+                    <WaIcon /> Get started
+                  </a>
+                </div>
               </div>
             ))}
           </div>
 
-          <p className="text-slate-400 text-xs text-center mt-6">
-            Need something custom?{' '}
-            <a href={waLink('Hi, I need a custom website quote')} target="_blank" rel="noreferrer" className="text-slate-600 underline">
-              WhatsApp to discuss
+          {/* Footer note */}
+          <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-3 px-1">
+            <p className="text-slate-400 text-xs">All packages include: mobile-first design · 30-day support · SSL advice · domain guidance</p>
+            <a
+              href={waLink('Hi, I need a custom website quote')}
+              target="_blank"
+              rel="noreferrer"
+              className="text-slate-500 hover:text-slate-800 text-xs underline underline-offset-2 whitespace-nowrap"
+            >
+              Need something custom? WhatsApp →
             </a>
-          </p>
+          </div>
+
         </div>
       </section>
 
