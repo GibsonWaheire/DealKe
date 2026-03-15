@@ -115,6 +115,37 @@ const services = [
   { name: 'Photo Editing', price: 'KES 300', turnaround: 'Same day', category: 'Cyber' },
   { name: 'Internet Research (per hour)', price: 'KES 100', turnaround: 'Same day', category: 'Cyber' },
   { name: 'File Recovery Assistance', price: 'KES 500', turnaround: 'Same day', category: 'Cyber' },
+
+  // IT & Networking
+  { name: 'Home Wi-Fi Setup & Configuration', price: 'KES 2,000', turnaround: 'Same day', category: 'IT & Networking', note: 'Popular' },
+  { name: 'Wi-Fi Repeater / Extender Setup', price: 'KES 1,500', turnaround: 'Same day', category: 'IT & Networking' },
+  { name: 'Router Configuration', price: 'KES 1,000', turnaround: 'Same day', category: 'IT & Networking' },
+  { name: 'Office Network Setup (up to 10 devices)', price: 'KES 8,000', turnaround: '1 business day', category: 'IT & Networking' },
+  { name: 'Network Cabling (structured)', price: 'KES 5,000+', turnaround: 'Quoted', category: 'IT & Networking' },
+  { name: 'TV Wall Mount Installation', price: 'KES 1,500', turnaround: 'Same day', category: 'IT & Networking' },
+  { name: 'DSTV / GoTV Installation', price: 'KES 2,000', turnaround: 'Same day', category: 'IT & Networking' },
+  { name: 'CCTV Installation (per camera)', price: 'KES 3,500', turnaround: '1 business day', category: 'IT & Networking' },
+  { name: 'Projector / Screen Installation', price: 'KES 2,000', turnaround: 'Same day', category: 'IT & Networking' },
+  { name: 'Printer / Scanner Network Setup', price: 'KES 1,000', turnaround: 'Same day', category: 'IT & Networking' },
+  { name: 'Computer Repair & Service', price: 'from KES 1,500', turnaround: 'Same day', category: 'IT & Networking' },
+  { name: 'Virus / Malware Removal', price: 'KES 1,500', turnaround: 'Same day', category: 'IT & Networking' },
+  { name: 'Software Installation (per device)', price: 'KES 500', turnaround: 'Same day', category: 'IT & Networking' },
+
+  // POS & ERP (Odoo)
+  { name: 'POS System Setup (retail shop)', price: 'KES 5,000', turnaround: '1 business day', category: 'POS & ERP', note: 'Popular' },
+  { name: 'POS System Setup (restaurant/hotel)', price: 'KES 8,000', turnaround: '1–2 business days', category: 'POS & ERP' },
+  { name: 'POS System Setup (pharmacy)', price: 'KES 8,000', turnaround: '1–2 business days', category: 'POS & ERP' },
+  { name: 'POS System Setup (supermarket)', price: 'KES 12,000', turnaround: '2–3 business days', category: 'POS & ERP' },
+  { name: 'Receipt Printer Setup & Test', price: 'KES 1,500', turnaround: 'Same day', category: 'POS & ERP' },
+  { name: 'Barcode Scanner Setup', price: 'KES 1,000', turnaround: 'Same day', category: 'POS & ERP' },
+  { name: 'Staff POS Training (per session)', price: 'KES 3,000', turnaround: '1 business day', category: 'POS & ERP' },
+  { name: 'Odoo ERP Demo & Setup', price: 'KES 5,000', turnaround: '2 business days', category: 'POS & ERP' },
+  { name: 'Odoo CRM Module', price: 'KES 15,000', turnaround: '3–5 business days', category: 'POS & ERP' },
+  { name: 'Odoo Accounting Module', price: 'KES 20,000', turnaround: '3–5 business days', category: 'POS & ERP' },
+  { name: 'Odoo Inventory Module', price: 'KES 15,000', turnaround: '3–5 business days', category: 'POS & ERP' },
+  { name: 'Odoo Point of Sale Module', price: 'KES 12,000', turnaround: '2–3 business days', category: 'POS & ERP' },
+  { name: 'Odoo Full ERP (all modules)', price: 'from KES 50,000', turnaround: 'Quoted', category: 'POS & ERP', note: 'Enterprise' },
+  { name: 'Odoo Staff Training', price: 'KES 5,000/day', turnaround: 'Agreed', category: 'POS & ERP' },
 ]
 
 const headerImages = [
@@ -135,6 +166,8 @@ const tabs = [
   { value: 'Websites', label: 'Websites' },
   { value: 'Social & Design', label: 'Social & Design' },
   { value: 'Cyber', label: 'Cyber Services' },
+  { value: 'IT & Networking', label: 'IT & Networking' },
+  { value: 'POS & ERP', label: 'POS & ERP' },
 ]
 
 export default function Services() {

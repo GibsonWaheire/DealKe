@@ -18,7 +18,7 @@ const waLink = (msg) => `${WA_BASE}?text=${encodeURIComponent(msg)}`
 const heroSlides = [
   {
     headline: 'Websites built properly.',
-    sub: 'Live in 5–10 days. Visible pricing. No surprises.',
+    sub: 'Landing pages, business sites, e-commerce — from KES 12,000.',
     image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1600&q=80',
     alt: 'Laptop with analytics dashboard',
   },
@@ -29,10 +29,22 @@ const heroSlides = [
     alt: 'Pen on documents',
   },
   {
+    headline: 'Networks, POS & IT setup.',
+    sub: 'Home networking, office IT, POS systems, TV installation — all in one place.',
+    image: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1600&q=80',
+    alt: 'Network equipment',
+  },
+  {
     headline: 'Documents without the queue.',
     sub: 'Contracts, affidavits, Good Conduct — handled from Nairobi.',
     image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1600&q=80',
     alt: 'Modern office interior',
+  },
+  {
+    headline: 'Odoo ERP for your business.',
+    sub: 'CRM, accounting, inventory, POS — set up and running fast.',
+    image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1600&q=80',
+    alt: 'Business dashboard',
   },
   {
     headline: 'One person. Direct answers.',
@@ -43,33 +55,33 @@ const heroSlides = [
 ]
 
 const featuredServices = [
-  { name: 'KRA PIN Registration',  price: 'KES 500',   turnaround: 'Same day',       note: 'Most requested' },
-  { name: 'KRA PIN Retrieval',      price: 'KES 300',   turnaround: 'Same day' },
-  { name: 'Car Sale Agreement',     price: 'KES 800',   turnaround: 'Same day' },
-  { name: 'eCitizen Account Setup', price: 'KES 300',   turnaround: 'Same day' },
-  { name: 'Business Name Search',   price: 'KES 400',   turnaround: 'Same day' },
-  { name: 'Passport Application',   price: 'KES 600',   turnaround: '1 business day' },
+  { name: 'KRA PIN Registration',     price: 'KES 500',   turnaround: 'Same day',       note: 'Most requested' },
+  { name: 'KRA PIN Retrieval',         price: 'KES 300',   turnaround: 'Same day' },
+  { name: 'Car Sale Agreement',        price: 'KES 800',   turnaround: 'Same day' },
+  { name: 'POS System Setup (retail)', price: 'KES 5,000', turnaround: '1 business day' },
+  { name: 'Home Wi-Fi Setup',          price: 'KES 2,000', turnaround: 'Same day' },
+  { name: 'Logo Design',               price: 'KES 2,500', turnaround: '2 business days' },
 ]
 
 const websitePackages = [
   {
-    name: 'Starter',
-    price: 'KES 15,000',
-    turnaround: '5–7 days',
-    items: ['1 page', 'Mobile ready', 'Contact form', '1 revision'],
+    name: 'Landing Page',
+    price: 'KES 12,000',
+    turnaround: '3–5 days',
+    items: ['1 page', 'WhatsApp CTA', 'Mobile ready', '2 revisions'],
   },
   {
-    name: 'Business',
-    price: 'KES 35,000',
+    name: 'Business Website',
+    price: 'KES 40,000',
     turnaround: '7–10 days',
-    items: ['5 pages', 'SEO setup', 'Google Maps', '3 revisions'],
+    items: ['Up to 8 pages', 'Full SEO', 'WhatsApp integration', '3 revisions'],
     popular: true,
   },
   {
-    name: 'Premium',
-    price: 'KES 65,000',
-    turnaround: '10–14 days',
-    items: ['10 pages', 'CMS + Blog', 'Analytics', 'Priority support'],
+    name: 'E-commerce',
+    price: 'KES 80,000',
+    turnaround: '14–21 days',
+    items: ['Online store', 'M-Pesa integration', 'Admin dashboard', 'Priority support'],
   },
 ]
 
