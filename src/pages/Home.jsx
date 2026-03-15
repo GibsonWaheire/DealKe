@@ -102,9 +102,7 @@ export default function Home() {
 
             {/* Left — text */}
             <div>
-              <span className="inline-flex items-center bg-emerald-50 text-emerald-700 text-xs font-medium px-3 py-1 rounded-full mb-6">
-                🇰🇪 Built for Kenya
-              </span>
+              
               <h1 className="text-4xl md:text-5xl font-bold text-zinc-900 leading-tight">
                 Affordable Websites &amp; Digital Services for Kenyan Businesses
               </h1>
@@ -126,40 +124,50 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Right — terminal card */}
+            {/* Right — value card */}
             <div className="flex justify-center lg:justify-end">
-              <div className="bg-zinc-900 rounded-2xl p-6 w-full max-w-sm font-mono text-sm shadow-xl ring-1 ring-white/10">
-                <div className="flex items-center gap-2 mb-5">
-                  <span className="w-3 h-3 rounded-full bg-red-500/80" />
-                  <span className="w-3 h-3 rounded-full bg-yellow-500/80" />
-                  <span className="w-3 h-3 rounded-full bg-emerald-500/80" />
-                  <span className="ml-2 text-zinc-500 text-xs">dealke ~ project-status</span>
+              <div className="bg-white rounded-2xl shadow-lg border border-zinc-100 w-full max-w-sm overflow-hidden">
+
+                {/* Card header */}
+                <div className="bg-emerald-500 px-6 py-4">
+                  <p className="text-white text-xs font-medium uppercase tracking-wide">What you get with DealKe</p>
+                  <p className="text-white/80 text-xs mt-0.5">Professional. Fast. Affordable.</p>
                 </div>
-                <div className="space-y-2.5 text-zinc-300">
-                  <div className="text-emerald-400 font-semibold">$ project status --latest</div>
-                  <div className="h-px bg-zinc-700" />
-                  <div className="flex justify-between">
-                    <span className="text-zinc-500">client</span>
-                    <span>Nairobi Bakery Co.</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-zinc-500">package</span>
-                    <span>Business Website</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-zinc-500">turnaround</span>
-                    <span>5 days</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-zinc-500">status</span>
-                    <span className="flex items-center gap-1.5 text-emerald-400 font-medium">
-                      <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_6px_2px_rgba(52,211,153,0.5)]" />
-                      Live
-                    </span>
-                  </div>
-                  <div className="h-px bg-zinc-700" />
-                  <div className="text-emerald-400">✓ Project delivered successfully</div>
+
+                {/* Feature rows */}
+                <div className="divide-y divide-zinc-100">
+                  {[
+                    { icon: '🌐', title: 'Professional Website', detail: 'Live in 3–7 business days' },
+                    { icon: '📱', title: 'Mobile-First Design', detail: 'Looks great on any device' },
+                    { icon: '📄', title: 'KRA & Legal Docs', detail: 'Same-day turnaround' },
+                    { icon: '💬', title: 'Dedicated Support', detail: 'WhatsApp & phone' },
+                    { icon: '💳', title: 'Pay via M-Pesa', detail: '50% deposit to start' },
+                  ].map(({ icon, title, detail }) => (
+                    <div key={title} className="flex items-center gap-4 px-6 py-3.5">
+                      <span className="text-xl shrink-0">{icon}</span>
+                      <div className="min-w-0">
+                        <p className="text-sm font-medium text-zinc-800 leading-tight">{title}</p>
+                        <p className="text-xs text-zinc-400 mt-0.5">{detail}</p>
+                      </div>
+                      <span className="ml-auto text-emerald-500 text-base shrink-0">✓</span>
+                    </div>
+                  ))}
                 </div>
+
+                {/* Card footer */}
+                <div className="px-6 py-4 bg-zinc-50 flex items-center justify-between">
+                  <div>
+                    <p className="text-xs text-zinc-400">Starting from</p>
+                    <p className="text-lg font-bold text-zinc-900">KES 15,000</p>
+                  </div>
+                  <Link
+                    to="/contact"
+                    className="bg-emerald-500 hover:bg-emerald-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
+                  >
+                    Get a Quote
+                  </Link>
+                </div>
+
               </div>
             </div>
 
