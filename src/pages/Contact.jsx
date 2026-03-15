@@ -95,6 +95,10 @@ export default function Contact() {
         label="Contact"
         title="Drop a message."
         subtitle="I check messages throughout the day. Most people get a reply within a few hours."
+        images={[
+          { src: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1600&q=80', alt: 'Smartphone on desk' },
+          { src: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1600&q=80', alt: 'Documents and pen' },
+        ]}
       />
 
       <section className="py-16 bg-white">

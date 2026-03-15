@@ -78,9 +78,49 @@ const services = [
   { name: 'KJSEA Results Check', price: 'KES 30', turnaround: 'Same day', category: 'Documents' },
   { name: 'KJSEA Placement Check', price: 'KES 30', turnaround: 'Same day', category: 'Documents' },
 
-  { name: 'Starter Website Package', price: 'KES 15,000', turnaround: '5–7 days', category: 'Websites' },
-  { name: 'Business Website Package', price: 'KES 35,000', turnaround: '7–10 days', category: 'Websites' },
-  { name: 'Premium Website Package', price: 'KES 65,000', turnaround: '10–14 days', category: 'Websites' },
+  { name: 'Landing Page', price: 'KES 12,000', turnaround: '3–5 days', category: 'Websites' },
+  { name: 'Simple Website', price: 'KES 22,000', turnaround: '5–7 days', category: 'Websites' },
+  { name: 'Business Website', price: 'KES 40,000', turnaround: '7–10 days', category: 'Websites', note: 'Popular' },
+  { name: 'E-commerce Website', price: 'KES 80,000', turnaround: '14–21 days', category: 'Websites' },
+
+  // Social Media & Design
+  { name: 'Facebook Business Page Setup', price: 'KES 800', turnaround: 'Same day', category: 'Social & Design' },
+  { name: 'Instagram Business Setup', price: 'KES 800', turnaround: 'Same day', category: 'Social & Design' },
+  { name: 'TikTok Business Account Setup', price: 'KES 800', turnaround: 'Same day', category: 'Social & Design' },
+  { name: 'WhatsApp Business Setup', price: 'KES 500', turnaround: 'Same day', category: 'Social & Design' },
+  { name: 'Google Business Profile Setup', price: 'KES 1,500', turnaround: '1 business day', category: 'Social & Design' },
+  { name: 'Social Media Profile Optimization', price: 'KES 1,500', turnaround: '1 business day', category: 'Social & Design' },
+  { name: 'Monthly Social Media Management', price: 'KES 5,000/mo', turnaround: 'Ongoing', category: 'Social & Design', note: 'Package' },
+  { name: 'Logo Design', price: 'KES 2,500', turnaround: '2 business days', category: 'Social & Design' },
+  { name: 'Business Card Design', price: 'KES 1,500', turnaround: '1 business day', category: 'Social & Design' },
+  { name: 'Flyer / Poster Design', price: 'KES 1,500', turnaround: '1 business day', category: 'Social & Design' },
+  { name: 'Banner / Signage Design', price: 'KES 2,000', turnaround: '1 business day', category: 'Social & Design' },
+  { name: 'Company Profile Design', price: 'KES 3,000', turnaround: '2 business days', category: 'Social & Design' },
+  { name: 'Email Signature Design', price: 'KES 800', turnaround: 'Same day', category: 'Social & Design' },
+  { name: 'T-Shirt / Uniform Print Design', price: 'KES 1,500', turnaround: '1 business day', category: 'Social & Design' },
+
+  // Cyber services
+  { name: 'CV / Resume Writing', price: 'KES 500', turnaround: 'Same day', category: 'Cyber', note: 'Popular' },
+  { name: 'Cover Letter Writing', price: 'KES 300', turnaround: 'Same day', category: 'Cyber' },
+  { name: 'Email Account Setup (Gmail/Yahoo)', price: 'KES 200', turnaround: 'Same day', category: 'Cyber' },
+  { name: 'Online Form Filling', price: 'KES 200', turnaround: 'Same day', category: 'Cyber' },
+  { name: 'Data Entry (per hour)', price: 'KES 500', turnaround: 'Agreed', category: 'Cyber' },
+  { name: 'PDF Conversion / Merging', price: 'KES 100', turnaround: 'Same day', category: 'Cyber' },
+  { name: 'MS Word / Excel / PowerPoint Help', price: 'KES 300', turnaround: 'Same day', category: 'Cyber' },
+  { name: 'Printing B&W (per page)', price: 'KES 10', turnaround: 'Same day', category: 'Cyber' },
+  { name: 'Printing Color (per page)', price: 'KES 30', turnaround: 'Same day', category: 'Cyber' },
+  { name: 'Scanning (per page)', price: 'KES 20', turnaround: 'Same day', category: 'Cyber' },
+  { name: 'Lamination A4', price: 'KES 50', turnaround: 'Same day', category: 'Cyber' },
+  { name: 'Passport Photo Print (2 copies)', price: 'KES 150', turnaround: 'Same day', category: 'Cyber' },
+  { name: 'Photo Editing', price: 'KES 300', turnaround: 'Same day', category: 'Cyber' },
+  { name: 'Internet Research (per hour)', price: 'KES 100', turnaround: 'Same day', category: 'Cyber' },
+  { name: 'File Recovery Assistance', price: 'KES 500', turnaround: 'Same day', category: 'Cyber' },
+]
+
+const headerImages = [
+  { src: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1600&q=80', alt: 'Documents and pen' },
+  { src: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1600&q=80', alt: 'Smartphone on desk' },
+  { src: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1600&q=80', alt: 'Modern office' },
 ]
 
 const tabs = [
@@ -93,6 +133,8 @@ const tabs = [
   { value: 'Business', label: 'Business' },
   { value: 'Documents', label: 'Documents' },
   { value: 'Websites', label: 'Websites' },
+  { value: 'Social & Design', label: 'Social & Design' },
+  { value: 'Cyber', label: 'Cyber Services' },
 ]
 
 export default function Services() {
@@ -103,8 +145,9 @@ export default function Services() {
     <div className="bg-white">
       <PageHeader
         label="Services"
-        title="KRA, NTSA, contracts, and more — sorted fast."
+        title="KRA, NTSA, contracts, design, and more."
         subtitle="Most of these take less than a day. You don't need to visit any office."
+        images={headerImages}
       />
 
       <section className="py-12 bg-white">

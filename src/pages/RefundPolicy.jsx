@@ -8,6 +8,7 @@ export default function RefundPolicy() {
         label="Legal"
         title="Refund Policy"
         subtitle="Last updated: 16 March 2026"
+        images={[{ src: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1600&q=80', alt: 'Documents' }]}
       />
 
       <section className="py-14 bg-white">
