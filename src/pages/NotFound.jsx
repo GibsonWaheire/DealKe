@@ -12,7 +12,7 @@ export default function NotFound() {
           Looks like that page took the wrong matatu. Try heading back home.
         </p>
         <div className="flex flex-wrap justify-center gap-3 mt-8">
-          <Button asChild className="bg-emerald-500 hover:bg-emerald-600 text-white font-medium h-auto py-2.5 px-6 rounded-lg">
+          <Button asChild className="bg-white text-zinc-900 hover:bg-zinc-100 font-medium h-auto py-2.5 px-6 rounded-lg">
             <Link to="/">Go Home</Link>
           </Button>
           <Button asChild variant="outline" className="border border-zinc-300 text-zinc-700 hover:bg-zinc-50 h-auto py-2.5 px-6 rounded-lg">

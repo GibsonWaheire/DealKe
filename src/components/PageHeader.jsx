@@ -4,7 +4,7 @@ export default function PageHeader({ label, title, subtitle }) {
     <div className="bg-zinc-900 py-16 md:py-20">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {label && (
-          <p className="text-emerald-400 text-xs font-semibold uppercase tracking-widest mb-3">
+          <p className="text-zinc-400 text-xs font-semibold uppercase tracking-widest mb-3">
             {label}
           </p>
         )}

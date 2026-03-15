@@ -18,8 +18,7 @@ export default function Footer() {
           {/* Col 1 — Brand */}
           <div>
             <Link to="/" className="text-xl font-bold tracking-tight">
-              <span className="text-white">Deal</span>
-              <span className="text-emerald-400">Ke</span>
+              <span className="text-white">DealKe.</span>
             </Link>
             <p className="text-zinc-400 text-sm mt-2 max-w-xs leading-relaxed">
               Built and run from Nairobi. Every project done personally.

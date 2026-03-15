@@ -34,13 +34,13 @@ export default function About() {
       />
 
       {/* Section 1 — Story (first person) */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-zinc-950">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
 
             {/* Text */}
             <div>
-              <div className="space-y-4 text-zinc-600 text-sm leading-relaxed">
+              <div className="space-y-4 text-zinc-300 text-sm leading-relaxed">
                 <p>
                   I'm a developer based in Nairobi. I've been building websites since 2019 —
                   e-commerce stores, business sites, landing pages, internal tools.
@@ -60,7 +60,7 @@ export default function About() {
                   overhead. And for KRA and document work, I've done it enough times that I can handle
                   it in hours.
                 </p>
-                <p className="text-zinc-900 font-medium">
+                <p className="text-zinc-100 font-medium">
                   If you have a question, just message me directly on WhatsApp. I'll give you a
                   straight answer.
                 </p>
@@ -73,11 +73,11 @@ export default function About() {
                 <div className="flex items-center gap-2 mb-5">
                   <span className="w-3 h-3 rounded-full bg-red-500/80" />
                   <span className="w-3 h-3 rounded-full bg-yellow-500/80" />
-                  <span className="w-3 h-3 rounded-full bg-emerald-500/80" />
+                  <span className="w-3 h-3 rounded-full bg-zinc-300/80" />
                   <span className="ml-2 text-zinc-500 text-xs">dealke ~ founder</span>
                 </div>
                 <div className="space-y-2.5 text-zinc-300">
-                  <div className="text-emerald-400 font-semibold">$ whoami</div>
+                  <div className="text-zinc-300 font-semibold">$ whoami</div>
                   <div className="h-px bg-zinc-700" />
                   <div className="flex justify-between">
                     <span className="text-zinc-500">location</span>
@@ -93,14 +93,14 @@ export default function About() {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-zinc-500">projects</span>
-                    <span className="text-emerald-400">47 delivered</span>
+                    <span className="text-zinc-300">47 delivered</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-zinc-500">last delivery</span>
                     <span className="text-zinc-300">12 March 2026</span>
                   </div>
                   <div className="h-px bg-zinc-700" />
-                  <div className="text-emerald-400">✓ Taking on new projects</div>
+                  <div className="text-zinc-300">✓ Taking on new projects</div>
                 </div>
               </div>
             </div>
@@ -110,19 +110,19 @@ export default function About() {
       </section>
 
       {/* Section 2 — What makes DealKe different */}
-      <section className="py-16 bg-zinc-50">
+      <section className="py-16 bg-zinc-900">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-10">
-            <span className="text-emerald-600 text-sm font-semibold uppercase tracking-wide">Why us</span>
-            <h2 className="text-2xl font-bold text-zinc-900 mt-1">What's different about DealKe</h2>
+            <span className="text-zinc-500 text-sm font-semibold uppercase tracking-wide">Why us</span>
+            <h2 className="text-2xl font-bold text-zinc-100 mt-1">What's different about DealKe</h2>
             <p className="text-zinc-400 text-sm mt-1">Compared to a random freelancer on Facebook or a Nairobi agency.</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {differentiators.map((d) => (
-              <div key={d.title} className="bg-white rounded-2xl p-6 border border-zinc-100 shadow-sm">
+              <div key={d.title} className="bg-zinc-950 rounded-2xl p-6 border border-zinc-800 shadow-sm">
                 <div className="text-2xl mb-3">{d.icon}</div>
-                <h3 className="text-sm font-bold text-zinc-900 mb-2 leading-snug">{d.title}</h3>
-                <p className="text-zinc-500 text-sm leading-relaxed">{d.description}</p>
+                <h3 className="text-sm font-bold text-zinc-100 mb-2 leading-snug">{d.title}</h3>
+                <p className="text-zinc-400 text-sm leading-relaxed">{d.description}</p>
               </div>
             ))}
           </div>
@@ -130,15 +130,15 @@ export default function About() {
       </section>
 
       {/* Section 3 — CTA */}
-      <section className="bg-emerald-600 py-16">
+      <section className="bg-zinc-800 border-t border-zinc-700 py-16">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-2xl md:text-3xl font-bold text-white">
             If you have a question, just ask.
           </h2>
-          <p className="text-white/80 mt-2">
+          <p className="text-zinc-400 mt-2">
             No sales pitch. Send a message, get a straight answer and a price.
           </p>
-          <Button asChild className="bg-white text-emerald-700 hover:bg-zinc-100 font-semibold px-8 py-3 rounded-lg mt-6 h-auto">
+          <Button asChild className="bg-white text-zinc-900 hover:bg-zinc-100 font-semibold px-8 py-3 rounded-lg mt-6 h-auto">
             <Link to="/contact">Send a Message</Link>
           </Button>
         </div>

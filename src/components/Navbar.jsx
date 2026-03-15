@@ -1,31 +1,26 @@
 import { useState } from 'react'
 import { NavLink, Link } from 'react-router-dom'
-import { Button } from '../ui/button'
-import { routes } from '../router/index'
-
-const navLinks = routes.filter(r => r.path !== '/contact')
 
 export default function Navbar() {
   const [open, setOpen] = useState(false)
 
   const linkClass = ({ isActive }) =>
     isActive
-      ? 'text-emerald-400 text-sm font-medium transition-colors'
-      : 'text-zinc-300 hover:text-white text-sm transition-colors'
+      ? 'text-white font-medium text-sm transition-colors'
+      : 'text-zinc-400 hover:text-white text-sm transition-colors'
 
   return (
-    <nav className="sticky top-0 z-50 backdrop-blur-sm bg-zinc-900/95 border-b border-white/10">
+    <nav className="sticky top-0 z-50 bg-zinc-950 border-b border-zinc-800">
       <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-
-        {/* Logo */}
-        <Link to="/" className="text-xl font-bold tracking-tight shrink-0">
-          <span className="text-white">Deal</span>
-          <span className="text-emerald-400">Ke</span>
+        <Link to="/" className="text-xl font-bold tracking-tight shrink-0 text-white">
+          DealKe<span className="text-white">.</span>
         </Link>
 
-        {/* Desktop nav links */}
         <div className="hidden md:flex items-center gap-8">
-          {navLinks.map(({ path, label }) => (
+          {[
+            { path: '/', label: 'Home' },
+            { path: '/services', label: 'Services' },
+          ].map(({ path, label }) => (
             <NavLink
               key={path}
               to={path}
@@ -37,19 +32,19 @@ export default function Navbar() {
           ))}
         </div>
 
-        {/* Desktop CTA */}
         <div className="hidden md:block">
-          <Button
-            asChild
-            className="bg-emerald-500 hover:bg-emerald-600 text-white text-sm"
+          <a
+            href="https://wa.me/254700000000"
+            target="_blank"
+            rel="noreferrer"
+            className="bg-green-500 hover:bg-green-600 text-white text-sm px-4 py-2 rounded-lg"
           >
-            <Link to="/contact">Get a Quote</Link>
-          </Button>
+            WhatsApp Us
+          </a>
         </div>
 
-        {/* Hamburger */}
         <button
-          className="flex md:hidden text-zinc-300 hover:text-white p-2 -mr-2"
+          className="flex md:hidden text-zinc-400 hover:text-white p-2 -mr-2"
           onClick={() => setOpen(prev => !prev)}
           aria-label="Toggle menu"
           aria-expanded={open}
@@ -69,14 +64,16 @@ export default function Navbar() {
         </button>
       </div>
 
-      {/* Mobile dropdown */}
       <div
         className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
-          open ? 'max-h-72 opacity-100' : 'max-h-0 opacity-0'
+          open ? 'max-h-64 opacity-100' : 'max-h-0 opacity-0'
         }`}
       >
-        <div className="bg-zinc-800 px-4 pt-3 pb-5 flex flex-col gap-4">
-          {navLinks.map(({ path, label }) => (
+        <div className="bg-zinc-950 border-t border-zinc-800 px-4 pt-3 pb-5 flex flex-col gap-4">
+          {[
+            { path: '/', label: 'Home' },
+            { path: '/services', label: 'Services' },
+          ].map(({ path, label }) => (
             <NavLink
               key={path}
               to={path}
@@ -87,12 +84,15 @@ export default function Navbar() {
               {label}
             </NavLink>
           ))}
-          <Button
-            asChild
-            className="bg-emerald-500 hover:bg-emerald-600 text-white text-sm w-full"
+          <a
+            href="https://wa.me/254700000000"
+            target="_blank"
+            rel="noreferrer"
+            className="bg-green-500 hover:bg-green-600 text-white text-sm px-4 py-2 rounded-lg w-full text-center"
+            onClick={() => setOpen(false)}
           >
-            <Link to="/contact" onClick={() => setOpen(false)}>Get a Quote</Link>
-          </Button>
+            WhatsApp Us
+          </a>
         </div>
       </div>
     </nav>

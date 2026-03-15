@@ -97,27 +97,27 @@ export default function Contact() {
         subtitle="We check messages throughout the day. Most people get a reply within a few hours."
       />
 
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-zinc-950">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
 
             {/* Left — Form */}
             <div>
-              <h2 className="text-xl font-bold text-zinc-900 mb-6">Send us a message</h2>
+              <h2 className="text-xl font-bold text-zinc-100 mb-6">Send us a message</h2>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-zinc-700 mb-1">Full Name</label>
+                  <label className="block text-sm font-medium text-zinc-300 mb-1">Full Name</label>
                   <Input
                     name="name"
                     value={form.name}
                     onChange={handleChange}
                     placeholder="e.g. James Mwangi"
                     required
-                    className="h-10 border-zinc-300"
+                    className="h-10 border-zinc-700 bg-zinc-900 text-zinc-100 placeholder:text-zinc-500 focus-visible:ring-white/20 focus-visible:ring-2"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-zinc-700 mb-1">Email</label>
+                  <label className="block text-sm font-medium text-zinc-300 mb-1">Email</label>
                   <Input
                     type="email"
                     name="email"
@@ -125,11 +125,11 @@ export default function Contact() {
                     onChange={handleChange}
                     placeholder="you@example.com"
                     required
-                    className="h-10 border-zinc-300"
+                    className="h-10 border-zinc-700 bg-zinc-900 text-zinc-100 placeholder:text-zinc-500 focus-visible:ring-white/20 focus-visible:ring-2"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-zinc-700 mb-1">
+                  <label className="block text-sm font-medium text-zinc-300 mb-1">
                     Phone Number <span className="text-zinc-400 font-normal">(optional)</span>
                   </label>
                   <Input
@@ -138,16 +138,16 @@ export default function Contact() {
                     value={form.phone}
                     onChange={handleChange}
                     placeholder="+254 7XX XXX XXX"
-                    className="h-10 border-zinc-300"
+                    className="h-10 border-zinc-700 bg-zinc-900 text-zinc-100 placeholder:text-zinc-500 focus-visible:ring-white/20 focus-visible:ring-2"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-zinc-700 mb-1">Service Interested In</label>
+                  <label className="block text-sm font-medium text-zinc-300 mb-1">Service Interested In</label>
                   <Select
                     value={form.service}
                     onValueChange={(val) => setForm((prev) => ({ ...prev, service: val }))}
                   >
-                    <SelectTrigger className="h-10 border-zinc-300 w-full">
+                    <SelectTrigger className="h-10 border-zinc-700 bg-zinc-900 text-zinc-100 w-full focus:ring-white/20 focus:ring-2">
                       <SelectValue placeholder="Select a service..." />
                     </SelectTrigger>
                     <SelectContent>
@@ -158,7 +158,7 @@ export default function Contact() {
                   </Select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-zinc-700 mb-1">Message / Project Brief</label>
+                  <label className="block text-sm font-medium text-zinc-300 mb-1">Message / Project Brief</label>
                   <Textarea
                     name="message"
                     value={form.message}
@@ -166,13 +166,13 @@ export default function Contact() {
                     placeholder="Tell us what you need..."
                     rows={5}
                     required
-                    className="border-zinc-300 resize-none"
+                    className="border-zinc-700 bg-zinc-900 text-zinc-100 placeholder:text-zinc-500 resize-none focus-visible:ring-white/20 focus-visible:ring-2"
                   />
                 </div>
                 <Button
                   type="submit"
                   disabled={loading}
-                  className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-medium h-11 rounded-lg"
+                  className="w-full bg-white text-zinc-900 hover:bg-zinc-100 font-medium h-11 rounded-lg"
                 >
                   {loading ? 'Sending...' : 'Send Message'}
                 </Button>
@@ -181,14 +181,14 @@ export default function Contact() {
 
             {/* Right — Contact details */}
             <div>
-              <h2 className="text-xl font-bold text-zinc-900 mb-6">Contact details</h2>
+              <h2 className="text-xl font-bold text-zinc-100 mb-6">Contact details</h2>
               <div className="space-y-5 mb-8">
                 {contactDetails.map(({ icon, label, value }) => (
                   <div key={label} className="flex items-start gap-3">
-                    <div className="text-emerald-500 mt-0.5 shrink-0">{icon}</div>
+                    <div className="text-zinc-300 mt-0.5 shrink-0">{icon}</div>
                     <div>
-                      <p className="text-xs text-zinc-400 font-medium uppercase tracking-wide">{label}</p>
-                      <p className="text-zinc-800 text-sm mt-0.5">{value}</p>
+                      <p className="text-xs text-zinc-500 font-medium uppercase tracking-wide">{label}</p>
+                      <p className="text-zinc-100 text-sm mt-0.5">{value}</p>
                     </div>
                   </div>
                 ))}
