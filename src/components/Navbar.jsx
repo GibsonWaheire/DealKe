@@ -34,7 +34,7 @@ export default function Navbar() {
             </NavLink>
           ))}
           <a
-            href="https://wa.me/254700000000"
+            href="https://wa.me/254726899113"
             target="_blank"
             rel="noreferrer"
             className="ml-2 bg-emerald-500 hover:bg-emerald-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
@@ -70,7 +70,7 @@ export default function Navbar() {
             </NavLink>
           ))}
           <a
-            href="https://wa.me/254700000000"
+            href="https://wa.me/254726899113"
             target="_blank"
             rel="noreferrer"
             className="bg-emerald-500 hover:bg-emerald-600 text-white text-sm font-medium px-4 py-2.5 rounded-lg text-center transition-colors"

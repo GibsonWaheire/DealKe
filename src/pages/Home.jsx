@@ -8,42 +8,47 @@ import {
   AccordionTrigger,
 } from '../ui/accordion'
 
-const whatsappUrl = 'https://wa.me/254700000000'
+const WA_NUMBER = '254726899113'
+const WA_BASE   = `https://wa.me/${WA_NUMBER}`
+const WA_PHONE  = '+254 726 899 113'
 
+const waLink = (msg) => `${WA_BASE}?text=${encodeURIComponent(msg)}`
+
+// All images: abstract / no visible people
 const heroSlides = [
   {
     headline: 'Websites built properly.',
     sub: 'Live in 5–10 days. Visible pricing. No surprises.',
-    image: 'https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?auto=format&fit=crop&w=1200&q=80',
-    alt: 'Website design workspace',
+    image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1600&q=80',
+    alt: 'Laptop with analytics dashboard',
   },
   {
     headline: 'KRA sorted same day.',
     sub: 'PIN registration, returns filing, eTIMS — done fast.',
-    image: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1200&q=80',
-    alt: 'Business admin work',
+    image: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1600&q=80',
+    alt: 'Pen on documents',
   },
   {
     headline: 'Documents without the queue.',
     sub: 'Contracts, affidavits, Good Conduct — handled from Nairobi.',
-    image: 'https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=1200&q=80',
-    alt: 'Document processing',
+    image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1600&q=80',
+    alt: 'Modern office interior',
   },
   {
     headline: 'One person. Direct answers.',
-    sub: 'You talk to me — not a call centre. WhatsApp me now.',
-    image: 'https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&w=1200&q=80',
-    alt: 'Personal service',
+    sub: 'Talk to me directly on WhatsApp — not a call centre.',
+    image: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1600&q=80',
+    alt: 'Smartphone on desk',
   },
 ]
 
 const featuredServices = [
-  { name: 'KRA PIN Registration', price: 'KES 500', turnaround: 'Same day', note: 'Most requested' },
-  { name: 'KRA PIN Retrieval', price: 'KES 300', turnaround: 'Same day' },
-  { name: 'Car Sale Agreement', price: 'KES 800', turnaround: 'Same day' },
-  { name: 'eCitizen Account Setup', price: 'KES 300', turnaround: 'Same day' },
-  { name: 'Business Name Search', price: 'KES 400', turnaround: 'Same day' },
-  { name: 'Passport Application', price: 'KES 600', turnaround: '1 business day' },
+  { name: 'KRA PIN Registration',  price: 'KES 500',   turnaround: 'Same day',       note: 'Most requested' },
+  { name: 'KRA PIN Retrieval',      price: 'KES 300',   turnaround: 'Same day' },
+  { name: 'Car Sale Agreement',     price: 'KES 800',   turnaround: 'Same day' },
+  { name: 'eCitizen Account Setup', price: 'KES 300',   turnaround: 'Same day' },
+  { name: 'Business Name Search',   price: 'KES 400',   turnaround: 'Same day' },
+  { name: 'Passport Application',   price: 'KES 600',   turnaround: '1 business day' },
 ]
 
 const websitePackages = [
@@ -83,24 +88,30 @@ const faqs = [
 ]
 
 const stats = [
-  { value: '47+', label: 'Projects delivered' },
-  { value: '6', label: 'Counties served' },
+  { value: '47+',      label: 'Projects delivered' },
+  { value: '6',        label: 'Counties served' },
   { value: '4.2 days', label: 'Avg website delivery' },
   { value: 'Same day', label: 'Most document services' },
 ]
 
+const WaIcon = () => (
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" className="shrink-0">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/>
+  </svg>
+)
+
 export default function Home() {
   const [slide, setSlide] = useState(0)
-  const [animating, setAnimating] = useState(true)
+  const [visible, setVisible] = useState(true)
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setAnimating(false)
+      setVisible(false)
       setTimeout(() => {
         setSlide((prev) => (prev + 1) % heroSlides.length)
-        setAnimating(true)
-      }, 200)
-    }, 3800)
+        setVisible(true)
+      }, 500)
+    }, 5000)
     return () => clearInterval(interval)
   }, [])
 
@@ -109,27 +120,27 @@ export default function Home() {
   return (
     <div className="bg-white">
 
-      {/* ── Hero ────────────────────────────────────────────── */}
+      {/* ── Hero ─ full-bleed background slider ───────────── */}
       <section className="relative h-[88vh] min-h-[560px] max-h-[820px] overflow-hidden">
 
-        {/* Background image slides */}
+        {/* Background layers with Ken Burns */}
         {heroSlides.map((s, i) => (
           <div
             key={i}
-            className="absolute inset-0 transition-opacity duration-700"
-            style={{ opacity: i === slide ? 1 : 0 }}
+            className="absolute inset-0 overflow-hidden transition-opacity duration-700"
+            style={{ opacity: i === slide ? 1 : 0, pointerEvents: 'none' }}
           >
             <img
               src={s.image}
               alt={s.alt}
-              className="w-full h-full object-cover"
+              className={`w-full h-full object-cover ${i % 2 === 0 ? 'animate-kb-a' : 'animate-kb-b'}`}
               loading={i === 0 ? 'eager' : 'lazy'}
             />
           </div>
         ))}
 
-        {/* Dark gradient overlay — keeps text readable */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-black/10" />
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/72 via-black/45 to-transparent" />
 
         {/* Content */}
         <div className="relative h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col justify-center">
@@ -139,33 +150,29 @@ export default function Home() {
 
           <div className="mt-5 min-h-[110px]">
             <h1
-              key={slide}
-              className={`text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight max-w-2xl transition-all duration-400 ${animating ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
+              className={`text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight max-w-2xl transition-all duration-500 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
             >
               {current.headline}
             </h1>
             <p
-              key={`sub-${slide}`}
-              className={`text-white/80 text-lg mt-3 max-w-lg transition-all duration-400 ${animating ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-3'}`}
+              className={`text-white/80 text-lg mt-3 max-w-lg transition-all duration-500 delay-100 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-3'}`}
             >
               {current.sub}
             </p>
           </div>
 
-          <p className="text-white/60 text-sm mt-2 max-w-sm">
-            Send your request on WhatsApp. Direct answer, clear price, real delivery time.
+          <p className="text-white/55 text-sm mt-2 max-w-sm">
+            Send your request on WhatsApp. Direct answer, clear price, paid via M-Pesa.
           </p>
 
           <div className="flex flex-wrap gap-3 mt-7">
             <a
-              href={whatsappUrl}
+              href={waLink('Hi, I have an enquiry')}
               target="_blank"
               rel="noreferrer"
               className="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold px-6 py-3 rounded-xl transition-colors shadow-lg"
             >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/>
-              </svg>
+              <WaIcon />
               Chat on WhatsApp
             </a>
             <Link
@@ -176,30 +183,30 @@ export default function Home() {
             </Link>
           </div>
 
-          {/* Slide indicators — bottom left */}
+          {/* Dots */}
           <div className="flex gap-1.5 mt-10">
             {heroSlides.map((_, i) => (
               <button
                 key={i}
-                onClick={() => { setSlide(i); setAnimating(true) }}
-                className={`h-1 rounded-full transition-all duration-300 ${i === slide ? 'w-8 bg-emerald-400' : 'w-2 bg-white/40 hover:bg-white/60'}`}
+                onClick={() => { setSlide(i); setVisible(true) }}
+                className={`h-1 rounded-full transition-all duration-300 ${i === slide ? 'w-8 bg-emerald-400' : 'w-2 bg-white/35 hover:bg-white/55'}`}
                 aria-label={`Slide ${i + 1}`}
               />
             ))}
           </div>
         </div>
 
-        {/* Bottom floating stats bar */}
-        <div className="absolute bottom-0 left-0 right-0 bg-white/10 backdrop-blur-md border-t border-white/20">
+        {/* Bottom frosted bar */}
+        <div className="absolute bottom-0 left-0 right-0 bg-black/30 backdrop-blur-md border-t border-white/15">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 grid grid-cols-3 gap-4">
-            <div><p className="text-white font-semibold text-sm">KRA PIN</p><p className="text-white/60 text-xs">2 hrs</p></div>
-            <div><p className="text-white font-semibold text-sm">Business Website</p><p className="text-white/60 text-xs">4 days</p></div>
-            <div><p className="text-white font-semibold text-sm">Car Agreement</p><p className="text-white/60 text-xs">Same day</p></div>
+            <div><p className="text-white font-semibold text-sm">KRA PIN</p><p className="text-white/55 text-xs">2 hrs</p></div>
+            <div><p className="text-white font-semibold text-sm">Business Website</p><p className="text-white/55 text-xs">4 days</p></div>
+            <div><p className="text-white font-semibold text-sm">Car Agreement</p><p className="text-white/55 text-xs">Same day</p></div>
           </div>
         </div>
       </section>
 
-      {/* ── Stats bar ───────────────────────────────────────── */}
+      {/* ── Stats ──────────────────────────────────────────── */}
       <section className="bg-white border-y border-gray-100 py-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
@@ -213,16 +220,29 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Quick announcement ──────────────────────────────── */}
-      <div className="bg-emerald-500 text-white py-3 text-center text-sm font-medium">
-        📲 Quick order? WhatsApp{' '}
-        <a href={whatsappUrl} target="_blank" rel="noreferrer" className="underline">
-          +254 700 000 000
-        </a>
-        {' '}— get a reply today.
+      {/* ── How it works ───────────────────────────────────── */}
+      <div className="bg-slate-900 text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-0 text-sm">
+            <div className="flex items-center gap-2">
+              <span className="w-5 h-5 rounded-full bg-emerald-500 text-white text-xs font-bold flex items-center justify-center shrink-0">1</span>
+              <span className="text-slate-300">WhatsApp your request</span>
+            </div>
+            <span className="hidden sm:block text-slate-600 mx-4">→</span>
+            <div className="flex items-center gap-2">
+              <span className="w-5 h-5 rounded-full bg-emerald-500 text-white text-xs font-bold flex items-center justify-center shrink-0">2</span>
+              <span className="text-slate-300">Confirm price · Pay via M-Pesa</span>
+            </div>
+            <span className="hidden sm:block text-slate-600 mx-4">→</span>
+            <div className="flex items-center gap-2">
+              <span className="w-5 h-5 rounded-full bg-emerald-500 text-white text-xs font-bold flex items-center justify-center shrink-0">3</span>
+              <span className="text-slate-300">Service delivered — usually same day</span>
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* ── Featured services ───────────────────────────────── */}
+      {/* ── Featured services ──────────────────────────────── */}
       <section id="services" className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-12 items-start">
@@ -231,10 +251,20 @@ export default function Home() {
               <h2 className="text-2xl md:text-3xl font-bold text-slate-900 mb-2">Most requested, fastest turnaround</h2>
               <p className="text-slate-500 text-sm mb-8">Full catalog with 70+ services is on the Services page.</p>
 
-              <div className="divide-y divide-gray-100 border border-gray-100 rounded-xl overflow-hidden">
-                {featuredServices.map((svc) => (
-                  <div key={svc.name} className="flex items-center justify-between gap-4 px-5 py-3.5 bg-white hover:bg-slate-50 transition-colors group">
-                    <div className="flex items-center gap-3 min-w-0">
+              <div className="border border-gray-100 rounded-xl overflow-hidden">
+                {/* Header row */}
+                <div className="grid grid-cols-[1fr_auto_auto_auto] gap-3 px-5 py-2.5 bg-slate-50 border-b border-gray-100">
+                  <span className="text-xs font-semibold text-slate-400 uppercase tracking-wide">Service</span>
+                  <span className="text-xs font-semibold text-slate-400 uppercase tracking-wide text-right">Price</span>
+                  <span className="text-xs font-semibold text-slate-400 uppercase tracking-wide text-right hidden sm:block">Time</span>
+                  <span className="text-xs font-semibold text-slate-400 uppercase tracking-wide text-right">Order</span>
+                </div>
+                {featuredServices.map((svc, i) => (
+                  <div
+                    key={svc.name}
+                    className={`grid grid-cols-[1fr_auto_auto_auto] gap-3 px-5 py-3.5 items-center hover:bg-slate-50 transition-colors ${i > 0 ? 'border-t border-gray-100' : ''}`}
+                  >
+                    <div className="flex items-center gap-2.5 min-w-0">
                       <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0" />
                       <span className="text-slate-800 font-medium text-sm truncate">{svc.name}</span>
                       {svc.note && (
@@ -243,25 +273,23 @@ export default function Home() {
                         </span>
                       )}
                     </div>
-                    <div className="flex items-center gap-4 shrink-0">
-                      <span className="text-slate-900 font-bold text-sm">{svc.price}</span>
-                      <span className="text-slate-400 text-xs hidden sm:inline">{svc.turnaround}</span>
-                      <a
-                        href={`https://wa.me/254700000000?text=${encodeURIComponent(`Hi, I need ${svc.name}`)}`}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-emerald-600 hover:text-emerald-700 text-xs font-semibold group-hover:underline"
-                      >
-                        Order →
-                      </a>
-                    </div>
+                    <span className="text-slate-900 font-bold text-sm text-right whitespace-nowrap">{svc.price}</span>
+                    <span className="text-slate-400 text-xs text-right whitespace-nowrap hidden sm:block">{svc.turnaround}</span>
+                    <a
+                      href={waLink(`Hi, I'd like to order ${svc.name}. Please confirm the price and M-Pesa payment details.`)}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-1 bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-semibold px-2.5 py-1.5 rounded-lg transition-colors whitespace-nowrap"
+                    >
+                      <WaIcon /> Order
+                    </a>
                   </div>
                 ))}
               </div>
 
               <Link
                 to="/services"
-                className="inline-flex items-center gap-1 text-slate-700 hover:text-slate-900 text-sm font-medium mt-5 underline underline-offset-2"
+                className="inline-flex items-center gap-1 text-slate-600 hover:text-slate-900 text-sm font-medium mt-5 underline underline-offset-2"
               >
                 View all 70+ services →
               </Link>
@@ -269,14 +297,14 @@ export default function Home() {
 
             <div className="space-y-4 lg:pt-14">
               <img
-                src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=800&q=80"
-                alt="Business admin support"
+                src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=800&q=80"
+                alt="Documents and pen"
                 className="w-full h-52 object-cover rounded-2xl"
                 loading="lazy"
               />
               <img
-                src="https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?auto=format&fit=crop&w=800&q=80"
-                alt="Website development workspace"
+                src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80"
+                alt="Laptop workspace"
                 className="w-full h-52 object-cover rounded-2xl"
                 loading="lazy"
               />
@@ -285,7 +313,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Website packages ────────────────────────────────── */}
+      {/* ── Website packages ───────────────────────────────── */}
       <section className="py-16 bg-slate-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <p className="text-emerald-600 text-xs font-semibold uppercase tracking-widest mb-3">Website packages</p>
@@ -298,7 +326,7 @@ export default function Home() {
                 key={pkg.name}
                 className={`rounded-2xl p-6 flex flex-col ${
                   pkg.popular
-                    ? 'bg-emerald-500 text-white shadow-lg ring-2 ring-emerald-400'
+                    ? 'bg-emerald-500 shadow-lg ring-2 ring-emerald-400'
                     : 'bg-white border border-gray-200'
                 }`}
               >
@@ -310,27 +338,25 @@ export default function Home() {
                 <h3 className={`text-xl font-bold ${pkg.popular ? 'text-white' : 'text-slate-900'}`}>{pkg.name}</h3>
                 <p className={`text-2xl font-bold mt-1 ${pkg.popular ? 'text-white' : 'text-slate-900'}`}>{pkg.price}</p>
                 <p className={`text-xs mt-0.5 ${pkg.popular ? 'text-emerald-100' : 'text-slate-400'}`}>{pkg.turnaround}</p>
-
                 <ul className="mt-4 space-y-2 flex-1">
                   {pkg.items.map((item) => (
                     <li key={item} className={`flex items-center gap-2 text-sm ${pkg.popular ? 'text-emerald-50' : 'text-slate-600'}`}>
-                      <span className={`w-4 h-4 rounded-full flex items-center justify-center text-xs ${pkg.popular ? 'bg-white/20 text-white' : 'bg-emerald-50 text-emerald-600'}`}>✓</span>
+                      <span className={`w-4 h-4 rounded-full flex items-center justify-center text-xs shrink-0 ${pkg.popular ? 'bg-white/20 text-white' : 'bg-emerald-50 text-emerald-600'}`}>✓</span>
                       {item}
                     </li>
                   ))}
                 </ul>
-
                 <a
-                  href={`https://wa.me/254700000000?text=${encodeURIComponent(`Hi, I'm interested in the ${pkg.name} website package`)}`}
+                  href={waLink(`Hi, I'm interested in the ${pkg.name} website package (${pkg.price}). Please confirm and share M-Pesa payment details.`)}
                   target="_blank"
                   rel="noreferrer"
-                  className={`mt-6 block text-center font-semibold text-sm px-4 py-2.5 rounded-xl transition-colors ${
+                  className={`mt-6 flex items-center justify-center gap-2 font-semibold text-sm px-4 py-2.5 rounded-xl transition-colors ${
                     pkg.popular
                       ? 'bg-white text-emerald-600 hover:bg-emerald-50'
                       : 'bg-slate-900 text-white hover:bg-slate-800'
                   }`}
                 >
-                  Get started →
+                  <WaIcon /> Get started
                 </a>
               </div>
             ))}
@@ -338,14 +364,14 @@ export default function Home() {
 
           <p className="text-slate-400 text-xs text-center mt-6">
             Need something custom?{' '}
-            <a href={whatsappUrl} target="_blank" rel="noreferrer" className="text-slate-600 underline">
+            <a href={waLink('Hi, I need a custom website quote')} target="_blank" rel="noreferrer" className="text-slate-600 underline">
               WhatsApp to discuss
             </a>
           </p>
         </div>
       </section>
 
-      {/* ── Testimonials ────────────────────────────────────── */}
+      {/* ── Testimonials ───────────────────────────────────── */}
       <section className="bg-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <p className="text-emerald-600 text-xs font-semibold uppercase tracking-widest mb-3">Client feedback</p>
@@ -365,7 +391,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── FAQ ─────────────────────────────────────────────── */}
+      {/* ── FAQ ────────────────────────────────────────────── */}
       <section className="bg-slate-50 py-16">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <p className="text-emerald-600 text-xs font-semibold uppercase tracking-widest mb-3">FAQ</p>
@@ -385,7 +411,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Final CTA ───────────────────────────────────────── */}
+      {/* ── Final CTA ──────────────────────────────────────── */}
       <section className="bg-white border-t border-gray-100 py-16 text-center">
         <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
           <p className="text-emerald-600 text-xs font-semibold uppercase tracking-widest mb-3">Get started</p>
@@ -395,15 +421,12 @@ export default function Home() {
           </p>
           <div className="flex flex-wrap justify-center gap-3">
             <a
-              href={whatsappUrl}
+              href={waLink('Hi, I have an enquiry')}
               target="_blank"
               rel="noreferrer"
               className="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold px-7 py-3.5 rounded-xl transition-colors shadow-sm"
             >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/>
-              </svg>
-              Chat on WhatsApp
+              <WaIcon /> Chat on WhatsApp
             </a>
             <Link
               to="/contact"
@@ -412,6 +435,7 @@ export default function Home() {
               Send a quote request
             </Link>
           </div>
+          <p className="text-slate-400 text-xs mt-4">{WA_PHONE} · Mon–Sat, 8am–8pm</p>
         </div>
       </section>
 

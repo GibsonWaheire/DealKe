@@ -32,7 +32,7 @@ const contactDetails = [
       </svg>
     ),
     label: 'WhatsApp',
-    value: '+254 700 000 000',
+    value: '+254 726 899 113',
   },
   {
     icon: (
@@ -201,7 +201,7 @@ export default function Contact() {
                   It's faster and I'm genuinely on it. Most questions get answered within the hour.
                 </p>
                 <a
-                  href="https://wa.me/254700000000"
+                  href="https://wa.me/254726899113"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white text-sm font-medium px-5 py-2.5 rounded-xl transition-colors"

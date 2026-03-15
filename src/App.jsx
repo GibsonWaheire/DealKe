@@ -11,6 +11,9 @@ import Packages from './pages/Packages'
 import Services from './pages/Services'
 import About from './pages/About'
 import Contact from './pages/Contact'
+import PrivacyPolicy from './pages/PrivacyPolicy'
+import TermsOfService from './pages/TermsOfService'
+import RefundPolicy from './pages/RefundPolicy'
 import NotFound from './pages/NotFound'
 
 const queryClient = new QueryClient({
@@ -32,6 +35,9 @@ const RouteTitleManager = () => {
       '/services': 'Other Services | DealKe',
       '/about':    'About Us | DealKe',
       '/contact':  'Get a Quote | DealKe',
+      '/privacy':  'Privacy Policy | DealKe',
+      '/terms':    'Terms of Service | DealKe',
+      '/refund':   'Refund Policy | DealKe',
     }
     document.title = titles[pathname] || 'DealKe | Digital Solutions Kenya'
   }, [pathname])
@@ -52,6 +58,9 @@ const App = () => (
               <Route path="services" element={<Services />} />
               <Route path="about" element={<About />} />
               <Route path="contact" element={<Contact />} />
+              <Route path="privacy" element={<PrivacyPolicy />} />
+              <Route path="terms" element={<TermsOfService />} />
+              <Route path="refund" element={<RefundPolicy />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>

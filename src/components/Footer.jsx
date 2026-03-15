@@ -9,6 +9,12 @@ const quickLinks = [
   { label: 'Contact',  to: '/contact' },
 ]
 
+const policyLinks = [
+  { label: 'Privacy Policy',   to: '/privacy' },
+  { label: 'Terms of Service', to: '/terms' },
+  { label: 'Refund Policy',    to: '/refund' },
+]
+
 export default function Footer() {
   return (
     <footer className="bg-slate-900 text-white">
@@ -25,7 +31,7 @@ export default function Footer() {
               Built and run from Nairobi — every project done personally.
             </p>
             <a
-              href="https://wa.me/254700000000"
+              href="https://wa.me/254726899113"
               target="_blank"
               rel="noreferrer"
               className="inline-flex items-center gap-2 mt-4 bg-emerald-500 hover:bg-emerald-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
@@ -51,14 +57,24 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Contact */}
+          {/* Contact + Legal */}
           <div>
             <h4 className="text-white font-semibold mb-4 text-sm uppercase tracking-wide">Contact</h4>
             <ul className="space-y-2.5 text-slate-400 text-sm">
-              <li>+254 700 000 000</li>
+              <li>+254 726 899 113</li>
               <li>hello@dealke.co.ke</li>
               <li>Nairobi, Kenya</li>
               <li className="text-slate-500 text-xs pt-1">Mon–Sat · 8am–8pm</li>
+            </ul>
+            <h4 className="text-white font-semibold mt-6 mb-3 text-sm uppercase tracking-wide">Legal</h4>
+            <ul className="space-y-2">
+              {policyLinks.map(({ label, to }) => (
+                <li key={to}>
+                  <Link to={to} className="text-slate-400 hover:text-white text-xs transition-colors">
+                    {label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 

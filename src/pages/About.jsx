@@ -99,7 +99,7 @@ export default function About() {
                   </div>
                 </div>
                 <a
-                  href="https://wa.me/254700000000"
+                  href="https://wa.me/254726899113"
                   target="_blank"
                   rel="noreferrer"
                   className="block mt-5 text-center bg-emerald-500 hover:bg-emerald-600 text-white text-sm font-medium py-2.5 rounded-xl transition-colors"

@@ -62,6 +62,22 @@ body {
 .animate-scale-in     { animation: scaleIn 0.6s ease both; }
 .animate-rotate-fade  { animation: rotateFade 3.2s ease both; }
 
+/* ── Ken Burns slow zoom ──────────────────────────────── */
+
+@keyframes kenBurnsA {
+  0%   { transform: scale(1.0)  translate(0%,    0%); }
+  50%  { transform: scale(1.10) translate(-1.5%, -1%); }
+  100% { transform: scale(1.0)  translate(0%,    0%); }
+}
+@keyframes kenBurnsB {
+  0%   { transform: scale(1.08) translate(-1%,  0.5%); }
+  50%  { transform: scale(1.0)  translate(0%,   0%); }
+  100% { transform: scale(1.08) translate(-1%,  0.5%); }
+}
+
+.animate-kb-a { animation: kenBurnsA 16s ease-in-out infinite; }
+.animate-kb-b { animation: kenBurnsB 16s ease-in-out infinite; }
+
 .delay-100 { animation-delay: 0.1s; }
 .delay-200 { animation-delay: 0.2s; }
 .delay-300 { animation-delay: 0.3s; }
