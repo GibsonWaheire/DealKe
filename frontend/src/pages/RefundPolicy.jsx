@@ -88,7 +88,7 @@ export default function RefundPolicy() {
             <p>
               Contact us via WhatsApp at <strong className="text-slate-800">+254 726 899 113</strong>{' '}
               or email{' '}
-              <a href="mailto:hello@dealflow.co.ke" className="text-emerald-600 underline">hello@dealflow.co.ke</a>.
+              <a href="mailto:iknus.xmc@gmail.com" className="text-emerald-600 underline">iknus.xmc@gmail.com</a>.
               Include your name, the service ordered, and the reason for the request. We will
               respond within 1 business day and process eligible refunds via M-Pesa within 3
               business days.

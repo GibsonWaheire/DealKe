@@ -3,8 +3,10 @@ import { Link } from 'react-router-dom'
 
 const quickLinks = [
   { label: 'Home',     to: '/' },
-  { label: 'Packages', to: '/packages' },
   { label: 'Services', to: '/services' },
+  { label: 'Packages', to: '/packages' },
+  { label: 'Shop',     to: '/shop' },
+  { label: 'Blog',     to: '/blog' },
   { label: 'About',    to: '/about' },
   { label: 'Contact',  to: '/contact' },
 ]
@@ -23,11 +25,16 @@ export default function Footer() {
 
           {/* Brand */}
           <div className="md:col-span-2">
-            <Link to="/" className="text-xl font-bold tracking-tight">
-              <span className="text-white">Deal</span><span className="text-emerald-400">Ke</span>
+            <Link to="/" className="flex items-center gap-2 shrink-0">
+              <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-emerald-500">
+                <span className="text-white font-bold text-sm tracking-tight">DF</span>
+              </span>
+              <span className="text-xl font-bold tracking-tight">
+                <span className="text-white">Deal</span><span className="text-emerald-400">Flow</span>
+              </span>
             </Link>
             <p className="text-slate-400 text-sm mt-3 max-w-xs leading-relaxed">
-              Websites and digital services for Kenyan businesses.
+              Websites, digital services, templates and tools for Kenyan businesses.
               Built and run from Nairobi — every project done personally.
             </p>
             <a
@@ -62,7 +69,7 @@ export default function Footer() {
             <h4 className="text-white font-semibold mb-4 text-sm uppercase tracking-wide">Contact</h4>
             <ul className="space-y-2.5 text-slate-400 text-sm">
               <li>+254 726 899 113</li>
-              <li>hello@dealflow.co.ke</li>
+              <li>iknus.xmc@gmail.com</li>
               <li>Nairobi, Kenya</li>
               <li className="text-slate-500 text-xs pt-1">Mon–Sat · 8am–8pm</li>
             </ul>

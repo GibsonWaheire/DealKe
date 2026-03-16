@@ -17,7 +17,7 @@ const websiteTypes = [
     emoji: '🎯',
     tagline: 'One page. One goal. One CTA.',
     bestFor: 'Product launches, campaigns, single services, events',
-    price: 'KES 12,000',
+    price: 'KES 6,000',
     turnaround: '3–5 days',
     features: [
       'Single scrollable page',
@@ -52,7 +52,7 @@ const websiteTypes = [
     emoji: '🏢',
     tagline: 'Built to rank, convert, and impress.',
     bestFor: 'Growing businesses, service companies, restaurants, schools',
-    price: 'KES 40,000',
+    price: 'KES 18,000',
     turnaround: '7–10 days',
     popular: true,
     features: [
@@ -223,7 +223,7 @@ export default function Packages() {
                 </thead>
                 <tbody className="divide-y divide-gray-50">
                   {[
-                    ['Price',           'KES 12,000',  'KES 22,000',  'KES 40,000',  'KES 80,000'],
+                    ['Price',           'KES 6,000',  'KES 22,000',  'KES 18,000',  'KES 80,000'],
                     ['Turnaround',      '3–5 days',    '5–7 days',    '7–10 days',   '14–21 days'],
                     ['Pages',           '1 page',      'Up to 4',     'Up to 8',     'Unlimited'],
                     ['SEO',             'Basic',       'Basic',       'Full',        'Advanced'],

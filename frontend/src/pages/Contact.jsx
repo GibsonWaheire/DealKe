@@ -42,7 +42,7 @@ const contactDetails = [
       </svg>
     ),
     label: 'Email',
-    value: 'hello@dealflow.co.ke',
+    value: 'iknus.xmc@gmail.com',
   },
   {
     icon: (

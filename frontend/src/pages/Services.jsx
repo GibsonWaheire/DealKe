@@ -78,9 +78,9 @@ const services = [
   { name: 'KJSEA Results Check', price: 'KES 30', turnaround: 'Same day', category: 'Documents' },
   { name: 'KJSEA Placement Check', price: 'KES 30', turnaround: 'Same day', category: 'Documents' },
 
-  { name: 'Landing Page', price: 'KES 12,000', turnaround: '3–5 days', category: 'Websites' },
+  { name: 'Landing Page', price: 'KES 6,000', turnaround: '3–5 days', category: 'Websites' },
   { name: 'Simple Website', price: 'KES 22,000', turnaround: '5–7 days', category: 'Websites' },
-  { name: 'Business Website', price: 'KES 40,000', turnaround: '7–10 days', category: 'Websites', note: 'Popular' },
+  { name: 'Business Website', price: 'KES 18,000', turnaround: '7–10 days', category: 'Websites', note: 'Popular' },
   { name: 'E-commerce Website', price: 'KES 80,000', turnaround: '14–21 days', category: 'Websites' },
 
   // Social Media & Design
@@ -135,7 +135,7 @@ const services = [
   { name: 'POS System Setup (retail shop)', price: 'KES 5,000', turnaround: '1 business day', category: 'POS & ERP', note: 'Popular' },
   { name: 'POS System Setup (restaurant/hotel)', price: 'KES 8,000', turnaround: '1–2 business days', category: 'POS & ERP' },
   { name: 'POS System Setup (pharmacy)', price: 'KES 8,000', turnaround: '1–2 business days', category: 'POS & ERP' },
-  { name: 'POS System Setup (supermarket)', price: 'KES 12,000', turnaround: '2–3 business days', category: 'POS & ERP' },
+  { name: 'POS System Setup (supermarket)', price: 'KES 6,000', turnaround: '2–3 business days', category: 'POS & ERP' },
   { name: 'Receipt Printer Setup & Test', price: 'KES 1,500', turnaround: 'Same day', category: 'POS & ERP' },
   { name: 'Barcode Scanner Setup', price: 'KES 1,000', turnaround: 'Same day', category: 'POS & ERP' },
   { name: 'Staff POS Training (per session)', price: 'KES 3,000', turnaround: '1 business day', category: 'POS & ERP' },
@@ -143,7 +143,7 @@ const services = [
   { name: 'Odoo CRM Module', price: 'KES 15,000', turnaround: '3–5 business days', category: 'POS & ERP' },
   { name: 'Odoo Accounting Module', price: 'KES 20,000', turnaround: '3–5 business days', category: 'POS & ERP' },
   { name: 'Odoo Inventory Module', price: 'KES 15,000', turnaround: '3–5 business days', category: 'POS & ERP' },
-  { name: 'Odoo Point of Sale Module', price: 'KES 12,000', turnaround: '2–3 business days', category: 'POS & ERP' },
+  { name: 'Odoo Point of Sale Module', price: 'KES 6,000', turnaround: '2–3 business days', category: 'POS & ERP' },
   { name: 'Odoo Full ERP (all modules)', price: 'from KES 50,000', turnaround: 'Quoted', category: 'POS & ERP', note: 'Enterprise' },
   { name: 'Odoo Staff Training', price: 'KES 5,000/day', turnaround: 'Agreed', category: 'POS & ERP' },
 ]
