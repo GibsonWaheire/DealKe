@@ -1,4 +1,6 @@
 User-agent: *
 Allow: /
+Disallow: /admin-login
+Disallow: /admin-blog
 
-Sitemap: https://dealflow.co.ke/sitemap.xml
+Sitemap: https://draftit.co.ke/sitemap.xml
