@@ -1,5 +1,6 @@
 // src/pages/Shop.jsx
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import PageHeader from '../components/PageHeader'
 
 const WA = '254726899113'
@@ -134,9 +135,71 @@ const shopCategories = [
 ]
 
 export default function Shop() {
+  const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState('print')
+  const [typeFilter, setTypeFilter] = useState('all')
+  const [query, setQuery] = useState('')
+  const [sortBy, setSortBy] = useState('featured')
+  const [cart, setCart] = useState([])
 
   const activeCategory = shopCategories.find(c => c.id === activeTab)
+  const visibleItems = useMemo(() => {
+    if (!activeCategory) return []
+    const normalized = query.trim().toLowerCase()
+    let items = activeCategory.items.filter((item) => {
+      const matchesQuery = !normalized || item.name.toLowerCase().includes(normalized)
+      const matchesType = typeFilter === 'all' || item.type === typeFilter
+      return matchesQuery && matchesType
+    })
+    if (sortBy === 'price-low') items = [...items].sort((a, b) => a.price - b.price)
+    if (sortBy === 'price-high') items = [...items].sort((a, b) => b.price - a.price)
+    if (sortBy === 'name') items = [...items].sort((a, b) => a.name.localeCompare(b.name))
+    return items
+  }, [activeCategory, query, typeFilter, sortBy])
+
+  const cartTotal = cart.reduce((sum, item) => sum + item.price * item.qty, 0)
+  const cartCount = cart.reduce((sum, item) => sum + item.qty, 0)
+
+  const addToCart = (item) => {
+    setCart((prev) => {
+      const exists = prev.find((p) => p.name === item.name)
+      if (exists) {
+        return prev.map((p) => (p.name === item.name ? { ...p, qty: p.qty + 1 } : p))
+      }
+      return [...prev, { ...item, qty: 1 }]
+    })
+  }
+
+  const updateQty = (name, delta) => {
+    setCart((prev) =>
+      prev
+        .map((item) => (item.name === name ? { ...item, qty: Math.max(0, item.qty + delta) } : item))
+        .filter((item) => item.qty > 0)
+    )
+  }
+
+  const buyNow = (item) => {
+    navigate('/order', {
+      state: {
+        serviceName: item.name,
+        price: item.price,
+        currency: 'KES',
+        category: 'Shop',
+      },
+    })
+  }
+
+  const checkoutCart = () => {
+    if (!cartTotal) return
+    navigate('/order', {
+      state: {
+        serviceName: `Shop Order (${cartCount} item${cartCount > 1 ? 's' : ''})`,
+        price: cartTotal,
+        currency: 'KES',
+        category: 'Shop',
+      },
+    })
+  }
 
   return (
     <div className="bg-white">
@@ -168,45 +231,128 @@ export default function Shop() {
             ))}
           </div>
 
-          {/* Products grid */}
           {activeCategory && (
-            <>
-              <div className="flex items-center gap-3 mb-6">
-                <span className="text-2xl">{activeCategory.icon}</span>
-                <h2 className="text-xl font-bold text-slate-900">{activeCategory.label}</h2>
-                <span className="text-slate-400 text-sm">({activeCategory.items.length} items)</span>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                {activeCategory.items.map((item) => {
-                  const badge = TYPE_BADGE[item.type]
-                  return (
-                    <div key={item.name} className="bg-white border border-gray-100 rounded-2xl p-5 flex flex-col gap-3 hover:shadow-md hover:-translate-y-0.5 transition-all">
-                      <div className="flex items-start justify-between gap-2">
-                        <p className="text-slate-800 font-semibold text-sm leading-snug flex-1">{item.name}</p>
-                        <span className={`shrink-0 text-xs font-semibold px-2 py-0.5 rounded-full border ${badge.cls}`}>
-                          {badge.label}
-                        </span>
+            <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-8 items-start">
+              <div>
+                <div className="flex flex-wrap items-center gap-3 mb-6">
+                  <span className="text-2xl">{activeCategory.icon}</span>
+                  <h2 className="text-xl font-bold text-slate-900">{activeCategory.label}</h2>
+                  <span className="text-slate-400 text-sm">({visibleItems.length} items)</span>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_auto] gap-3 mb-6">
+                  <input
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    placeholder="Search products..."
+                    className="w-full h-11 px-4 border border-gray-200 rounded-xl text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-zinc-300 text-sm"
+                  />
+                  <select
+                    value={typeFilter}
+                    onChange={(e) => setTypeFilter(e.target.value)}
+                    className="h-11 px-3 border border-gray-200 rounded-xl text-slate-700 bg-white text-sm"
+                  >
+                    <option value="all">All types</option>
+                    <option value="digital">Digital</option>
+                    <option value="physical">Physical</option>
+                    <option value="software">Software</option>
+                    <option value="service">Service</option>
+                  </select>
+                  <select
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value)}
+                    className="h-11 px-3 border border-gray-200 rounded-xl text-slate-700 bg-white text-sm"
+                  >
+                    <option value="featured">Featured</option>
+                    <option value="price-low">Price: Low to high</option>
+                    <option value="price-high">Price: High to low</option>
+                    <option value="name">Name: A-Z</option>
+                  </select>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4">
+                  {visibleItems.map((item) => {
+                    const badge = TYPE_BADGE[item.type]
+                    return (
+                      <div key={item.name} className="bg-white border border-gray-100 rounded-2xl p-5 flex flex-col gap-3 hover:shadow-md hover:-translate-y-0.5 transition-all">
+                        <div className="flex items-start justify-between gap-2">
+                          <p className="text-slate-800 font-semibold text-sm leading-snug flex-1">{item.name}</p>
+                          <span className={`shrink-0 text-xs font-semibold px-2 py-0.5 rounded-full border ${badge.cls}`}>
+                            {badge.label}
+                          </span>
+                        </div>
+                        <div className="mt-auto">
+                          <p className="text-slate-900 font-black text-lg mb-3">KES {item.price.toLocaleString()}</p>
+                          <div className="grid grid-cols-2 gap-2">
+                            <button
+                              onClick={() => addToCart(item)}
+                              className="inline-flex items-center justify-center border border-gray-200 hover:border-gray-400 text-slate-700 text-xs font-bold px-3 py-2 rounded-lg transition-colors"
+                            >
+                              Add to cart
+                            </button>
+                            <button
+                              onClick={() => buyNow(item)}
+                              className="inline-flex items-center justify-center bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-bold px-3 py-2 rounded-lg transition-colors"
+                            >
+                              Buy now
+                            </button>
+                          </div>
+                        </div>
                       </div>
-                      <div className="mt-auto flex items-center justify-between">
-                        <span className="text-slate-900 font-black text-lg">KES {item.price.toLocaleString()}</span>
-                        <a
-                          href={waLink(`Hi, I'd like to order "${item.name}" — KES ${item.price.toLocaleString()}. Please confirm availability and M-Pesa payment details.`)}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="inline-flex items-center gap-1.5 bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-bold px-3 py-2 rounded-lg transition-colors"
-                        >
-                          <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/>
-                          </svg>
-                          Order
-                        </a>
+                    )
+                  })}
+                </div>
+                {!visibleItems.length && (
+                  <div className="bg-slate-50 border border-gray-100 rounded-2xl p-8 text-center mt-2">
+                    <p className="text-slate-700 font-semibold">No products found.</p>
+                    <p className="text-slate-500 text-sm mt-1">Try a different category, type, or search term.</p>
+                  </div>
+                )}
+              </div>
+              <aside className="lg:sticky lg:top-24 bg-white border border-gray-100 rounded-2xl p-5">
+                <p className="text-slate-900 font-bold text-base">Your cart</p>
+                <p className="text-slate-500 text-xs mt-1 mb-4">{cartCount} item{cartCount !== 1 ? 's' : ''}</p>
+                {cart.length ? (
+                  <div className="space-y-3">
+                    {cart.map((item) => (
+                      <div key={item.name} className="rounded-xl border border-gray-100 p-3">
+                        <p className="text-slate-800 text-sm font-medium leading-snug">{item.name}</p>
+                        <div className="flex items-center justify-between mt-2">
+                          <p className="text-slate-900 font-semibold text-sm">KES {(item.price * item.qty).toLocaleString()}</p>
+                          <div className="flex items-center gap-2">
+                            <button onClick={() => updateQty(item.name, -1)} className="w-7 h-7 rounded-md border border-gray-200 text-slate-600 hover:border-gray-400">-</button>
+                            <span className="text-sm font-semibold text-slate-800 w-5 text-center">{item.qty}</span>
+                            <button onClick={() => updateQty(item.name, 1)} className="w-7 h-7 rounded-md border border-gray-200 text-slate-600 hover:border-gray-400">+</button>
+                          </div>
                       </div>
                     </div>
-                  )
-                })}
-              </div>
-            </>
+                    ))}
+                    <div className="pt-3 border-t border-gray-100">
+                      <div className="flex items-center justify-between">
+                        <span className="text-slate-500 text-sm">Subtotal</span>
+                        <span className="text-slate-900 text-lg font-bold">KES {cartTotal.toLocaleString()}</span>
+                      </div>
+                      <button
+                        onClick={checkoutCart}
+                        className="mt-3 w-full bg-slate-900 hover:bg-slate-800 text-white font-semibold py-2.5 rounded-xl transition-colors"
+                      >
+                        Proceed to checkout
+                      </button>
+                      <a
+                        href={waLink(`Hi, I'd like to order these items: ${cart.map((i) => `${i.name} x${i.qty}`).join(', ')}. Total KES ${cartTotal.toLocaleString()}. Please confirm availability.`)}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="mt-2 w-full inline-flex items-center justify-center bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-2.5 rounded-xl transition-colors text-sm"
+                      >
+                        Checkout on WhatsApp
+                      </a>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="bg-slate-50 border border-gray-100 rounded-xl p-4">
+                    <p className="text-slate-600 text-sm">Your cart is empty. Add products to continue.</p>
+                  </div>
+                )}
+              </aside>
+            </div>
           )}
 
           {/* CTA */}

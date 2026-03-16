@@ -27,10 +27,10 @@ export default function Footer() {
           <div className="md:col-span-2">
             <Link to="/" className="flex items-center gap-2 shrink-0">
               <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-emerald-500">
-                <span className="text-white font-bold text-sm tracking-tight">DF</span>
+                <span className="text-white font-bold text-sm tracking-tight">DI</span>
               </span>
               <span className="text-xl font-bold tracking-tight">
-                <span className="text-white">Deal</span><span className="text-emerald-400">Flow</span>
+                <span className="text-white">Draft</span><span className="text-emerald-400">-It</span>
               </span>
             </Link>
             <p className="text-slate-400 text-sm mt-3 max-w-xs leading-relaxed">
@@ -90,7 +90,7 @@ export default function Footer() {
 
       <div className="border-t border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row items-center justify-between gap-2">
-          <p className="text-slate-500 text-sm">© 2026 DealFlow. All rights reserved.</p>
+          <p className="text-slate-500 text-sm">© 2026 Draft-It. All rights reserved.</p>
           <p className="text-slate-500 text-sm">Made in Kenya 🇰🇪</p>
         </div>
       </div>

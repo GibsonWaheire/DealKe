@@ -26,10 +26,10 @@ export default function Navbar() {
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2 shrink-0">
           <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-emerald-500">
-            <span className="text-white font-bold text-sm tracking-tight">DF</span>
+            <span className="text-white font-bold text-sm tracking-tight">DI</span>
           </span>
           <span className="text-xl font-bold tracking-tight">
-            <span className="text-slate-900">Deal</span><span className="text-emerald-500">Flow</span>
+            <span className="text-slate-900">Draft</span><span className="text-emerald-500">-It</span>
           </span>
         </Link>
 

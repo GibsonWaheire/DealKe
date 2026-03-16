@@ -21,40 +21,40 @@ import AdminBlog from './pages/AdminBlog'
 import OrderPage from './pages/OrderPage'
 import NotFound from './pages/NotFound'
 
-const SITE = 'https://dealflow.co.ke'
+const SITE = 'https://draftit.co.ke'
 
 const pageMeta = {
   '/': {
-    title: 'DealFlow | Websites, Digital Services & Tools in Kenya',
-    description: 'Websites, KRA registration, IT support, POS systems, templates, calculators and more for Kenyan businesses. From KES 6,000. WhatsApp +254 726 899 113.',
+    title: 'Draft-It | Websites, KRA Registration & Digital Services in Kenya',
+    description: 'Draft-It — websites from KES 6,000, KRA PIN registration, eTIMS, NTSA, business registration, IT support, CCTV, POS & ERP for Kenyan businesses. WhatsApp +254 726 899 113.',
   },
   '/packages': {
-    title: 'Website Packages & Pricing | DealFlow',
-    description: 'Website packages from KES 6,000. Landing pages, business sites, and e-commerce stores built for Kenyan businesses with fixed pricing and fast turnaround.',
+    title: 'Website Packages Kenya | Affordable Web Design — Draft-It',
+    description: 'Website packages from KES 6,000. Landing pages, business websites, and e-commerce stores built for Kenyan businesses. Fixed pricing, fast turnaround, personal service.',
   },
   '/services': {
-    title: 'Digital Services in Kenya | DealFlow',
-    description: 'KRA PIN, eTIMS, NHIF/NSSF, social media, CCTV, home & office networking, POS systems, Odoo ERP and more — all services in one place.',
+    title: 'KRA Registration, eCitizen & Digital Services in Kenya | Draft-It',
+    description: 'KRA PIN registration, eTIMS, NTSA services, eCitizen, NSSF & SHA, business registration, CCTV installation, IT support, POS & Odoo ERP — Nairobi, Kenya.',
   },
   '/shop': {
-    title: 'Shop | DealFlow — Software, Hardware & Digital Products',
-    description: 'Buy POS software, barcode scanners, digital templates, office equipment, and more. Order via WhatsApp, pay via M-Pesa.',
+    title: 'Shop | POS Software, Hardware & Digital Products Kenya — Draft-It',
+    description: 'Buy POS software, barcode scanners, receipt printers, digital templates and office equipment in Kenya. Order via WhatsApp, pay via M-Pesa.',
   },
   '/blog': {
-    title: 'Blog | DealFlow — Business & Tech Tips for Kenya',
-    description: 'Articles on running a business in Kenya, KRA tips, tech guides, and DealFlow updates.',
+    title: 'Blog | Business & Tech Tips for Kenya — Draft-It',
+    description: 'Guides on KRA registration, running a business in Kenya, web design tips, eCitizen services, and Draft-It updates.',
   },
   '/about': {
-    title: 'About DealFlow | Nairobi Digital Agency',
-    description: 'DealFlow is a Nairobi-based digital agency helping small businesses get online, stay KRA-compliant, and run better with the right tools.',
+    title: 'About Draft-It | Nairobi Digital Services Agency',
+    description: 'Draft-It is a Nairobi-based digital agency helping Kenyan small businesses get online, stay KRA-compliant, and run better with affordable tech solutions.',
   },
   '/contact': {
-    title: 'Get a Quote | DealFlow',
-    description: 'Contact DealFlow for websites, KRA services, IT support, and more. WhatsApp +254 726 899 113 or email iknus.xmc@gmail.com.',
+    title: 'Get a Quote | Draft-It — Digital Services Kenya',
+    description: 'Contact Draft-It for website design, KRA registration, IT support, CCTV, and more. WhatsApp +254 726 899 113 or email iknus.xmc@gmail.com.',
   },
-  '/privacy':  { title: 'Privacy Policy | DealFlow', description: 'How DealFlow collects, uses, and protects your personal information.' },
-  '/terms':    { title: 'Terms of Service | DealFlow', description: 'Terms and conditions for using DealFlow services.' },
-  '/refund':   { title: 'Refund Policy | DealFlow', description: 'DealFlow refund and cancellation policy for digital services.' },
+  '/privacy':  { title: 'Privacy Policy | Draft-It', description: 'How Draft-It collects, uses, and protects your personal information.' },
+  '/terms':    { title: 'Terms of Service | Draft-It', description: 'Terms and conditions for using Draft-It digital services in Kenya.' },
+  '/refund':   { title: 'Refund Policy | Draft-It', description: 'Draft-It refund and cancellation policy for digital services.' },
 }
 
 const queryClient = new QueryClient({
@@ -63,7 +63,7 @@ const queryClient = new QueryClient({
 
 const SeoManager = () => {
   const { pathname } = useLocation()
-  const meta = pageMeta[pathname] || { title: 'DealFlow | Digital Services Kenya', description: 'Affordable digital services for Kenyan businesses.' }
+  const meta = pageMeta[pathname] || { title: 'Draft-It | Digital Services Kenya', description: 'Affordable digital services for Kenyan businesses.' }
   const canonical = `${SITE}${pathname}`
   return (
     <Helmet>
