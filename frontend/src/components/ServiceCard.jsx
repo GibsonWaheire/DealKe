@@ -1,5 +1,5 @@
 // src/components/ServiceCard.jsx
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 export default function ServiceCard({
   name,
@@ -10,6 +10,19 @@ export default function ServiceCard({
   category,
   note,
 }) {
+  const navigate = useNavigate()
+
+  const handleOrder = () => {
+    navigate('/order', {
+      state: {
+        serviceName: name,
+        price: typeof price === 'number' ? price : parseInt(String(price).replace(/[^0-9]/g, ''), 10) || 0,
+        currency,
+        category,
+      },
+    })
+  }
+
   return (
     <div className="bg-zinc-900 border border-zinc-700 rounded-xl p-5 flex flex-col gap-3 transition-shadow hover:shadow-md">
       <div className="flex items-start justify-between gap-2">
@@ -45,12 +58,12 @@ export default function ServiceCard({
           </span>
         )}
       </div>
-      <Link
-        to="/contact"
+      <button
+        onClick={handleOrder}
         className="mt-1 inline-flex items-center justify-center w-full bg-white hover:bg-zinc-100 text-zinc-900 text-sm font-medium py-2 rounded-lg transition-colors"
       >
         Order Now
-      </Link>
+      </button>
     </div>
   )
 }

@@ -1,6 +1,7 @@
 // src/pages/Home.jsx
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import PackageCard from '../components/PackageCard'
 import {
   Accordion,
   AccordionContent,
@@ -63,28 +64,33 @@ const featuredServices = [
   { name: 'Logo Design',               price: 'KES 2,500', turnaround: '2 business days' },
 ]
 
-const websitePackages = [
+const homePackages = [
   {
     name: 'Landing Page',
-    price: 'KES 6,000',
+    price: 6000,
+    currency: 'KES',
     turnaround: '3–5 days',
-    bestFor: 'Campaigns, single products, events',
-    items: ['1 scrollable page', 'WhatsApp / CTA button', 'Mobile responsive', '2 revision rounds'],
+    features: ['Single scrollable page', '3–5 content sections', 'Contact / WhatsApp CTA', 'Mobile responsive', 'Basic SEO (title + meta)', '2 revision rounds'],
+    popular: false,
+    cta: 'Get This Package',
   },
   {
     name: 'Business Website',
-    price: 'KES 18,000',
+    price: 18000,
+    currency: 'KES',
     turnaround: '7–10 days',
-    bestFor: 'Growing businesses, services, restaurants',
-    items: ['Up to 8 pages', 'Full SEO + Analytics', 'WhatsApp chat integration', '3 revision rounds'],
+    features: ['Up to 8 pages', 'SEO optimized', 'Blog / news section', 'Google Analytics setup', 'WhatsApp chat button', 'Google Maps integration', 'Social media links', '3 revision rounds'],
     popular: true,
+    cta: 'Get This Package',
   },
   {
     name: 'E-commerce',
-    price: 'KES 80,000',
+    price: 80000,
+    currency: 'KES',
     turnaround: '14–21 days',
-    bestFor: 'Shops, retailers, online stores',
-    items: ['Full online store', 'M-Pesa STK push', 'Admin dashboard', 'Priority support'],
+    features: ['Full online store', 'M-Pesa payment integration', 'Product catalog (up to 50 items)', 'Order management dashboard', 'Customer accounts', 'Mobile responsive', 'Advanced SEO', 'Priority support', '5 revision rounds'],
+    popular: false,
+    cta: 'Get This Package',
   },
 ]
 
@@ -260,7 +266,10 @@ const WaIcon = () => (
   </svg>
 )
 
+const parsePrice = (str) => parseInt(String(str).replace(/[^0-9]/g, ''), 10) || 0
+
 export default function Home() {
+  const navigate = useNavigate()
   const [slide, setSlide] = useState(0)
   const [visible, setVisible] = useState(true)
 
@@ -465,14 +474,12 @@ export default function Home() {
                     </div>
                     <span className="text-slate-900 font-bold text-sm text-right whitespace-nowrap">{svc.price}</span>
                     <span className="text-slate-400 text-xs text-right whitespace-nowrap hidden sm:block">{svc.turnaround}</span>
-                    <a
-                      href={waLink(`Hi, I'd like to order ${svc.name}. Please confirm the price and M-Pesa payment details.`)}
-                      target="_blank"
-                      rel="noreferrer"
+                    <button
+                      onClick={() => navigate('/order', { state: { serviceName: svc.name, price: parsePrice(svc.price), currency: 'KES', category: 'Services' } })}
                       className="inline-flex items-center gap-1 bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-semibold px-2.5 py-1.5 rounded-lg transition-colors whitespace-nowrap"
                     >
-                      <WaIcon /> Order
-                    </a>
+                      Order →
+                    </button>
                   </div>
                 ))}
               </div>
@@ -581,76 +588,10 @@ export default function Home() {
           </div>
 
           {/* Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
-            {websitePackages.map((pkg, idx) => {
-              const topColors = ['bg-slate-400', 'bg-emerald-500', 'bg-violet-500']
-              return (
-                <div
-                  key={pkg.name}
-                  className={`relative flex flex-col rounded-2xl bg-white transition-all duration-200 ${
-                    pkg.popular
-                      ? 'border-2 border-emerald-500 shadow-2xl shadow-emerald-100 scale-[1.02]'
-                      : 'border border-gray-200 shadow-sm hover:shadow-lg hover:-translate-y-1'
-                  }`}
-                >
-                  {/* Top color stripe */}
-                  <div className={`h-1.5 rounded-t-2xl ${topColors[idx]}`} />
-
-                  <div className="p-7 flex flex-col flex-1">
-                    {pkg.popular && (
-                      <span className="self-start bg-emerald-500 text-white text-xs font-bold px-3 py-1 rounded-full mb-4 shadow-sm">
-                        ★ Most Popular
-                      </span>
-                    )}
-
-                    <h3 className="text-xl font-bold text-slate-900">{pkg.name}</h3>
-                    <p className="text-slate-400 text-xs mt-1">{pkg.bestFor}</p>
-
-                    {/* Price block */}
-                    <div className="mt-6 pb-6 border-b border-gray-100">
-                      <div className="flex items-baseline gap-1">
-                        <span className="text-sm font-semibold text-slate-400">KES</span>
-                        <span className="text-5xl font-black text-slate-900 tracking-tight">
-                          {pkg.price.replace('KES ', '').replace(',', ',')}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-1.5 mt-2">
-                        <svg className="text-emerald-500 shrink-0" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                          <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
-                        </svg>
-                        <span className="text-slate-400 text-xs">Delivered in {pkg.turnaround}</span>
-                      </div>
-                    </div>
-
-                    {/* Features */}
-                    <ul className="mt-5 space-y-3 flex-1">
-                      {pkg.items.map((item) => (
-                        <li key={item} className="flex items-start gap-2.5 text-sm text-slate-600">
-                          <svg className="text-emerald-500 mt-0.5 shrink-0" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                            <polyline points="20 6 9 17 4 12"/>
-                          </svg>
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-
-                    {/* CTA */}
-                    <a
-                      href={waLink(`Hi, I'm interested in the ${pkg.name} website package (${pkg.price}). Please confirm and share M-Pesa payment details.`)}
-                      target="_blank"
-                      rel="noreferrer"
-                      className={`mt-8 flex items-center justify-center gap-2 font-bold text-sm px-4 py-3.5 rounded-xl transition-all ${
-                        pkg.popular
-                          ? 'bg-emerald-500 hover:bg-emerald-600 text-white shadow-lg shadow-emerald-200'
-                          : 'bg-slate-900 hover:bg-slate-800 text-white'
-                      }`}
-                    >
-                      <WaIcon /> Get started
-                    </a>
-                  </div>
-                </div>
-              )
-            })}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
+            {homePackages.map((pkg) => (
+              <PackageCard key={pkg.name} {...pkg} />
+            ))}
           </div>
 
           {/* Footer row */}
