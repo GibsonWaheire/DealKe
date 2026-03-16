@@ -1,5 +1,9 @@
 # DraftIt TODO
 
+## Vercel Deployment
+- [x] Add vercel.json with SPA rewrite rule (fixes 404 on page refresh/direct URL)
+- [ ] Push to git → Vercel auto-redeploys
+
 ## SEO & Crawlability
 - [x] Fix robots.txt — update domain to draftit.co.ke, block admin routes
 - [x] Fix sitemap.xml — update all URLs to draftit.co.ke, add /order page
