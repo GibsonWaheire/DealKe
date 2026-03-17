@@ -6,7 +6,7 @@ export default function PrivacyPolicy() {
     <div className="bg-white">
       <PageHeader
         label="Legal"
-        title="Privacy Policy"
+        title="Privacy Notice"
         subtitle="Last updated: 16 March 2026"
         images={[{ src: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1600&q=80', alt: 'Documents' }]}
       />
@@ -17,7 +17,7 @@ export default function PrivacyPolicy() {
           <div>
             <h2 className="text-slate-900 font-bold text-lg mb-3">1. Who we are</h2>
             <p>
-              DealFlow is a sole-proprietor digital services business based in Nairobi, Kenya.
+              Draft-It is a sole-proprietor digital services business based in Nairobi, Kenya.
               We provide website development, KRA services, eCitizen services, and related digital
               assistance. Contact: <a href="mailto:iknus.xmc@gmail.com" className="text-emerald-600 underline">iknus.xmc@gmail.com</a> · +254 726 899 113.
             </p>

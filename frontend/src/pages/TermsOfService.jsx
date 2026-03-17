@@ -6,7 +6,7 @@ export default function TermsOfService() {
     <div className="bg-white">
       <PageHeader
         label="Legal"
-        title="Terms of Service"
+        title="Terms &amp; Conditions"
         subtitle="Last updated: 16 March 2026"
         images={[{ src: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1600&q=80', alt: 'Documents' }]}
       />
@@ -17,15 +17,15 @@ export default function TermsOfService() {
           <div>
             <h2 className="text-slate-900 font-bold text-lg mb-3">1. Agreement</h2>
             <p>
-              By using this website or engaging DealFlow for any service, you agree to these Terms of
-              Service. DealFlow is operated by a sole proprietor based in Nairobi, Kenya.
+              By using this website or engaging Draft-It for any service, you agree to these Terms of
+              Service. Draft-It is operated by a sole proprietor based in Nairobi, Kenya.
             </p>
           </div>
 
           <div>
             <h2 className="text-slate-900 font-bold text-lg mb-3">2. Services</h2>
             <p>
-              DealFlow provides website development, KRA registration, government agency assistance
+              Draft-It provides website development, KRA registration, government agency assistance
               (NTSA, eCitizen, NSSF, SHA, TSC, HELB/HEF), business registration, document drafting,
               and related digital services. Prices and service details are as listed on our Services
               and Packages pages. All prices are quoted in Kenyan Shillings (KES).
@@ -66,7 +66,7 @@ export default function TermsOfService() {
             <h2 className="text-slate-900 font-bold text-lg mb-3">6. Intellectual property</h2>
             <p>
               For website projects, full ownership of the completed website is transferred to you
-              upon final payment. DealFlow retains the right to display completed work in a portfolio
+              upon final payment. Draft-It retains the right to display completed work in a portfolio
               unless you request otherwise in writing.
             </p>
           </div>
@@ -74,7 +74,7 @@ export default function TermsOfService() {
           <div>
             <h2 className="text-slate-900 font-bold text-lg mb-3">7. Limitation of liability</h2>
             <p>
-              DealFlow is not liable for delays or failures caused by government system outages,
+              Draft-It is not liable for delays or failures caused by government system outages,
               changes in government policy, incorrect information provided by the client, or
               circumstances beyond our reasonable control. Our liability is limited to the fee
               paid for the specific service in question.

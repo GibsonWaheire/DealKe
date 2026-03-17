@@ -1,6 +1,8 @@
 // src/components/Footer.jsx
 import { Link } from 'react-router-dom'
 
+const scrollTop = () => window.scrollTo({ top: 0, behavior: 'smooth' })
+
 const quickLinks = [
   { label: 'Home',     to: '/' },
   { label: 'Services', to: '/services' },
@@ -12,9 +14,9 @@ const quickLinks = [
 ]
 
 const policyLinks = [
-  { label: 'Privacy Policy',   to: '/privacy' },
-  { label: 'Terms of Service', to: '/terms' },
-  { label: 'Refund Policy',    to: '/refund' },
+  { label: 'Privacy Notice',    to: '/privacy' },
+  { label: 'Terms & Conditions', to: '/terms' },
+  { label: 'Refund Policy',     to: '/refund' },
 ]
 
 export default function Footer() {
@@ -56,7 +58,7 @@ export default function Footer() {
             <ul className="space-y-2.5">
               {quickLinks.map(({ label, to }) => (
                 <li key={to}>
-                  <Link to={to} className="text-slate-400 hover:text-white text-sm transition-colors">
+                  <Link to={to} onClick={scrollTop} className="text-slate-400 hover:text-white text-sm transition-colors">
                     {label}
                   </Link>
                 </li>
@@ -77,7 +79,7 @@ export default function Footer() {
             <ul className="space-y-2">
               {policyLinks.map(({ label, to }) => (
                 <li key={to}>
-                  <Link to={to} className="text-slate-400 hover:text-white text-xs transition-colors">
+                  <Link to={to} onClick={scrollTop} className="text-slate-400 hover:text-white text-xs transition-colors">
                     {label}
                   </Link>
                 </li>
