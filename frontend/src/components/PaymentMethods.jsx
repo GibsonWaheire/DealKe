@@ -242,6 +242,7 @@ export default function PaymentMethods({
       </div>
 
       {/* ── 2. M-Pesa Paybill (collapsible) ───────────────────────────────── */}
+      {false && (
       <div className="bg-white border border-amber-200 rounded-xl overflow-hidden">
         <button
           onClick={() => setPaybillOpen(o => !o)}
@@ -307,8 +308,10 @@ export default function PaymentMethods({
           </div>
         )}
       </div>
+      )} {/* end Paybill hidden */}
 
       {/* ── 3. M-Pesa STK Push (collapsed, coming soon) ───────────────────── */}
+      {false && (
       <div className="opacity-50 hover:opacity-100 transition-opacity duration-300">
         <div className="bg-white border border-green-200 rounded-xl overflow-hidden">
           <button
@@ -384,9 +387,10 @@ export default function PaymentMethods({
           )}
         </div>
       </div>
+      )} {/* end STK Push hidden */}
 
       <p className="text-zinc-400 text-xs text-center pb-2">
-        All payments in KES · Secured by Safaricom &amp; Paystack
+        All payments in KES · Secured by Paystack
       </p>
     </div>
   )
