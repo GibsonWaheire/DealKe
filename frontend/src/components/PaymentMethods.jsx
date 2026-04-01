@@ -57,6 +57,7 @@ export default function PaymentMethods({
 
   // ── STK Push state ─────────────────────────────────────────────────────────
   const [stkPhone,      setStkPhone]      = useState(customerPhone)
+  const [stkOpen,       setStkOpen]       = useState(false)
   const [stkStatus,     setStkStatus]     = useState('idle') // idle|loading|polling|paid|error|timeout
   const [stkMessage,    setStkMessage]    = useState('')
   const [stkCheckoutId, setStkCheckoutId] = useState('')
@@ -178,86 +179,33 @@ export default function PaymentMethods({
   return (
     <div className="space-y-3">
 
-      {/* ── 1. M-Pesa STK Push ────────────────────────────────────────────── */}
-      <div className="bg-white border border-zinc-200 rounded-xl overflow-hidden">
-        <div className="px-5 pt-5 pb-1 flex items-center gap-3">
-          <div className="w-9 h-9 rounded-lg bg-green-100 flex items-center justify-center shrink-0">
-            <svg className="w-5 h-5 text-green-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
-            </svg>
-          </div>
-          <div>
-            <p className="font-semibold text-zinc-900 text-sm">M-Pesa STK Push</p>
-            <p className="text-zinc-500 text-xs">We send a payment prompt to your phone</p>
-          </div>
-          <span className="ml-auto text-[10px] font-semibold bg-green-100 text-green-700 px-2 py-0.5 rounded-full">Fastest</span>
-        </div>
-
-        <div className="px-5 pb-5 pt-3">
-          {stkStatus === 'paid' ? (
-            <div className="text-center py-2">
-              <div className="w-11 h-11 rounded-full bg-emerald-100 flex items-center justify-center mx-auto mb-2"><CheckIcon /></div>
-              <p className="text-emerald-700 font-semibold text-sm mb-3">Payment confirmed!</p>
-              <a href={buildWaUrl('M-Pesa STK Push', stkCheckoutId)} target="_blank" rel="noreferrer"
-                className="block w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-2.5 rounded-lg transition-colors text-sm text-center">
-                Confirm on WhatsApp →
-              </a>
-            </div>
-          ) : stkStatus === 'polling' ? (
-            <div>
-              <div className="flex items-center gap-2 bg-emerald-50 border border-emerald-200 rounded-lg px-3 py-2.5 mb-3">
-                <Spinner />
-                <p className="text-emerald-700 text-xs">{stkMessage}</p>
-              </div>
-              <button onClick={resetStk} className="w-full text-xs text-zinc-400 hover:text-zinc-600 py-1 transition-colors">
-                Cancel — try another method
-              </button>
-            </div>
-          ) : stkStatus === 'timeout' ? (
-            <div>
-              <p className="text-amber-700 text-xs bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 mb-3">{stkMessage}</p>
-              <button onClick={resetStk} className="w-full bg-zinc-100 hover:bg-zinc-200 text-zinc-800 font-semibold py-2.5 rounded-lg text-sm transition-colors">
-                Try again
-              </button>
-            </div>
-          ) : (
-            <div>
-              <input
-                type="tel"
-                value={stkPhone}
-                onChange={e => setStkPhone(e.target.value)}
-                placeholder="07XX XXX XXX"
-                className="w-full bg-white border border-zinc-300 rounded-lg px-4 py-2.5 text-zinc-900 placeholder-zinc-400 text-sm focus:outline-none focus:border-zinc-500 mb-2.5"
-              />
-              {stkStatus === 'error' && (
-                <p className="text-red-600 text-xs bg-red-50 border border-red-100 rounded-lg px-3 py-2 mb-2.5">{stkMessage}</p>
-              )}
-              <button
-                onClick={handleStkPush}
-                disabled={!stkPhone || stkStatus === 'loading'}
-                className="w-full bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white font-semibold py-2.5 rounded-lg transition-colors text-sm flex items-center justify-center gap-2"
-              >
-                {stkStatus === 'loading' ? <><Spinner /> Sending…</> : `Send ${fmt(amount)} to My Phone`}
-              </button>
-              <p className="text-zinc-400 text-xs text-center mt-1.5">You'll get a PIN prompt from Safaricom</p>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* ── 2. Paystack — Card / Apple Pay / M-Pesa ───────────────────────── */}
+      {/* ── 1. Paystack — Card / Apple Pay / M-Pesa ───────────────────────── */}
       <div className="bg-white border border-indigo-200 rounded-xl overflow-hidden">
         <div className="px-5 pt-5 pb-1 flex items-center gap-3">
           <div className="w-9 h-9 rounded-lg bg-indigo-100 flex items-center justify-center shrink-0">
+            {/* Card icon */}
             <svg className="w-5 h-5 text-indigo-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
               <rect x="1" y="4" width="22" height="16" rx="2" ry="2" /><line x1="1" y1="10" x2="23" y2="10" />
             </svg>
           </div>
-          <div>
+          <div className="flex-1 min-w-0">
             <p className="font-semibold text-zinc-900 text-sm">Card · Apple Pay · M-Pesa</p>
-            <p className="text-zinc-500 text-xs">Secure Paystack checkout — Apple Pay on Safari</p>
+            {/* Payment method icons */}
+            <div className="flex items-center gap-1.5 mt-1">
+              {/* Apple Pay */}
+              <span className="inline-flex items-center gap-0.5 bg-zinc-900 text-white text-[10px] font-semibold px-1.5 py-0.5 rounded" title="Apple Pay">
+                <svg className="w-2.5 h-2.5" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+                </svg>
+                Pay
+              </span>
+              {/* Visa */}
+              <span className="inline-flex items-center bg-blue-700 text-white text-[10px] font-black px-1.5 py-0.5 rounded tracking-tight" title="Visa">VISA</span>
+              {/* M-Pesa */}
+              <span className="inline-flex items-center bg-green-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded" title="M-Pesa">M-Pesa</span>
+            </div>
           </div>
-          <span className="ml-auto text-[10px] font-semibold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full">International</span>
+          <span className="ml-auto text-[10px] font-semibold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full shrink-0">Recommended</span>
         </div>
 
         <div className="px-5 pb-5 pt-3">
@@ -268,7 +216,7 @@ export default function PaymentMethods({
               <p className="text-zinc-400 text-xs font-mono mb-3">Ref: {paystackRef}</p>
               <a href={buildWaUrl('Card / Apple Pay / Paystack', paystackRef)} target="_blank" rel="noreferrer"
                 className="block w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-2.5 rounded-lg transition-colors text-sm text-center">
-                Confirm on WhatsApp →
+                Notify us on WhatsApp →
               </a>
             </div>
           ) : (
@@ -285,22 +233,15 @@ export default function PaymentMethods({
                 disabled={!paystackEmail || paystackStatus === 'loading'}
                 className="w-full bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white font-semibold py-2.5 rounded-lg transition-colors text-sm flex items-center justify-center gap-2"
               >
-                {paystackStatus === 'loading' ? <><Spinner /> Opening checkout…</> : (
-                  <>
-                    <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                      <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z" />
-                    </svg>
-                    Pay {fmt(amount)} — Card / Apple Pay / M-Pesa
-                  </>
-                )}
+                {paystackStatus === 'loading' ? <><Spinner /> Opening checkout…</> : `Pay ${fmt(amount)}`}
               </button>
-              <p className="text-zinc-400 text-xs text-center mt-1.5">Opens Paystack secure checkout · All major cards accepted</p>
+              <p className="text-zinc-400 text-xs text-center mt-1.5">Paystack secure checkout · Apple Pay on Safari</p>
             </div>
           )}
         </div>
       </div>
 
-      {/* ── 3. M-Pesa Paybill (collapsible) ───────────────────────────────── */}
+      {/* ── 2. M-Pesa Paybill (collapsible) ───────────────────────────────── */}
       <div className="bg-white border border-amber-200 rounded-xl overflow-hidden">
         <button
           onClick={() => setPaybillOpen(o => !o)}
@@ -313,7 +254,7 @@ export default function PaymentMethods({
           </div>
           <div className="flex-1">
             <p className="font-semibold text-zinc-900 text-sm">M-Pesa Paybill</p>
-            <p className="text-zinc-500 text-xs">Pay manually from the Safaricom app or USSD</p>
+            <p className="text-zinc-500 text-xs">Pay manually via Safaricom app or USSD</p>
           </div>
           <svg className={`w-4 h-4 text-amber-400 transition-transform shrink-0 ${paybillOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
@@ -323,7 +264,7 @@ export default function PaymentMethods({
         {paybillOpen && (
           <div className="px-5 pb-5 space-y-3 border-t border-zinc-100">
             <p className="text-zinc-500 text-xs pt-3">
-              Go to <strong>M-Pesa → Lipa na M-Pesa → Pay Bill</strong> and enter the details below:
+              Go to <strong>M-Pesa → Lipa na M-Pesa → Pay Bill</strong> and enter:
             </p>
             {[
               ['Business No.', paymentConfig.paybillNumber,  copiedPaybill, setCopiedPaybill],
@@ -359,12 +300,89 @@ export default function PaymentMethods({
                   rel="noreferrer"
                   className="mt-3 block w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-2.5 rounded-lg transition-colors text-sm text-center"
                 >
-                  Confirm Payment on WhatsApp →
+                  Notify us on WhatsApp →
                 </a>
               )}
             </div>
           </div>
         )}
+      </div>
+
+      {/* ── 3. M-Pesa STK Push (collapsed, coming soon) ───────────────────── */}
+      <div className="opacity-50 hover:opacity-100 transition-opacity duration-300">
+        <div className="bg-white border border-green-200 rounded-xl overflow-hidden">
+          <button
+            onClick={() => setStkOpen(o => !o)}
+            className="w-full flex items-center gap-3 px-5 py-3.5 text-left hover:bg-green-50 transition-colors"
+          >
+            <div className="w-8 h-8 rounded-lg bg-green-100 flex items-center justify-center shrink-0">
+              <svg className="w-4 h-4 text-green-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <div className="flex-1">
+              <p className="font-semibold text-zinc-900 text-sm">M-Pesa STK Push</p>
+              <p className="text-zinc-500 text-xs">Direct prompt to phone · Coming soon</p>
+            </div>
+            <span className="text-[10px] font-semibold bg-green-100 text-green-700 px-2 py-0.5 rounded-full shrink-0">Soon</span>
+            <svg className={`w-4 h-4 text-green-400 transition-transform shrink-0 ${stkOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+
+          {stkOpen && (
+            <div className="px-5 pb-5 pt-1 border-t border-green-100">
+              {stkStatus === 'paid' ? (
+                <div className="text-center py-2">
+                  <div className="w-11 h-11 rounded-full bg-emerald-100 flex items-center justify-center mx-auto mb-2"><CheckIcon /></div>
+                  <p className="text-emerald-700 font-semibold text-sm mb-3">Payment confirmed!</p>
+                  <a href={buildWaUrl('M-Pesa STK Push', stkCheckoutId)} target="_blank" rel="noreferrer"
+                    className="block w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-2.5 rounded-lg transition-colors text-sm text-center">
+                    Notify us on WhatsApp →
+                  </a>
+                </div>
+              ) : stkStatus === 'polling' ? (
+                <div className="pt-3">
+                  <div className="flex items-center gap-2 bg-emerald-50 border border-emerald-200 rounded-lg px-3 py-2.5 mb-3">
+                    <Spinner />
+                    <p className="text-emerald-700 text-xs">{stkMessage}</p>
+                  </div>
+                  <button onClick={resetStk} className="w-full text-xs text-zinc-400 hover:text-zinc-600 py-1 transition-colors">
+                    Cancel — try another method
+                  </button>
+                </div>
+              ) : stkStatus === 'timeout' ? (
+                <div className="pt-3">
+                  <p className="text-amber-700 text-xs bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 mb-3">{stkMessage}</p>
+                  <button onClick={resetStk} className="w-full bg-zinc-100 hover:bg-zinc-200 text-zinc-800 font-semibold py-2.5 rounded-lg text-sm transition-colors">
+                    Try again
+                  </button>
+                </div>
+              ) : (
+                <div className="pt-3">
+                  <input
+                    type="tel"
+                    value={stkPhone}
+                    onChange={e => setStkPhone(e.target.value)}
+                    placeholder="07XX XXX XXX"
+                    className="w-full bg-white border border-zinc-300 rounded-lg px-4 py-2.5 text-zinc-900 placeholder-zinc-400 text-sm focus:outline-none focus:border-green-400 mb-2.5"
+                  />
+                  {stkStatus === 'error' && (
+                    <p className="text-red-600 text-xs bg-red-50 border border-red-100 rounded-lg px-3 py-2 mb-2.5">{stkMessage}</p>
+                  )}
+                  <button
+                    onClick={handleStkPush}
+                    disabled={!stkPhone || stkStatus === 'loading'}
+                    className="w-full bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white font-semibold py-2.5 rounded-lg transition-colors text-sm flex items-center justify-center gap-2"
+                  >
+                    {stkStatus === 'loading' ? <><Spinner /> Sending…</> : `Send ${fmt(amount)} to My Phone`}
+                  </button>
+                  <p className="text-zinc-400 text-xs text-center mt-1.5">You'll get a PIN prompt from Safaricom</p>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
       </div>
 
       <p className="text-zinc-400 text-xs text-center pb-2">

@@ -1,10 +1,21 @@
 import { useState } from 'react'
-import { TILL, templateCategories } from '../../data/homeData'
-import WaIcon from './WaIcon'
-import { waLink } from './homeUtils'
+import { useNavigate } from 'react-router-dom'
+import { templateCategories } from '../../data/homeData'
 
 export default function HomeTemplates() {
   const [tmplTab, setTmplTab] = useState('mpesa')
+  const navigate = useNavigate()
+
+  const orderTemplate = (t) => {
+    navigate('/pay', {
+      state: {
+        serviceName: t.name,
+        price: t.price || 0,
+        currency: 'KES',
+        category: 'Templates',
+      },
+    })
+  }
 
   return (
     <section className="py-20 bg-zinc-50">
@@ -14,7 +25,7 @@ export default function HomeTemplates() {
             <p className="text-zinc-500 text-xs font-semibold uppercase tracking-widest mb-2">Templates</p>
             <h2 className="text-2xl md:text-3xl font-bold text-zinc-900">Ready-made Kenyan templates</h2>
             <p className="text-zinc-600 text-sm mt-1">
-              Free or KES 50 · Pay via M-Pesa Till <span className="font-semibold text-zinc-700">{TILL}</span> · Sent on WhatsApp
+              Free or KES 50 · Pay online · Delivered instantly after payment
             </p>
           </div>
         </div>
@@ -45,19 +56,17 @@ export default function HomeTemplates() {
                   </span>
                 </div>
                 <p className="text-zinc-800 font-medium text-sm leading-snug flex-1">{t.name}</p>
-                <a
-                  href={t.price === 0 ? waLink(`Hi, please send me the "${t.name}" (free template).`) : waLink(`Hi, I'd like the "${t.name}" template. Please share M-Pesa Till details for KES ${t.price}.`)}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex items-center justify-center gap-1.5 bg-green-500 hover:bg-green-600 text-white text-xs font-semibold px-3 py-2 rounded-lg transition-colors"
+                <button
+                  onClick={() => orderTemplate(t)}
+                  className="flex items-center justify-center gap-1.5 bg-zinc-900 hover:bg-zinc-700 text-white text-xs font-semibold px-3 py-2 rounded-lg transition-colors"
                 >
-                  <WaIcon /> {t.price === 0 ? 'Get Free' : `Order · KES ${t.price}`}
-                </a>
+                  {t.price === 0 ? 'Get Free' : `Order · KES ${t.price}`}
+                </button>
               </div>
             ))}
           </div>
         ))}
-        <p className="text-zinc-500 text-xs mt-8">All templates are fully editable in Word, PDF or Excel. Sent via WhatsApp within minutes of payment confirmation.</p>
+        <p className="text-zinc-500 text-xs mt-8">All templates are fully editable in Word, PDF or Excel. Delivered instantly after payment confirmation.</p>
       </div>
     </section>
   )
