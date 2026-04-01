@@ -65,8 +65,21 @@ export default function Footer() {
           <div>
             <h4 className="text-white font-semibold mb-4 text-sm uppercase tracking-wide">Contact</h4>
             <ul className="space-y-2.5 text-slate-400 text-sm">
-              <li>+254 726 899 113</li>
-              <li>iknus.xmc@gmail.com</li>
+              <li>
+                <a
+                  href="https://wa.me/254726899113"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="hover:text-white transition-colors"
+                >
+                  WhatsApp Us →
+                </a>
+              </li>
+              <li>
+                <a href="mailto:help@draftit.co.ke" className="hover:text-white transition-colors">
+                  help@draftit.co.ke
+                </a>
+              </li>
               <li>Nairobi, Kenya</li>
               <li className="text-slate-500 text-xs pt-1">Mon–Sat · 8am–8pm</li>
             </ul>

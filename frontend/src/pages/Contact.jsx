@@ -43,7 +43,7 @@ const contactDetails = [
       </svg>
     ),
     label: 'Email',
-    value: 'iknus.xmc@gmail.com',
+    value: 'help@draftit.co.ke',
   },
   {
     icon: (

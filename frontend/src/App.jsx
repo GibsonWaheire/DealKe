@@ -51,7 +51,7 @@ const pageMeta = {
   },
   '/contact': {
     title: 'Get a Quote | Draft-It — Digital Services Kenya',
-    description: 'Contact Draft-It for website design, KRA registration, IT support, CCTV, and more. WhatsApp +254 726 899 113 or email iknus.xmc@gmail.com.',
+    description: 'Contact Draft-It for website design, KRA registration, IT support, CCTV, and more. WhatsApp +254 726 899 113 or email help@draftit.co.ke.',
   },
   '/pay': {
     title: 'Pay for a Service | Draft-It — Secure Online Payment Kenya',

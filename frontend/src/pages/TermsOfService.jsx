@@ -93,7 +93,7 @@ export default function TermsOfService() {
             <h2 className="text-slate-900 font-bold text-lg mb-3">9. Contact</h2>
             <p>
               Questions about these terms?{' '}
-              <a href="mailto:iknus.xmc@gmail.com" className="text-emerald-600 underline">iknus.xmc@gmail.com</a>
+              <a href="mailto:help@draftit.co.ke" className="text-emerald-600 underline">help@draftit.co.ke</a>
               {' '}· +254 726 899 113
             </p>
           </div>
