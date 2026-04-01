@@ -47,6 +47,23 @@ const hasAcademicKeyword = (text) => {
   return ACADEMIC_KEYWORDS.some(kw => lower.includes(kw))
 }
 
+// ── Country phone prefixes ────────────────────────────────────────────────────
+const COUNTRIES = [
+  { code: '+254', flag: '🇰🇪', name: 'Kenya',        placeholder: '7XX XXX XXX',  regex: /^0?[71]\d{8}$/ },
+  { code: '+971', flag: '🇦🇪', name: 'UAE',          placeholder: '5X XXX XXXX',  regex: /^0?5\d{8}$/ },
+  { code: '+974', flag: '🇶🇦', name: 'Qatar',        placeholder: '5XXX XXXX',    regex: /^[3-7]\d{7}$/ },
+  { code: '+966', flag: '🇸🇦', name: 'Saudi Arabia', placeholder: '5X XXX XXXX',  regex: /^0?5\d{8}$/ },
+  { code: '+1',   flag: '🇺🇸', name: 'USA / Canada', placeholder: 'XXX XXX XXXX', regex: /^\d{10}$/ },
+  { code: '+44',  flag: '🇬🇧', name: 'UK',           placeholder: '7XXX XXXXXX',  regex: /^0?7\d{9}$/ },
+  { code: '+255', flag: '🇹🇿', name: 'Tanzania',     placeholder: '7XX XXX XXX',  regex: /^0?[67]\d{8}$/ },
+  { code: '+256', flag: '🇺🇬', name: 'Uganda',       placeholder: '7XX XXX XXX',  regex: /^0?[37]\d{8}$/ },
+  { code: '+27',  flag: '🇿🇦', name: 'South Africa', placeholder: '7X XXX XXXX',  regex: /^0?[67]\d{8}$/ },
+  { code: '+91',  flag: '🇮🇳', name: 'India',        placeholder: 'XXXXX XXXXX',  regex: /^[6-9]\d{9}$/ },
+  { code: '+other', flag: '🌍', name: 'Other',       placeholder: 'XXXXXXXXXX',   regex: /^\d{6,15}$/ },
+]
+
+const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+
 const MIN_KES = 100
 
 export default function ClientPayPage() {
@@ -59,7 +76,8 @@ export default function ClientPayPage() {
   const [partialAmount, setPartialAmount] = useState('')
   const [name,          setName]          = useState('')
   const [email,         setEmail]         = useState('')
-  const [phone,         setPhone]         = useState('')
+  const [phoneCountry,  setPhoneCountry]  = useState(COUNTRIES[0])
+  const [phoneLocal,    setPhoneLocal]    = useState('')
   const [agreed,        setAgreed]        = useState(false)
   const [errors,        setErrors]        = useState({})
 
@@ -88,22 +106,31 @@ export default function ClientPayPage() {
   const fmt = (n, currency) =>
     new Intl.NumberFormat('en-KE', { style: 'currency', currency, maximumFractionDigits: 2 }).format(n)
 
-  // ── Validation ───────────────────────────────────────────────────────────────
-  const notesWarning = notes.length > 3 && hasAcademicKeyword(notes)
+  // ── Derived phone ────────────────────────────────────────────────────────────
+  const fullPhone = phoneLocal
+    ? (phoneCountry.code === '+other' ? phoneLocal : phoneCountry.code + phoneLocal.replace(/^0+/, ''))
+    : ''
+
+  // ── Live validation flags ─────────────────────────────────────────────────────
+  const notesWarning  = notes.length > 3 && hasAcademicKeyword(notes)
+  const emailInvalid  = email.length > 5 && !EMAIL_REGEX.test(email)
+  const phoneInvalid  = phoneLocal.length > 3 && !phoneCountry.regex.test(phoneLocal.replace(/\s/g, ''))
 
   const validate = () => {
     const e = {}
-    if (!project)                        e.project  = 'Select a project type'
-    if (!name.trim())                    e.name     = 'Enter your full name'
-    if (!email.trim())                   e.email    = 'Enter your email address'
-    if (!phone.trim())                   e.phone    = 'Enter your phone number'
-    if (chargeKES < MIN_KES)             e.amount   = `Minimum is ${fmt(MIN_KES, 'KES')}`
+    if (!project)                                         e.project = 'Select a project type'
+    if (!name.trim())                                     e.name    = 'Enter your full name'
+    if (!email.trim())                                    e.email   = 'Enter your email address'
+    else if (!EMAIL_REGEX.test(email))                    e.email   = 'Enter a valid email address'
+    if (!phoneLocal.trim())                               e.phone   = 'Enter your phone number'
+    else if (phoneInvalid)                                e.phone   = `Invalid number for ${phoneCountry.name} — expected format: ${phoneCountry.placeholder}`
+    if (chargeKES < MIN_KES)                              e.amount  = `Minimum is ${fmt(MIN_KES, 'KES')}`
     if (paymentType === 'partial') {
-      if (parsedPartial <= 0)            e.partial  = 'Enter a deposit amount'
-      if (parsedPartial > amountKES)     e.partial  = `Cannot exceed ${fmt(amountKES, 'KES')}`
+      if (parsedPartial <= 0)                             e.partial = 'Enter a deposit amount'
+      if (parsedPartial > amountKES)                      e.partial = `Cannot exceed ${fmt(amountKES, 'KES')}`
     }
-    if (hasAcademicKeyword(notes))       e.notes    = 'Please use professional terms to describe your project.'
-    if (!agreed)                         e.agreed   = 'Please accept the terms to continue'
+    if (hasAcademicKeyword(notes))                        e.notes   = 'Please use professional terms to describe your project.'
+    if (!agreed)                                          e.agreed  = 'Please accept the terms to continue'
     return e
   }
 
@@ -153,7 +180,7 @@ export default function ClientPayPage() {
             <div className="border-t border-zinc-100 pt-3 flex flex-wrap gap-x-6 gap-y-1 text-xs text-zinc-500">
               <span><strong className="text-zinc-700">Name:</strong> {name}</span>
               <span><strong className="text-zinc-700">Email:</strong> {email}</span>
-              <span><strong className="text-zinc-700">Phone:</strong> {phone}</span>
+              <span><strong className="text-zinc-700">Phone:</strong> {fullPhone}</span>
               {paymentType === 'partial' && (
                 <span><strong className="text-zinc-700">Total:</strong> {fmt(amountKES, 'KES')} · <span className="text-amber-600">Paying deposit</span></span>
               )}
@@ -182,7 +209,7 @@ export default function ClientPayPage() {
             amount={chargeKES}
             serviceName={project}
             customerEmail={email}
-            customerPhone={phone}
+            customerPhone={fullPhone}
             customerName={name}
           />
 
@@ -195,17 +222,6 @@ export default function ClientPayPage() {
   return (
     <div className="min-h-screen bg-zinc-50 py-12">
       <div className="max-w-lg mx-auto px-4 sm:px-6">
-
-        {/* Header */}
-        <div className="flex items-center gap-3 mb-8">
-          <div className="w-10 h-10 rounded-xl bg-zinc-900 flex items-center justify-center shrink-0">
-            <span className="text-white font-bold text-sm">DI</span>
-          </div>
-          <div>
-            <p className="font-bold text-zinc-900 leading-tight">Draft-It</p>
-            <p className="text-zinc-500 text-xs">draftit.co.ke · +254 726 899 113</p>
-          </div>
-        </div>
 
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-zinc-900">Pay for your project</h1>
@@ -369,8 +385,11 @@ export default function ClientPayPage() {
               value={email}
               onChange={e => { setEmail(e.target.value); setErrors(v => ({ ...v, email: '' })) }}
               placeholder="your@email.com"
-              className={inputClass('email')}
+              className={`${inputClass('email')} ${emailInvalid && !errors.email ? 'border-red-400' : ''}`}
             />
+            {emailInvalid && !errors.email && (
+              <p className="text-red-500 text-xs mt-1">Please enter a valid email — e.g. name@example.com</p>
+            )}
             {errMsg('email')}
           </div>
 
@@ -379,13 +398,40 @@ export default function ClientPayPage() {
             <label className="block text-sm font-semibold text-zinc-700 mb-1.5">
               Phone <span className="text-red-400">*</span>
             </label>
-            <input
-              type="tel"
-              value={phone}
-              onChange={e => { setPhone(e.target.value); setErrors(v => ({ ...v, phone: '' })) }}
-              placeholder="+254 7XX XXX XXX or +971 XX XXX XXXX"
-              className={inputClass('phone')}
-            />
+            <div className={`flex border rounded-lg overflow-hidden transition-colors ${errors.phone ? 'border-red-400' : phoneInvalid ? 'border-red-400' : 'border-zinc-300'}`}>
+              {/* Country selector */}
+              <select
+                value={phoneCountry.code}
+                onChange={e => {
+                  setPhoneCountry(COUNTRIES.find(c => c.code === e.target.value))
+                  setPhoneLocal('')
+                  setErrors(v => ({ ...v, phone: '' }))
+                }}
+                className="bg-zinc-50 border-r border-zinc-300 text-zinc-700 text-sm px-2 py-2.5 focus:outline-none shrink-0 cursor-pointer"
+              >
+                {COUNTRIES.map(c => (
+                  <option key={c.code} value={c.code}>
+                    {c.flag} {c.code === '+other' ? 'Other' : c.code}
+                  </option>
+                ))}
+              </select>
+              {/* Number input */}
+              <input
+                type="tel"
+                value={phoneLocal}
+                onChange={e => {
+                  setPhoneLocal(e.target.value.replace(/[^\d\s]/g, ''))
+                  setErrors(v => ({ ...v, phone: '' }))
+                }}
+                placeholder={phoneCountry.placeholder}
+                className="flex-1 bg-white px-3 py-2.5 text-zinc-900 placeholder-zinc-400 text-sm focus:outline-none"
+              />
+            </div>
+            {phoneInvalid && !errors.phone && (
+              <p className="text-red-500 text-xs mt-1">
+                {phoneCountry.name} number should look like: <span className="font-medium">{phoneCountry.placeholder}</span>
+              </p>
+            )}
             {errMsg('phone')}
           </div>
 
