@@ -19,6 +19,7 @@ import RefundPolicy from './pages/RefundPolicy'
 import AdminLogin from './pages/AdminLogin'
 import AdminBlog from './pages/AdminBlog'
 import OrderPage from './pages/OrderPage'
+import ClientPayPage from './pages/ClientPayPage'
 import NotFound from './pages/NotFound'
 
 const SITE = 'https://draftit.co.ke'
@@ -100,6 +101,7 @@ const App = () => (
               <Route path="terms" element={<TermsOfService />} />
               <Route path="refund" element={<RefundPolicy />} />
               <Route path="order" element={<OrderPage />} />
+              <Route path="pay" element={<ClientPayPage />} />
             </Route>
             {/* Admin routes — outside Layout (no navbar/footer) */}
             <Route path="/admin-login" element={<AdminLogin />} />
