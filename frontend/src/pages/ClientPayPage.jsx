@@ -16,7 +16,6 @@ const PROJECTS = [
   // Writing & Content
   'Copywriting Services',
   'Business Proposal Writing',
-  'Research & Report Writing',
   'Presentation Design (PPT/Slides)',
   'Technical Writing',
   'CV / Resume Writing',
@@ -34,12 +33,19 @@ const PROJECTS = [
   'Custom / Other',
 ]
 
-// Keywords that suggest academic cheating — blocked for Paystack compliance
 const ACADEMIC_KEYWORDS = [
   'essay', 'assignment', 'homework', 'coursework', 'dissertation',
   'thesis', 'exam', 'turnitin', 'plagiarism', 'school work',
-  'university task', 'college assignment', 'class work',
+  'university task', 'college assignment', 'class work', 'class assignment',
+  'take my exam', 'do my', 'write my essay', 'write my assignment',
+  'academic paper', 'term paper', 'research paper', 'school project',
+  'college work', 'university work', 'exam help', 'exam prep',
 ]
+
+const hasAcademicKeyword = (text) => {
+  const lower = text.toLowerCase()
+  return ACADEMIC_KEYWORDS.some(kw => lower.includes(kw))
+}
 
 const MIN_KES = 100
 
@@ -83,10 +89,7 @@ export default function ClientPayPage() {
     new Intl.NumberFormat('en-KE', { style: 'currency', currency, maximumFractionDigits: 2 }).format(n)
 
   // ── Validation ───────────────────────────────────────────────────────────────
-  const hasAcademicKeyword = (text) => {
-    const lower = text.toLowerCase()
-    return ACADEMIC_KEYWORDS.some(kw => lower.includes(kw))
-  }
+  const notesWarning = notes.length > 3 && hasAcademicKeyword(notes)
 
   const validate = () => {
     const e = {}
@@ -99,7 +102,7 @@ export default function ClientPayPage() {
       if (parsedPartial <= 0)            e.partial  = 'Enter a deposit amount'
       if (parsedPartial > amountKES)     e.partial  = `Cannot exceed ${fmt(amountKES, 'KES')}`
     }
-    if (hasAcademicKeyword(notes))       e.notes    = 'Please describe your project using professional terms — e.g. "research report", "content writing", or "document drafting".'
+    if (hasAcademicKeyword(notes))       e.notes    = 'Please use professional terms to describe your project.'
     if (!agreed)                         e.agreed   = 'Please accept the terms to continue'
     return e
   }
@@ -237,8 +240,21 @@ export default function ClientPayPage() {
               onChange={e => { setNotes(e.target.value); setErrors(v => ({ ...v, notes: '' })) }}
               placeholder="e.g. 5-page business website with contact form, or 10-slide pitch deck for a startup"
               rows={2}
-              className={`w-full bg-white border rounded-lg px-4 py-2.5 text-zinc-900 placeholder-zinc-400 text-sm focus:outline-none focus:border-zinc-500 resize-none ${errors.notes ? 'border-red-400' : 'border-zinc-300'}`}
+              className={`w-full bg-white border rounded-lg px-4 py-2.5 text-zinc-900 placeholder-zinc-400 text-sm focus:outline-none focus:border-zinc-500 resize-none transition-colors ${
+                notesWarning || errors.notes ? 'border-red-400' : 'border-zinc-300'
+              }`}
             />
+            {notesWarning && !errors.notes && (
+              <div className="mt-1.5 flex items-start gap-2 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
+                <span className="text-red-500 mt-0.5 shrink-0">⚠</span>
+                <div>
+                  <p className="text-red-700 text-xs font-semibold">We don't offer academic writing services.</p>
+                  <p className="text-red-600 text-xs mt-0.5">
+                    Try describing it as: <span className="font-medium">content writing, pitch deck, business document, technical write-up</span>, or similar.
+                  </p>
+                </div>
+              </div>
+            )}
             {errMsg('notes')}
           </div>
 
