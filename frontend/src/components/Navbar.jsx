@@ -40,14 +40,12 @@ export default function Navbar() {
               {label}
             </NavLink>
           ))}
-          <a
-            href="https://wa.me/254726899113"
-            target="_blank"
-            rel="noreferrer"
+          <NavLink
+            to="/pay"
             className="ml-2 bg-emerald-500 hover:bg-emerald-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
           >
-            WhatsApp Us
-          </a>
+            Pay Now
+          </NavLink>
         </div>
 
         {/* Hamburger */}
@@ -76,15 +74,13 @@ export default function Navbar() {
               {label}
             </NavLink>
           ))}
-          <a
-            href="https://wa.me/254726899113"
-            target="_blank"
-            rel="noreferrer"
+          <NavLink
+            to="/pay"
             className="bg-emerald-500 hover:bg-emerald-600 text-white text-sm font-medium px-4 py-2.5 rounded-lg text-center transition-colors"
             onClick={() => setOpen(false)}
           >
-            WhatsApp Us
-          </a>
+            Pay Now
+          </NavLink>
         </div>
       </div>
     </nav>

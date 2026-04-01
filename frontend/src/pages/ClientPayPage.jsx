@@ -3,20 +3,42 @@ import { Link } from 'react-router-dom'
 import PaymentSheet from '../components/PaymentSheet'
 
 const PROJECTS = [
+  // Web & Digital
   'Website — Landing Page',
   'Website — Business Site',
   'Website — E-Commerce',
+  // Government & Compliance
   'KRA PIN Registration',
   'eTIMS Registration',
-  'Business Registration',
+  'Business Name Registration',
   'NTSA Services',
   'eCitizen Services',
+  // Writing & Content
+  'Copywriting Services',
+  'Business Proposal Writing',
+  'Research & Report Writing',
+  'Presentation Design (PPT/Slides)',
+  'Technical Writing',
+  'CV / Resume Writing',
+  'Grant & Funding Proposal',
+  // Documents & Legal
+  'Contract & Agreement Drafting',
+  'Affidavit Drafting',
+  'Car Sale Agreement',
+  // Tech & Infrastructure
   'IT Support',
   'CCTV Installation',
   'POS System Setup',
   'Odoo ERP',
-  'Document Drafting',
-  'Custom Project',
+  // Other
+  'Custom / Other',
+]
+
+// Keywords that suggest academic cheating — blocked for Paystack compliance
+const ACADEMIC_KEYWORDS = [
+  'essay', 'assignment', 'homework', 'coursework', 'dissertation',
+  'thesis', 'exam', 'turnitin', 'plagiarism', 'school work',
+  'university task', 'college assignment', 'class work',
 ]
 
 const MIN_KES = 100
@@ -61,6 +83,11 @@ export default function ClientPayPage() {
     new Intl.NumberFormat('en-KE', { style: 'currency', currency, maximumFractionDigits: 2 }).format(n)
 
   // ── Validation ───────────────────────────────────────────────────────────────
+  const hasAcademicKeyword = (text) => {
+    const lower = text.toLowerCase()
+    return ACADEMIC_KEYWORDS.some(kw => lower.includes(kw))
+  }
+
   const validate = () => {
     const e = {}
     if (!project)                        e.project  = 'Select a project type'
@@ -72,6 +99,7 @@ export default function ClientPayPage() {
       if (parsedPartial <= 0)            e.partial  = 'Enter a deposit amount'
       if (parsedPartial > amountKES)     e.partial  = `Cannot exceed ${fmt(amountKES, 'KES')}`
     }
+    if (hasAcademicKeyword(notes))       e.notes    = 'Please describe your project using professional terms — e.g. "research report", "content writing", or "document drafting".'
     if (!agreed)                         e.agreed   = 'Please accept the terms to continue'
     return e
   }
@@ -203,11 +231,12 @@ export default function ClientPayPage() {
             </label>
             <textarea
               value={notes}
-              onChange={e => setNotes(e.target.value)}
-              placeholder="Briefly describe what you need — e.g. 5-page business website with contact form"
+              onChange={e => { setNotes(e.target.value); setErrors(v => ({ ...v, notes: '' })) }}
+              placeholder="e.g. 5-page business website with contact form, or 10-slide pitch deck for a startup"
               rows={2}
-              className="w-full bg-white border border-zinc-300 rounded-lg px-4 py-2.5 text-zinc-900 placeholder-zinc-400 text-sm focus:outline-none focus:border-zinc-500 resize-none"
+              className={`w-full bg-white border rounded-lg px-4 py-2.5 text-zinc-900 placeholder-zinc-400 text-sm focus:outline-none focus:border-zinc-500 resize-none ${errors.notes ? 'border-red-400' : 'border-zinc-300'}`}
             />
+            {errMsg('notes')}
           </div>
 
           {/* Amount */}

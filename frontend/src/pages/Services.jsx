@@ -248,15 +248,13 @@ export default function Services() {
       <section className="bg-slate-50 border-t border-gray-100 py-10 text-center">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <p className="text-slate-600 text-sm">
-            Don&apos;t see what you need? I handle more than what&apos;s listed here.
+            Don&apos;t see what you need? We handle more than what&apos;s listed here.
           </p>
           <a
-            href="https://wa.me/254726899113"
-            target="_blank"
-            rel="noreferrer"
+            href="/pay"
             className="inline-block bg-emerald-500 hover:bg-emerald-600 text-white mt-4 px-6 py-2.5 rounded-xl font-medium transition-colors"
           >
-            Chat on WhatsApp
+            Pay for a custom service →
           </a>
         </div>
       </section>

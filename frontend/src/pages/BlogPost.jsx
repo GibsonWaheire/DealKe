@@ -57,14 +57,12 @@ export default function BlogPost() {
         </div>
 
         <div className="mt-14 border-t border-gray-100 pt-8 text-center">
-          <p className="text-slate-500 text-sm mb-4">Need help with a digital service? We're on WhatsApp.</p>
+          <p className="text-slate-500 text-sm mb-4">Need help with a digital service? Pay directly and we get started immediately.</p>
           <a
-            href="https://wa.me/254726899113"
-            target="_blank"
-            rel="noreferrer"
+            href="/pay"
             className="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold px-6 py-3 rounded-xl transition-colors"
           >
-            Chat on WhatsApp
+            Get started →
           </a>
         </div>
       </div>

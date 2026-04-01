@@ -358,14 +358,12 @@ export default function Shop() {
           {/* CTA */}
           <div className="mt-14 bg-slate-50 border border-gray-100 rounded-2xl p-8 text-center">
             <p className="text-slate-700 font-semibold text-lg mb-2">Don't see what you need?</p>
-            <p className="text-slate-500 text-sm mb-5">We source most things on request — just ask on WhatsApp.</p>
+            <p className="text-slate-500 text-sm mb-5">We source most things on request — pay for a custom order directly.</p>
             <a
-              href={`https://wa.me/254726899113?text=${encodeURIComponent("Hi, I'm looking for a product/service not listed on the shop — can you help?")}`}
-              target="_blank"
-              rel="noreferrer"
+              href="/pay"
               className="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold px-6 py-3 rounded-xl transition-colors"
             >
-              Ask on WhatsApp
+              Order something custom →
             </a>
           </div>
 
