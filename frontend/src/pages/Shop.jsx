@@ -3,9 +3,6 @@ import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import PageHeader from '../components/PageHeader'
 
-const WA = '254726899113'
-const waLink = (msg) => `https://wa.me/${WA}?text=${encodeURIComponent(msg)}`
-
 const headerImages = [
   { src: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=1600&q=80', alt: 'Shop' },
   { src: 'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&w=1600&q=80', alt: 'Digital products' },
@@ -336,14 +333,6 @@ export default function Shop() {
                       >
                         Proceed to checkout
                       </button>
-                      <a
-                        href={waLink(`Hi, I'd like to order these items: ${cart.map((i) => `${i.name} x${i.qty}`).join(', ')}. Total KES ${cartTotal.toLocaleString()}. Please confirm availability.`)}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="mt-2 w-full inline-flex items-center justify-center bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-2.5 rounded-xl transition-colors text-sm"
-                      >
-                        Checkout on WhatsApp
-                      </a>
                     </div>
                   </div>
                 ) : (

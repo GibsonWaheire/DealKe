@@ -246,10 +246,10 @@ export default function PaymentMethods({
       </div>
 
       {/* ── 2. Paystack — Card / Apple Pay / M-Pesa ───────────────────────── */}
-      <div className="bg-white border border-zinc-200 rounded-xl overflow-hidden">
+      <div className="bg-white border border-indigo-200 rounded-xl overflow-hidden">
         <div className="px-5 pt-5 pb-1 flex items-center gap-3">
-          <div className="w-9 h-9 rounded-lg bg-zinc-100 flex items-center justify-center shrink-0">
-            <svg className="w-5 h-5 text-zinc-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+          <div className="w-9 h-9 rounded-lg bg-indigo-100 flex items-center justify-center shrink-0">
+            <svg className="w-5 h-5 text-indigo-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
               <rect x="1" y="4" width="22" height="16" rx="2" ry="2" /><line x1="1" y1="10" x2="23" y2="10" />
             </svg>
           </div>
@@ -257,7 +257,7 @@ export default function PaymentMethods({
             <p className="font-semibold text-zinc-900 text-sm">Card · Apple Pay · M-Pesa</p>
             <p className="text-zinc-500 text-xs">Secure Paystack checkout — Apple Pay on Safari</p>
           </div>
-          <span className="ml-auto text-[10px] font-semibold bg-zinc-100 text-zinc-600 px-2 py-0.5 rounded-full">International</span>
+          <span className="ml-auto text-[10px] font-semibold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full">International</span>
         </div>
 
         <div className="px-5 pb-5 pt-3">
@@ -278,12 +278,12 @@ export default function PaymentMethods({
                 value={paystackEmail}
                 onChange={e => setPaystackEmail(e.target.value)}
                 placeholder="Email address"
-                className="w-full bg-white border border-zinc-300 rounded-lg px-4 py-2.5 text-zinc-900 placeholder-zinc-400 text-sm focus:outline-none focus:border-zinc-500 mb-2.5"
+                className="w-full bg-white border border-indigo-200 rounded-lg px-4 py-2.5 text-zinc-900 placeholder-zinc-400 text-sm focus:outline-none focus:border-indigo-400 mb-2.5"
               />
               <button
                 onClick={handlePaystack}
                 disabled={!paystackEmail || paystackStatus === 'loading'}
-                className="w-full bg-zinc-900 hover:bg-zinc-700 disabled:opacity-50 text-white font-semibold py-2.5 rounded-lg transition-colors text-sm flex items-center justify-center gap-2"
+                className="w-full bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white font-semibold py-2.5 rounded-lg transition-colors text-sm flex items-center justify-center gap-2"
               >
                 {paystackStatus === 'loading' ? <><Spinner /> Opening checkout…</> : (
                   <>
@@ -301,13 +301,13 @@ export default function PaymentMethods({
       </div>
 
       {/* ── 3. M-Pesa Paybill (collapsible) ───────────────────────────────── */}
-      <div className="bg-white border border-zinc-200 rounded-xl overflow-hidden">
+      <div className="bg-white border border-amber-200 rounded-xl overflow-hidden">
         <button
           onClick={() => setPaybillOpen(o => !o)}
-          className="w-full flex items-center gap-3 px-5 py-4 text-left hover:bg-zinc-50 transition-colors"
+          className="w-full flex items-center gap-3 px-5 py-4 text-left hover:bg-amber-50 transition-colors"
         >
-          <div className="w-9 h-9 rounded-lg bg-zinc-100 flex items-center justify-center shrink-0">
-            <svg className="w-5 h-5 text-zinc-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+          <div className="w-9 h-9 rounded-lg bg-amber-100 flex items-center justify-center shrink-0">
+            <svg className="w-5 h-5 text-amber-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z" />
             </svg>
           </div>
@@ -315,7 +315,7 @@ export default function PaymentMethods({
             <p className="font-semibold text-zinc-900 text-sm">M-Pesa Paybill</p>
             <p className="text-zinc-500 text-xs">Pay manually from the Safaricom app or USSD</p>
           </div>
-          <svg className={`w-4 h-4 text-zinc-400 transition-transform shrink-0 ${paybillOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <svg className={`w-4 h-4 text-amber-400 transition-transform shrink-0 ${paybillOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
           </svg>
         </button>

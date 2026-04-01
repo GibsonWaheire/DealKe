@@ -107,7 +107,10 @@ export default function ClientPayPage() {
   const handleContinue = () => {
     const e = validate()
     setErrors(e)
-    if (Object.keys(e).length === 0) setStep(2)
+    if (Object.keys(e).length === 0) {
+      setStep(2)
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
   }
 
   const errMsg = (field) => errors[field]

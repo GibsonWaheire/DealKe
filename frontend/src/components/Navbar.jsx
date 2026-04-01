@@ -40,12 +40,6 @@ export default function Navbar() {
               {label}
             </NavLink>
           ))}
-          <NavLink
-            to="/pay"
-            className="ml-2 bg-emerald-500 hover:bg-emerald-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
-          >
-            Pay Now
-          </NavLink>
         </div>
 
         {/* Hamburger */}
@@ -74,13 +68,6 @@ export default function Navbar() {
               {label}
             </NavLink>
           ))}
-          <NavLink
-            to="/pay"
-            className="bg-emerald-500 hover:bg-emerald-600 text-white text-sm font-medium px-4 py-2.5 rounded-lg text-center transition-colors"
-            onClick={() => setOpen(false)}
-          >
-            Pay Now
-          </NavLink>
         </div>
       </div>
     </nav>

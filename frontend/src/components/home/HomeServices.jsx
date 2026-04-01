@@ -1,9 +1,9 @@
 import { useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { featuredServices, microServices } from '../../data/homeData'
+import { featuredServices, microServices, WA_NUMBER } from '../../data/homeData'
 import useScrollAnimation from '../../hooks/useScrollAnimation'
 import WaIcon from './WaIcon'
-import { parsePrice, waLink } from './homeUtils'
+import { parsePrice } from './homeUtils'
 
 export default function HomeServices() {
   const navigate = useNavigate()
@@ -59,6 +59,8 @@ export default function HomeServices() {
           </div>
         </div>
       </section>
+
+      {/* Quick micro-services with WhatsApp ordering */}
       <section className="py-20 bg-zinc-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-10">
@@ -68,31 +70,46 @@ export default function HomeServices() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {microServices.map((group) => (
-              <div key={group.category} className="bg-white rounded-2xl border border-zinc-200 overflow-hidden shadow-sm">
+              <div key={group.category} className="bg-white rounded-2xl border border-zinc-200 overflow-hidden shadow-sm flex flex-col">
                 <div className={`${group.accentBg} px-5 py-4 flex items-center gap-2`}>
                   <span className="text-lg">{group.icon}</span>
                   <h3 className="text-white font-bold text-sm">{group.category}</h3>
                 </div>
-                <div className="divide-y divide-zinc-100">
+                <div className="divide-y divide-zinc-100 flex-1">
                   {group.services.map((svc) => (
                     <div key={svc.name} className="flex items-center justify-between gap-3 px-4 py-2.5 hover:bg-zinc-50 transition-colors">
                       <span className="text-zinc-700 text-xs leading-snug flex-1">{svc.name}</span>
-                      <div className="flex items-center gap-2 shrink-0">
-                        <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${group.accentLight} ${group.accentText}`}>KES {svc.price}</span>
-                        <a href={waLink(`Hi, I need "${svc.name}" — KES ${svc.price}. Please confirm and share M-Pesa payment details.`)} target="_blank" rel="noreferrer" className="text-zinc-400 hover:text-green-600 transition-colors" aria-label="Order on WhatsApp">
-                          <WaIcon />
-                        </a>
-                      </div>
+                      <span className={`text-xs font-bold px-2 py-0.5 rounded-full shrink-0 ${group.accentLight} ${group.accentText}`}>
+                        KES {svc.price}
+                      </span>
                     </div>
                   ))}
                 </div>
                 <div className="px-5 py-3 bg-zinc-50 border-t border-zinc-200">
-                  <a href={waLink(`Hi, I need help with a ${group.category} task. Can you assist?`)} target="_blank" rel="noreferrer" className={`text-xs font-semibold ${group.accentText} hover:underline`}>
+                  <a
+                    href={`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(`Hi, I need help with a ${group.category} task. Can you assist?`)}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className={`text-xs font-semibold ${group.accentText} hover:underline`}
+                  >
                     Ask about a custom task →
                   </a>
                 </div>
               </div>
             ))}
+          </div>
+
+          {/* Single WhatsApp CTA at the bottom */}
+          <div className="mt-12 text-center">
+            <p className="text-zinc-500 text-sm mb-4">Ready to order any of the above? WhatsApp your request and we'll handle it.</p>
+            <a
+              href={`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent('Hi, I need a quick service done. Can you help?')}`}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white font-semibold px-8 py-3.5 rounded-xl transition-colors"
+            >
+              <WaIcon /> WhatsApp your request
+            </a>
           </div>
         </div>
       </section>

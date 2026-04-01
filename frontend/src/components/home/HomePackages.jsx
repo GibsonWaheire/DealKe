@@ -24,8 +24,8 @@ export default function HomePackages() {
         </div>
         <div className="mt-10 text-center">
           <p className="text-zinc-500 text-xs">All packages include: mobile-first design · 30-day support · SSL advice · domain guidance</p>
-          <a href={waLink('Hi, I need a custom website quote — can you help?')} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-zinc-500 hover:text-zinc-800 text-sm mt-2 underline underline-offset-2">
-            Need something custom? Chat on WhatsApp →
+          <a href="/contact" className="inline-flex items-center gap-1 text-zinc-500 hover:text-zinc-800 text-sm mt-2 underline underline-offset-2">
+            Need something custom? Send us a message →
           </a>
         </div>
       </div>
