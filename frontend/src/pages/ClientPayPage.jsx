@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import PaymentMethods from '../components/PaymentMethods'
+import PaymentSheet from '../components/PaymentSheet'
 
 const PROJECTS = [
   'Website — Landing Page',
@@ -36,7 +36,8 @@ export default function ClientPayPage() {
   const [errors,        setErrors]        = useState({})
 
   // ── Step tracking ────────────────────────────────────────────────────────────
-  const [step, setStep] = useState(1) // 1 = details, 2 = payment
+  const [step,      setStep]      = useState(1) // 1 = details, 2 = payment
+  const [sheetOpen, setSheetOpen] = useState(false)
 
   // ── Exchange rate ────────────────────────────────────────────────────────────
   const [rate,        setRate]        = useState(null)
@@ -125,7 +126,25 @@ export default function ClientPayPage() {
             </div>
           </div>
 
-          <PaymentMethods
+          {/* Single CTA */}
+          <button
+            onClick={() => setSheetOpen(true)}
+            className="w-full bg-zinc-900 hover:bg-zinc-700 active:scale-[.98] text-white font-semibold py-4 rounded-xl transition-all text-base flex items-center justify-center gap-2.5 shadow-lg shadow-zinc-900/20"
+          >
+            <svg className="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
+              <line x1="1" y1="10" x2="23" y2="10" />
+            </svg>
+            Pay {fmt(chargeKES, 'KES')}
+          </button>
+
+          <p className="text-zinc-400 text-xs text-center mt-3">
+            M-Pesa · Card · Apple Pay · Paybill
+          </p>
+
+          <PaymentSheet
+            open={sheetOpen}
+            onClose={() => setSheetOpen(false)}
             amount={chargeKES}
             serviceName={project}
             customerEmail={email}
