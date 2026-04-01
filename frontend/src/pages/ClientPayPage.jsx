@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import PaymentMethods from '../components/PaymentMethods'
 
 const PROJECTS = [
   'Website — Landing Page',
@@ -20,156 +21,132 @@ const PROJECTS = [
 
 const MIN_KES = 100
 
-function generateRef() {
-  const ts = Date.now().toString(36).toUpperCase()
-  const rand = Math.random().toString(36).substring(2, 7).toUpperCase()
-  return `DI-${ts}-${rand}`
-}
-
 export default function ClientPayPage() {
-  const [project, setProject]           = useState('')
-  const [notes, setNotes]               = useState('')
+  // ── Step 1 state ────────────────────────────────────────────────────────────
+  const [project,       setProject]       = useState('')
+  const [notes,         setNotes]         = useState('')
   const [inputCurrency, setInputCurrency] = useState('KES')
-  const [inputAmount, setInputAmount]   = useState('')
-  const [paymentType, setPaymentType]   = useState('full')
+  const [inputAmount,   setInputAmount]   = useState('')
+  const [paymentType,   setPaymentType]   = useState('full')
   const [partialAmount, setPartialAmount] = useState('')
-  const [name, setName]                 = useState('')
-  const [email, setEmail]               = useState('')
-  const [phone, setPhone]               = useState('')
-  const [agreed, setAgreed]             = useState(false)
-  const [rate, setRate]                 = useState(null)
-  const [rateLoading, setRateLoading]   = useState(true)
-  const [loading, setLoading]           = useState(false)
-  const [success, setSuccess]           = useState(null) // { reference, amount }
-  const [error, setError]               = useState('')
-  const [validationErrors, setValidationErrors] = useState({})
+  const [name,          setName]          = useState('')
+  const [email,         setEmail]         = useState('')
+  const [phone,         setPhone]         = useState('')
+  const [agreed,        setAgreed]        = useState(false)
+  const [errors,        setErrors]        = useState({})
+
+  // ── Step tracking ────────────────────────────────────────────────────────────
+  const [step, setStep] = useState(1) // 1 = details, 2 = payment
+
+  // ── Exchange rate ────────────────────────────────────────────────────────────
+  const [rate,        setRate]        = useState(null)
+  const [rateLoading, setRateLoading] = useState(true)
 
   useEffect(() => {
     fetch('https://open.er-api.com/v6/latest/KES')
       .then(r => r.json())
-      .then(data => { setRate(data.rates?.AED ?? 0.027); setRateLoading(false) })
+      .then(d => { setRate(d.rates?.AED ?? 0.027); setRateLoading(false) })
       .catch(() => { setRate(0.027); setRateLoading(false) })
   }, [])
 
-  const parsedInput  = parseFloat(inputAmount) || 0
-  const amountKES    = inputCurrency === 'KES' ? parsedInput : rate ? parsedInput / rate : 0
-  const amountAED    = inputCurrency === 'AED' ? parsedInput : rate ? parsedInput * rate : 0
+  // ── Derived amounts ──────────────────────────────────────────────────────────
+  const parsedInput   = parseFloat(inputAmount) || 0
+  const amountKES     = inputCurrency === 'KES' ? parsedInput : (rate ? parsedInput / rate : 0)
+  const amountAED     = inputCurrency === 'AED' ? parsedInput : (rate ? parsedInput * rate : 0)
   const parsedPartial = parseFloat(partialAmount) || 0
-  const chargeKES    = paymentType === 'full' ? amountKES : parsedPartial
+  const chargeKES     = paymentType === 'full' ? amountKES : parsedPartial
 
   const fmt = (n, currency) =>
     new Intl.NumberFormat('en-KE', { style: 'currency', currency, maximumFractionDigits: 2 }).format(n)
 
+  // ── Validation ───────────────────────────────────────────────────────────────
   const validate = () => {
-    const errs = {}
-    if (!project)                          errs.project = 'Select a project type'
-    if (!name.trim())                      errs.name    = 'Enter your full name'
-    if (!email.trim())                     errs.email   = 'Enter your email address'
-    if (chargeKES < MIN_KES)               errs.amount  = `Minimum payment is ${fmt(MIN_KES, 'KES')}`
+    const e = {}
+    if (!project)                        e.project  = 'Select a project type'
+    if (!name.trim())                    e.name     = 'Enter your full name'
+    if (!email.trim())                   e.email    = 'Enter your email address'
+    if (!phone.trim())                   e.phone    = 'Enter your phone number'
+    if (chargeKES < MIN_KES)             e.amount   = `Minimum is ${fmt(MIN_KES, 'KES')}`
     if (paymentType === 'partial') {
-      if (parsedPartial <= 0)              errs.partial = 'Enter a deposit amount'
-      if (parsedPartial > amountKES)       errs.partial = `Deposit cannot exceed ${fmt(amountKES, 'KES')}`
+      if (parsedPartial <= 0)            e.partial  = 'Enter a deposit amount'
+      if (parsedPartial > amountKES)     e.partial  = `Cannot exceed ${fmt(amountKES, 'KES')}`
     }
-    if (!agreed)                           errs.agreed  = 'Please accept the terms to continue'
-    return errs
+    if (!agreed)                         e.agreed   = 'Please accept the terms to continue'
+    return e
   }
 
-  const handlePay = async () => {
-    setError('')
-    const errs = validate()
-    setValidationErrors(errs)
-    if (Object.keys(errs).length > 0) return
-    if (!window.PaystackPop) {
-      setError('Payment provider failed to load. Please refresh the page.')
-      return
-    }
-    setLoading(true)
-    const ref = generateRef()
-    const paystackPop = new window.PaystackPop()
-    await paystackPop.checkout({
-      key: import.meta.env.VITE_PAYSTACK_PUBLIC_KEY,
-      email,
-      amount: Math.round(chargeKES * 100),
-      currency: 'KES',
-      ref,
-      label: project,
-      firstname: name.split(' ')[0],
-      lastname: name.split(' ').slice(1).join(' ') || '',
-      phone: phone || undefined,
-      metadata: {
-        custom_fields: [
-          { display_name: 'Project',      variable_name: 'project',      value: project },
-          { display_name: 'Notes',        variable_name: 'notes',        value: notes || '—' },
-          { display_name: 'Total (KES)',  variable_name: 'total_kes',    value: fmt(amountKES, 'KES') },
-          { display_name: 'Total (AED)',  variable_name: 'total_aed',    value: fmt(amountAED, 'AED') },
-          { display_name: 'Payment type', variable_name: 'payment_type', value: paymentType },
-          { display_name: 'Customer',     variable_name: 'customer_name', value: name },
-        ],
-      },
-      onSuccess: (transaction) => {
-        setLoading(false)
-        setSuccess({ reference: transaction.reference, amount: chargeKES })
-      },
-      onCancel: () => {
-        setLoading(false)
-      },
-    })
-    setLoading(false)
+  const handleContinue = () => {
+    const e = validate()
+    setErrors(e)
+    if (Object.keys(e).length === 0) setStep(2)
   }
 
-  const err = (field) => validationErrors[field]
-    ? <p className="text-red-500 text-xs mt-1">{validationErrors[field]}</p>
+  const errMsg = (field) => errors[field]
+    ? <p className="text-red-500 text-xs mt-1">{errors[field]}</p>
     : null
 
-  // ── Success screen ──────────────────────────────────────────────────────────
-  if (success) {
+  const inputClass = (field) =>
+    `w-full bg-white border rounded-lg px-4 py-2.5 text-zinc-900 placeholder-zinc-400 text-sm focus:outline-none focus:border-zinc-500 ${errors[field] ? 'border-red-400' : 'border-zinc-300'}`
+
+  // ── Step 2: Payment ──────────────────────────────────────────────────────────
+  if (step === 2) {
     return (
-      <div className="min-h-screen bg-zinc-50 flex items-center justify-center py-12 px-4">
-        <div className="max-w-md w-full bg-white border border-zinc-200 rounded-xl p-8 text-center">
-          <div className="w-14 h-14 rounded-full bg-emerald-100 flex items-center justify-center mx-auto mb-4">
-            <svg className="w-7 h-7 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-            </svg>
-          </div>
-          <h2 className="text-xl font-bold text-zinc-900 mb-1">Payment received</h2>
-          <p className="text-zinc-500 text-sm mb-6">Thank you, {name.split(' ')[0]}. We'll be in touch shortly.</p>
-          <div className="bg-zinc-50 border border-zinc-200 rounded-lg px-4 py-3 text-sm text-left space-y-2 mb-6">
-            <div className="flex justify-between">
-              <span className="text-zinc-500">Project</span>
-              <span className="font-medium text-zinc-900">{project}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-zinc-500">Amount paid</span>
-              <span className="font-bold text-zinc-900">{fmt(success.amount, 'KES')}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-zinc-500">Reference</span>
-              <span className="font-mono text-xs text-zinc-700">{success.reference}</span>
-            </div>
-          </div>
-          <a
-            href={`https://wa.me/254726899113?text=${encodeURIComponent(`Hi, I just paid for ${project}. Reference: ${success.reference}. Name: ${name}. Please confirm.`)}`}
-            target="_blank"
-            rel="noreferrer"
-            className="w-full block bg-green-500 hover:bg-green-600 text-white font-semibold py-3 rounded-lg transition-colors text-sm"
+      <div className="min-h-screen bg-zinc-50 py-12">
+        <div className="max-w-lg mx-auto px-4 sm:px-6">
+
+          {/* Back to details */}
+          <button
+            onClick={() => setStep(1)}
+            className="text-zinc-500 hover:text-zinc-900 text-sm mb-6 flex items-center gap-1 transition-colors"
           >
-            Confirm on WhatsApp
-          </a>
-          <p className="text-zinc-400 text-xs mt-3">Save your reference number for your records.</p>
+            ← Edit details
+          </button>
+
+          {/* Order summary */}
+          <div className="bg-white border border-zinc-200 rounded-xl p-5 mb-4">
+            <div className="flex items-start justify-between gap-3 flex-wrap mb-4">
+              <div>
+                <p className="text-xs text-zinc-500 uppercase tracking-widest font-semibold mb-1">Paying for</p>
+                <p className="font-bold text-zinc-900 text-lg">{project}</p>
+                {notes && <p className="text-zinc-500 text-xs mt-1 max-w-xs">{notes}</p>}
+              </div>
+              <div className="text-right shrink-0">
+                <p className="text-3xl font-bold text-zinc-900">{fmt(chargeKES, 'KES')}</p>
+                <p className="text-zinc-400 text-xs mt-0.5">≈ {fmt(amountAED * (chargeKES / amountKES || 1), 'AED')}</p>
+              </div>
+            </div>
+            <div className="border-t border-zinc-100 pt-3 flex flex-wrap gap-x-6 gap-y-1 text-xs text-zinc-500">
+              <span><strong className="text-zinc-700">Name:</strong> {name}</span>
+              <span><strong className="text-zinc-700">Email:</strong> {email}</span>
+              <span><strong className="text-zinc-700">Phone:</strong> {phone}</span>
+              {paymentType === 'partial' && (
+                <span><strong className="text-zinc-700">Total:</strong> {fmt(amountKES, 'KES')} · <span className="text-amber-600">Paying deposit</span></span>
+              )}
+            </div>
+          </div>
+
+          <PaymentMethods
+            amount={chargeKES}
+            serviceName={project}
+            customerEmail={email}
+            customerPhone={phone}
+            customerName={name}
+          />
+
         </div>
       </div>
     )
   }
 
-  // ── Payment form ────────────────────────────────────────────────────────────
+  // ── Step 1: Details form ─────────────────────────────────────────────────────
   return (
     <div className="min-h-screen bg-zinc-50 py-12">
       <div className="max-w-lg mx-auto px-4 sm:px-6">
 
-        {/* Merchant identity */}
+        {/* Header */}
         <div className="flex items-center gap-3 mb-8">
           <div className="w-10 h-10 rounded-xl bg-zinc-900 flex items-center justify-center shrink-0">
-            <span className="text-white font-bold text-sm">D</span>
+            <span className="text-white font-bold text-sm">DI</span>
           </div>
           <div>
             <p className="font-bold text-zinc-900 leading-tight">Draft-It</p>
@@ -177,25 +154,34 @@ export default function ClientPayPage() {
           </div>
         </div>
 
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold text-zinc-900">Pay for your project</h1>
+          <p className="text-zinc-500 text-sm mt-1">Fill in your details and choose how to pay.</p>
+        </div>
+
         <div className="bg-white border border-zinc-200 rounded-xl p-6 space-y-5">
 
           {/* Project */}
           <div>
-            <label className="block text-sm font-semibold text-zinc-700 mb-1.5">Project type <span className="text-red-400">*</span></label>
+            <label className="block text-sm font-semibold text-zinc-700 mb-1.5">
+              Project type <span className="text-red-400">*</span>
+            </label>
             <select
               value={project}
-              onChange={e => { setProject(e.target.value); setValidationErrors(v => ({ ...v, project: '' })) }}
-              className={`w-full bg-white border rounded-lg px-4 py-2.5 text-zinc-900 text-sm focus:outline-none focus:border-zinc-500 ${err('project') ? 'border-red-400' : 'border-zinc-300'}`}
+              onChange={e => { setProject(e.target.value); setErrors(v => ({ ...v, project: '' })) }}
+              className={inputClass('project')}
             >
               <option value="">Select a project…</option>
               {PROJECTS.map(p => <option key={p} value={p}>{p}</option>)}
             </select>
-            {err('project')}
+            {errMsg('project')}
           </div>
 
           {/* Notes */}
           <div>
-            <label className="block text-sm font-semibold text-zinc-700 mb-1.5">Project description <span className="text-zinc-400 font-normal">(optional)</span></label>
+            <label className="block text-sm font-semibold text-zinc-700 mb-1.5">
+              Description <span className="text-zinc-400 font-normal">(optional)</span>
+            </label>
             <textarea
               value={notes}
               onChange={e => setNotes(e.target.value)}
@@ -207,12 +193,14 @@ export default function ClientPayPage() {
 
           {/* Amount */}
           <div>
-            <label className="block text-sm font-semibold text-zinc-700 mb-1.5">Amount <span className="text-red-400">*</span></label>
+            <label className="block text-sm font-semibold text-zinc-700 mb-1.5">
+              Amount <span className="text-red-400">*</span>
+            </label>
             <div className="flex gap-2 mb-2.5">
               {['KES', 'AED'].map(c => (
                 <button
                   key={c}
-                  onClick={() => { setInputCurrency(c); setInputAmount(''); setValidationErrors(v => ({ ...v, amount: '' })) }}
+                  onClick={() => { setInputCurrency(c); setInputAmount(''); setErrors(v => ({ ...v, amount: '' })) }}
                   className={`px-4 py-1.5 rounded-lg text-sm font-semibold border transition-colors ${
                     inputCurrency === c ? 'bg-zinc-900 text-white border-zinc-900' : 'bg-white text-zinc-600 border-zinc-300 hover:border-zinc-500'
                   }`}
@@ -227,12 +215,12 @@ export default function ClientPayPage() {
                 type="number"
                 min="0"
                 value={inputAmount}
-                onChange={e => { setInputAmount(e.target.value); setValidationErrors(v => ({ ...v, amount: '' })) }}
+                onChange={e => { setInputAmount(e.target.value); setErrors(v => ({ ...v, amount: '' })) }}
                 placeholder="0.00"
-                className={`w-full bg-white border rounded-lg pl-16 pr-4 py-2.5 text-zinc-900 text-sm focus:outline-none focus:border-zinc-500 ${err('amount') ? 'border-red-400' : 'border-zinc-300'}`}
+                className={`w-full bg-white border rounded-lg pl-16 pr-4 py-2.5 text-zinc-900 text-sm focus:outline-none focus:border-zinc-500 ${errors.amount ? 'border-red-400' : 'border-zinc-300'}`}
               />
             </div>
-            {err('amount')}
+            {errMsg('amount')}
             {parsedInput > 0 && rate && (
               <div className="mt-2 flex items-center justify-between bg-zinc-50 border border-zinc-200 rounded-lg px-4 py-2.5">
                 <div>
@@ -266,7 +254,9 @@ export default function ClientPayPage() {
               </div>
               {paymentType === 'partial' && (
                 <div>
-                  <p className="text-zinc-500 text-xs mb-1.5">Amount to pay now (KES) — max {fmt(amountKES, 'KES')}</p>
+                  <p className="text-zinc-500 text-xs mb-1.5">
+                    Amount to pay now (KES) — max {fmt(amountKES, 'KES')}
+                  </p>
                   <div className="relative">
                     <span className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 text-sm font-medium">KES</span>
                     <input
@@ -274,125 +264,93 @@ export default function ClientPayPage() {
                       min={MIN_KES}
                       max={amountKES}
                       value={partialAmount}
-                      onChange={e => { setPartialAmount(e.target.value); setValidationErrors(v => ({ ...v, partial: '' })) }}
+                      onChange={e => { setPartialAmount(e.target.value); setErrors(v => ({ ...v, partial: '' })) }}
                       placeholder={`e.g. ${Math.round(amountKES * 0.5).toLocaleString()}`}
-                      className={`w-full bg-white border rounded-lg pl-16 pr-4 py-2.5 text-zinc-900 text-sm focus:outline-none focus:border-zinc-500 ${err('partial') ? 'border-red-400' : 'border-zinc-300'}`}
+                      className={`w-full bg-white border rounded-lg pl-16 pr-4 py-2.5 text-zinc-900 text-sm focus:outline-none focus:border-zinc-500 ${errors.partial ? 'border-red-400' : 'border-zinc-300'}`}
                     />
                   </div>
-                  {err('partial')}
+                  {errMsg('partial')}
                 </div>
               )}
             </div>
           )}
 
-          <div className="border-t border-zinc-100 pt-1" />
+          <div className="border-t border-zinc-100" />
 
           {/* Name */}
           <div>
-            <label className="block text-sm font-semibold text-zinc-700 mb-1.5">Full name <span className="text-red-400">*</span></label>
+            <label className="block text-sm font-semibold text-zinc-700 mb-1.5">
+              Full name <span className="text-red-400">*</span>
+            </label>
             <input
               type="text"
               value={name}
-              onChange={e => { setName(e.target.value); setValidationErrors(v => ({ ...v, name: '' })) }}
+              onChange={e => { setName(e.target.value); setErrors(v => ({ ...v, name: '' })) }}
               placeholder="John Doe"
-              className={`w-full bg-white border rounded-lg px-4 py-2.5 text-zinc-900 placeholder-zinc-400 text-sm focus:outline-none focus:border-zinc-500 ${err('name') ? 'border-red-400' : 'border-zinc-300'}`}
+              className={inputClass('name')}
             />
-            {err('name')}
+            {errMsg('name')}
           </div>
 
           {/* Email */}
           <div>
-            <label className="block text-sm font-semibold text-zinc-700 mb-1.5">Email address <span className="text-red-400">*</span></label>
+            <label className="block text-sm font-semibold text-zinc-700 mb-1.5">
+              Email <span className="text-red-400">*</span>
+            </label>
             <input
               type="email"
               value={email}
-              onChange={e => { setEmail(e.target.value); setValidationErrors(v => ({ ...v, email: '' })) }}
+              onChange={e => { setEmail(e.target.value); setErrors(v => ({ ...v, email: '' })) }}
               placeholder="your@email.com"
-              className={`w-full bg-white border rounded-lg px-4 py-2.5 text-zinc-900 placeholder-zinc-400 text-sm focus:outline-none focus:border-zinc-500 ${err('email') ? 'border-red-400' : 'border-zinc-300'}`}
+              className={inputClass('email')}
             />
-            {err('email')}
+            {errMsg('email')}
           </div>
 
-          {/* Phone (optional) */}
+          {/* Phone */}
           <div>
             <label className="block text-sm font-semibold text-zinc-700 mb-1.5">
-              Phone <span className="text-zinc-400 font-normal">(optional)</span>
+              Phone <span className="text-red-400">*</span>
             </label>
             <input
               type="tel"
               value={phone}
-              onChange={e => setPhone(e.target.value)}
-              placeholder="+971 XX XXX XXXX"
-              className="w-full bg-white border border-zinc-300 rounded-lg px-4 py-2.5 text-zinc-900 placeholder-zinc-400 text-sm focus:outline-none focus:border-zinc-500"
+              onChange={e => { setPhone(e.target.value); setErrors(v => ({ ...v, phone: '' })) }}
+              placeholder="+254 7XX XXX XXX or +971 XX XXX XXXX"
+              className={inputClass('phone')}
             />
+            {errMsg('phone')}
           </div>
 
-          {/* Order summary */}
-          {project && chargeKES >= MIN_KES && name && email && (
-            <div className="bg-zinc-50 border border-zinc-200 rounded-lg px-4 py-3 space-y-1.5 text-sm">
-              <div className="flex justify-between text-zinc-600">
-                <span>Project</span>
-                <span className="font-medium text-zinc-900 text-right max-w-[55%]">{project}</span>
-              </div>
-              <div className="flex justify-between text-zinc-600">
-                <span>Total</span>
-                <span>{fmt(amountKES, 'KES')} <span className="text-zinc-400 text-xs">(≈ {fmt(amountAED, 'AED')})</span></span>
-              </div>
-              <div className="flex justify-between text-zinc-900 font-bold border-t border-zinc-200 pt-1.5">
-                <span>Paying now</span>
-                <span>{fmt(chargeKES, 'KES')}</span>
-              </div>
-              {paymentType === 'partial' && amountKES - chargeKES > 0 && (
-                <div className="flex justify-between text-zinc-400 text-xs">
-                  <span>Balance remaining</span>
-                  <span>{fmt(amountKES - chargeKES, 'KES')}</span>
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* Terms agreement */}
+          {/* Terms */}
           <div>
-            <label className={`flex items-start gap-3 cursor-pointer ${err('agreed') ? 'text-red-500' : ''}`}>
+            <label className={`flex items-start gap-3 cursor-pointer`}>
               <input
                 type="checkbox"
                 checked={agreed}
-                onChange={e => { setAgreed(e.target.checked); setValidationErrors(v => ({ ...v, agreed: '' })) }}
+                onChange={e => { setAgreed(e.target.checked); setErrors(v => ({ ...v, agreed: '' })) }}
                 className="mt-0.5 w-4 h-4 accent-emerald-500 cursor-pointer shrink-0"
               />
               <span className="text-xs text-zinc-600 leading-relaxed">
-                I have read and agree to Draft-It's{' '}
-                <Link to="/terms" target="_blank" className="underline text-zinc-900">Terms of Service</Link>,{' '}
-                <Link to="/refund" target="_blank" className="underline text-zinc-900">Refund Policy</Link>, and{' '}
+                I agree to Draft-It's{' '}
+                <Link to="/terms"   target="_blank" className="underline text-zinc-900">Terms of Service</Link>,{' '}
+                <Link to="/refund"  target="_blank" className="underline text-zinc-900">Refund Policy</Link>, and{' '}
                 <Link to="/privacy" target="_blank" className="underline text-zinc-900">Privacy Policy</Link>.
-                I understand that all charges are in KES via Paystack.
               </span>
             </label>
-            {err('agreed')}
+            {errMsg('agreed')}
           </div>
 
-          {error && (
-            <p className="text-red-600 text-sm bg-red-50 border border-red-200 rounded-lg px-3 py-2">{error}</p>
-          )}
-
-          {/* Pay button */}
+          {/* Continue button */}
           <button
-            onClick={handlePay}
-            disabled={loading}
-            className="w-full bg-zinc-900 hover:bg-zinc-700 disabled:opacity-40 text-white font-semibold py-3.5 rounded-xl transition-colors flex items-center justify-center gap-2 text-base"
+            onClick={handleContinue}
+            className="w-full bg-zinc-900 hover:bg-zinc-700 text-white font-semibold py-3.5 rounded-xl transition-colors text-base"
           >
-            {loading ? 'Opening checkout…' : (
-              <>
-                <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                  <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z" />
-                </svg>
-                {chargeKES >= MIN_KES ? `Pay ${fmt(chargeKES, 'KES')}` : 'Pay with Apple Pay / Card'}
-              </>
-            )}
+            Continue to Payment →
           </button>
 
           <p className="text-zinc-400 text-xs text-center">
-            Secured by Paystack · Apple Pay on Safari · Charges in KES
+            Secured by Paystack &amp; Safaricom · Charges in KES
           </p>
 
         </div>
