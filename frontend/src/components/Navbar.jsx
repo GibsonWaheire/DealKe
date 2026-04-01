@@ -8,6 +8,7 @@ const navLinks = [
   { path: '/shop',      label: 'Shop',     end: false },
   { path: '/about',     label: 'About',    end: false },
   { path: '/contact',   label: 'Contact',  end: false },
+  { path: '/pay',       label: 'Pay',      end: false },
 ]
 
 export default function Navbar() {
