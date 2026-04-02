@@ -20,6 +20,7 @@ import AdminLogin from './pages/AdminLogin'
 import AdminBlog from './pages/AdminBlog'
 import OrderPage from './pages/OrderPage'
 import ClientPayPage from './pages/ClientPayPage'
+import PassportPhotoPage from './pages/PassportPhotoPage'
 import NotFound from './pages/NotFound'
 
 const SITE = 'https://draftit.co.ke'
@@ -60,6 +61,10 @@ const pageMeta = {
   '/order': {
     title: 'Order a Service | Draft-It Kenya',
     description: 'Place an order for websites, KRA registration, IT support and 70+ digital services. Pay via M-Pesa or card.',
+  },
+  '/passport-photo': {
+    title: 'Passport Photo Online Kenya | 35×45mm Print-Ready — Draft-It',
+    description: 'Upload your photo, remove the background with AI, and download a print-ready Kenya passport photo (35×45mm, 300 DPI). Pay KES 150 online.',
   },
   '/privacy':  { title: 'Privacy Policy | Draft-It', description: 'How Draft-It collects, uses, and protects your personal information.' },
   '/terms':    { title: 'Terms of Service | Draft-It', description: 'Terms and conditions for using Draft-It digital services in Kenya.' },
@@ -110,6 +115,7 @@ const App = () => (
               <Route path="refund" element={<RefundPolicy />} />
               <Route path="order" element={<OrderPage />} />
               <Route path="pay" element={<ClientPayPage />} />
+              <Route path="passport-photo" element={<PassportPhotoPage />} />
             </Route>
             {/* Admin routes — outside Layout (no navbar/footer) */}
             <Route path="/admin-login" element={<AdminLogin />} />

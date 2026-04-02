@@ -8,10 +8,12 @@ export default function PaymentSheet({
   onClose,
   amount,
   serviceName,
-  category      = '',
-  customerEmail = '',
-  customerPhone = '',
-  customerName  = '',
+  category         = '',
+  description      = '',
+  customerEmail    = '',
+  customerPhone    = '',
+  customerName     = '',
+  onPaymentSuccess = undefined,
 }) {
   const [mounted, setMounted] = useState(false)
   const [visible, setVisible] = useState(false)
@@ -91,9 +93,11 @@ export default function PaymentSheet({
             amount={amount}
             serviceName={serviceName}
             category={category}
+            description={description}
             customerEmail={customerEmail}
             customerPhone={customerPhone}
             customerName={customerName}
+            onPaymentSuccess={onPaymentSuccess}
           />
         </div>
       </div>
