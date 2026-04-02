@@ -1,7 +1,95 @@
 import { useState, useRef, useCallback } from 'react'
+import { Helmet } from 'react-helmet-async'
 import PassportPhotoEditor from '../components/PassportPhotoEditor'
 import PassportPhotoDownload from '../components/PassportPhotoDownload'
 import PaymentSheet from '../components/PaymentSheet'
+
+const STRUCTURED_DATA = [
+  // Product schema — lets Google show price in search results
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: 'Online Passport Photo Kenya — 35×45mm',
+    description: 'AI background removal, crop to Kenya standard 35×45mm, instant download of 300 DPI print-ready PNG or 4-up A4 sheet.',
+    brand: { '@type': 'Brand', name: 'Draft-It' },
+    image: 'https://draftit.co.ke/og-image.jpg',
+    offers: {
+      '@type': 'Offer',
+      priceCurrency: 'KES',
+      price: '150',
+      availability: 'https://schema.org/InStock',
+      url: 'https://draftit.co.ke/passport-photo',
+      seller: { '@type': 'Organization', name: 'Draft-It' },
+    },
+  },
+  // WebApplication schema — for the tool itself
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: 'Passport Photo Editor — Draft-It',
+    url: 'https://draftit.co.ke/passport-photo',
+    applicationCategory: 'UtilitiesApplication',
+    operatingSystem: 'Any',
+    description: 'Online passport photo maker for Kenya. Upload a photo, remove background with AI, crop to 35×45mm, pay KES 150 and download instantly.',
+    offers: { '@type': 'Offer', priceCurrency: 'KES', price: '150' },
+  },
+  // FAQPage schema — targets Google "People Also Ask" boxes
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: 'How much does a passport photo cost online in Kenya?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'A passport photo on Draft-It costs KES 150 (about $1.20). Pay online with M-Pesa or card, and download your print-ready 35×45mm PNG instantly — no queuing at a photo studio.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'What size is a Kenya passport photo?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Kenya passport photos must be 35mm wide by 45mm tall (35×45mm). Draft-It crops your photo to exactly this size at 300 DPI, ready to print at any photo studio or print shop.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Can I remove the background from a passport photo online?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Yes. Draft-It uses AI to automatically remove the background from your photo directly in your browser — your photo is never uploaded to a server. You can choose white, light blue, or light gray as the replacement background.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Can I print a passport photo sheet at home?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Yes. After paying KES 150, you can download a 4-up A4 sheet with four passport photos arranged for printing. Print at 300 DPI on photo paper for best results.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Is it safe to upload my photo online for a passport photo?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Your photo never leaves your device. All AI background removal and cropping runs entirely in your browser using WebAssembly — nothing is sent to or stored on our servers.',
+        },
+      },
+    ],
+  },
+  // BreadcrumbList
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://draftit.co.ke/' },
+      { '@type': 'ListItem', position: 2, name: 'Passport Photo', item: 'https://draftit.co.ke/passport-photo' },
+    ],
+  },
+]
 
 const COUNTRIES = [
   { code: '+254',   flag: '🇰🇪', name: 'Kenya',        placeholder: '7XX XXX XXX',  regex: /^0?[71]\d{8}$/ },
@@ -102,6 +190,20 @@ export default function PassportPhotoPage() {
   // ── Render ─────────────────────────────────────────────────────────────────
   return (
     <div className="min-h-screen bg-zinc-50 pb-16">
+      <Helmet>
+        {/* Keywords — supplements the global SeoManager title/description */}
+        <meta name="keywords" content="passport photo online Kenya, passport photo maker Kenya, online passport photo Nairobi, Kenya passport photo 35x45mm, passport photo background removal, passport size photo Kenya, cheap passport photo Kenya, passport photo KES 150, print ready passport photo Kenya, 4up passport photo sheet Kenya" />
+        <meta property="og:image" content="https://draftit.co.ke/og-image.jpg" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:image" content="https://draftit.co.ke/og-image.jpg" />
+        {/* Structured data — injected as separate script tags */}
+        {STRUCTURED_DATA.map((schema, i) => (
+          <script key={i} type="application/ld+json">
+            {JSON.stringify(schema)}
+          </script>
+        ))}
+      </Helmet>
+
       <div className="max-w-lg mx-auto px-4 pt-10">
 
         {/* Page header */}

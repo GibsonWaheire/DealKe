@@ -63,8 +63,8 @@ const pageMeta = {
     description: 'Place an order for websites, KRA registration, IT support and 70+ digital services. Pay via M-Pesa or card.',
   },
   '/passport-photo': {
-    title: 'Passport Photo Online Kenya | 35×45mm Print-Ready — Draft-It',
-    description: 'Upload your photo, remove the background with AI, and download a print-ready Kenya passport photo (35×45mm, 300 DPI). Pay KES 150 online.',
+    title: 'Online Passport Photo Kenya — AI Crop & BG Removal | KES 150 | Draft-It',
+    description: 'Make a Kenya passport photo online in minutes. AI removes background, crop to 35×45mm, download 300 DPI PNG. Pay KES 150 — no account needed.',
   },
   '/privacy':  { title: 'Privacy Policy | Draft-It', description: 'How Draft-It collects, uses, and protects your personal information.' },
   '/terms':    { title: 'Terms of Service | Draft-It', description: 'Terms and conditions for using Draft-It digital services in Kenya.' },
