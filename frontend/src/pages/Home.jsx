@@ -1,6 +1,7 @@
 import HomeHero from '../components/home/HomeHero'
 import HomeStats from '../components/home/HomeStats'
 import HomeServices from '../components/home/HomeServices'
+import HomePassportPhoto from '../components/home/HomePassportPhoto'
 import HomePackages from '../components/home/HomePackages'
 import HomeTemplates from '../components/home/HomeTemplates'
 import HomeTools from '../components/home/HomeTools'
@@ -14,6 +15,7 @@ export default function Home() {
       <HomeHero />
       <HomeStats />
       <HomeServices />
+      <HomePassportPhoto />
       <HomePackages />
       <HomeTemplates />
       <HomeTools />
