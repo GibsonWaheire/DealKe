@@ -94,27 +94,28 @@ export default function PrivacyPolicy() {
               </ul>
             </Section>
 
-            <Section title="3. Cookies and Tracking">
+            <Section title="3. Cookies and Third-Party Tools">
               <p>
-                We use a minimal number of cookies on this website:
+                We use a minimal number of cookies and third-party tools to enhance your browsing
+                experience, enable secure payments, and protect your privacy:
               </p>
               <ul className="list-disc pl-5 space-y-1">
                 <li>
-                  <strong className="text-slate-800">Functional cookies (Paystack):</strong> Our
-                  payment provider, Paystack, may set cookies required for secure payment processing
-                  and fraud prevention. These are strictly necessary and cannot be disabled without
-                  disabling the payment feature.
+                  <strong className="text-slate-800">Functional cookies (third-party payment processors):</strong>{' '}
+                  The payment processors we use may set session cookies strictly necessary for secure
+                  checkout and fraud prevention. These cannot be disabled without disabling the payment
+                  feature entirely.
                 </li>
                 <li>
-                  <strong className="text-slate-800">Consent cookie:</strong> We store your cookie
-                  consent preference in your browser's local storage so we do not ask again on
+                  <strong className="text-slate-800">Consent preference:</strong> We store your cookie
+                  consent choice in your browser's local storage so we do not prompt you again on
                   subsequent visits.
                 </li>
               </ul>
               <p>
-                We do not use advertising cookies, social media tracking pixels, Google Analytics,
-                or any third-party behavioural tracking scripts. You may withdraw your cookie consent
-                at any time by clearing your browser's cookies and local storage.
+                We do not use advertising cookies, social media tracking pixels, analytics scripts,
+                or any third-party behavioural tracking tools. You may withdraw consent at any time
+                by clearing your browser's cookies and local storage.
               </p>
             </Section>
 

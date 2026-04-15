@@ -191,13 +191,13 @@ export default function TermsOfService() {
               </p>
             </Section>
 
-            <Section title="9. Cookies and Tracking">
+            <Section title="9. Cookies and Third-Party Tools">
               <p>
-                This website uses limited functional cookies necessary for the operation of our payment
-                provider (Paystack) and to remember your cookie consent preference. We do not use
-                advertising cookies or third-party tracking scripts for marketing purposes. By accepting
-                our cookie notice, you consent to the use of these functional cookies. You may withdraw
-                consent at any time by clearing your browser cookies. See our{' '}
+                This website uses cookies and third-party tools to enhance your browsing experience,
+                enable secure payments, and protect your privacy. We do not use advertising cookies
+                or behavioural tracking scripts. By accepting our cookie notice, you consent to the
+                use of these functional cookies. You may withdraw consent at any time by clearing your
+                browser cookies and local storage. See our{' '}
                 <a href="/privacy" className="text-emerald-600 underline">Privacy Notice</a> for full details.
               </p>
             </Section>
