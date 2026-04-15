@@ -424,11 +424,71 @@ export default function PassportPhotoPage() {
           )}
         </div>
 
-        {/* Footer note on upload screen */}
+        {/* Description + FAQ — shown on upload step only */}
         {step === 'upload' && (
-          <p className="text-center text-xs text-slate-400 mt-5">
-            Kenya/UK passport photo standard: 35 × 45 mm · 300 DPI print quality
-          </p>
+          <div className="mt-8 space-y-6 text-sm text-slate-600">
+
+            <p className="text-center text-xs text-slate-400">
+              Kenya/UK passport photo standard: 35 × 45 mm · 300 DPI print quality
+            </p>
+
+            {/* What this tool does */}
+            <div className="bg-white rounded-2xl border border-zinc-100 shadow-sm p-5">
+              <h2 className="font-semibold text-slate-800 mb-2">What is this tool?</h2>
+              <p className="leading-relaxed">
+                Draft-It's Passport Photo Editor lets you create a Kenya-standard passport photo entirely in your browser
+                — no app download, no photo studio queue. Upload any clear photo of yourself, and the tool will:
+              </p>
+              <ul className="mt-3 space-y-1.5 list-none">
+                {[
+                  { icon: '🤖', text: 'Remove the background automatically using AI' },
+                  { icon: '✂️', text: 'Crop and resize to the exact 35 × 45 mm Kenya passport size' },
+                  { icon: '🖨️', text: 'Export a 300 DPI print-ready PNG — or a 4-up A4 sheet with four photos' },
+                  { icon: '🔒', text: 'Process everything locally — your photo never leaves your device' },
+                ].map(item => (
+                  <li key={item.text} className="flex items-start gap-2">
+                    <span className="mt-0.5">{item.icon}</span>
+                    <span>{item.text}</span>
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-3 leading-relaxed">
+                Once your photo looks right, pay <strong className="text-slate-800">KES 150</strong> (≈ $1.20) via M-Pesa or card,
+                and download your file instantly.
+              </p>
+            </div>
+
+            {/* FAQ */}
+            <div className="bg-white rounded-2xl border border-zinc-100 shadow-sm p-5">
+              <h2 className="font-semibold text-slate-800 mb-3">Common questions</h2>
+              <div className="space-y-4">
+                {[
+                  {
+                    q: 'What size is a Kenya passport photo?',
+                    a: 'Kenya passport photos must be 35 mm wide × 45 mm tall. Draft-It crops your photo to exactly this size at 300 DPI, ready to print at any print shop.',
+                  },
+                  {
+                    q: 'Is my photo stored on your servers?',
+                    a: 'No. All background removal and cropping runs in your browser using WebAssembly. Nothing is uploaded or stored anywhere.',
+                  },
+                  {
+                    q: 'What do I get after paying?',
+                    a: 'You can download a single 35×45 mm PNG, or a 4-up A4 sheet with four photos — both at 300 DPI, ready for printing.',
+                  },
+                  {
+                    q: 'Can I change the background colour?',
+                    a: 'Yes — after removing the background you can choose white, light blue, or light grey before saving.',
+                  },
+                ].map(item => (
+                  <div key={item.q}>
+                    <p className="font-medium text-slate-700">{item.q}</p>
+                    <p className="text-slate-500 mt-0.5 leading-relaxed">{item.a}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+          </div>
         )}
       </div>
 
