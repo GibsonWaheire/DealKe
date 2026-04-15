@@ -265,29 +265,42 @@ export default function HomeHero() {
     return () => clearInterval(interval)
   }, [])
 
-  const current = heroSlides[slide]
-  const heroIllustrations = [
-    WebsiteIllustration,
-    KRAIllustration,
-    NetworkIllustration,
-    DocumentsIllustration,
-    ERPIllustration,
-    ChatIllustration,
-  ]
-  const CurrentIllustration = heroIllustrations[slide] || WebsiteIllustration
-
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-zinc-200 via-zinc-100/80 to-zinc-50">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(15,23,42,0.12),transparent_46%)] pointer-events-none" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,rgba(59,130,246,0.14),transparent_44%)] pointer-events-none" />
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center py-20 lg:py-24">
-          <div className={`transition-all duration-500 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`}>
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-zinc-900 leading-tight">
-              {current.headline}
+    <section className="relative overflow-hidden min-h-[560px] md:min-h-[620px] flex flex-col">
+
+      {/* ── Background images — crossfade between slides ─────────────── */}
+      {heroSlides.map((s, i) => (
+        <div
+          key={i}
+          className="absolute inset-0 transition-opacity duration-700"
+          style={{ opacity: i === slide ? 1 : 0 }}
+        >
+          <img
+            src={s.image}
+            alt=""
+            className="w-full h-full object-cover"
+            loading={i === 0 ? 'eager' : 'lazy'}
+          />
+        </div>
+      ))}
+
+      {/* Gradient overlay — heavier on left so text stays readable */}
+      <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/55 to-black/25" />
+      {/* Bottom fade into ticker */}
+      <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/60 to-transparent" />
+
+      {/* ── Content ──────────────────────────────────────────────────── */}
+      <div className="relative flex-1 flex items-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28 w-full">
+          <div className={`max-w-xl transition-all duration-500 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight">
+              {heroSlides[slide].headline}
             </h1>
-            <p className="text-zinc-600 text-base mt-3 max-w-md">{current.sub}</p>
-            <p className="text-zinc-400 text-xs mt-3">Last project delivered: 12 March 2026</p>
+            <p className="text-white/70 text-base mt-3 max-w-md leading-relaxed">
+              {heroSlides[slide].sub}
+            </p>
+            <p className="text-white/40 text-xs mt-2">Last project delivered: 12 March 2026</p>
+
             <div className="flex flex-wrap gap-3 mt-6">
               <a
                 href={waLink('Hi, I have an enquiry')}
@@ -299,49 +312,48 @@ export default function HomeHero() {
               </a>
               <Link
                 to="/services"
-                className="border border-zinc-300 text-zinc-700 hover:border-zinc-500 hover:text-zinc-900 font-medium px-6 py-3 rounded-xl transition-colors"
+                className="border border-white/30 hover:border-white/60 text-white font-medium px-6 py-3 rounded-xl transition-colors backdrop-blur-sm"
               >
                 See all services
               </Link>
             </div>
+
             <div className="flex flex-wrap gap-2 mt-5">
               {serviceChips.map((cat) => (
                 <Link
                   key={cat}
                   to="/services"
                   state={{ category: cat }}
-                  className="text-xs text-zinc-500 hover:text-zinc-900 bg-zinc-50 hover:bg-zinc-100 border border-zinc-200 hover:border-zinc-300 px-3 py-1.5 rounded-full transition-all"
+                  className="text-xs text-white/65 hover:text-white bg-white/10 hover:bg-white/20 border border-white/15 hover:border-white/30 px-3 py-1.5 rounded-full transition-all"
                 >
                   {cat}
                 </Link>
               ))}
             </div>
+
             <div className="flex gap-1.5 mt-7">
               {heroSlides.map((_, i) => (
                 <button
                   key={i}
-                  onClick={() => {
-                    setSlide(i)
-                    setVisible(true)
-                  }}
-                  className={`h-0.5 rounded-full transition-all duration-300 ${i === slide ? 'w-6 bg-zinc-900' : 'w-2 bg-zinc-300 hover:bg-zinc-500'}`}
+                  onClick={() => { setSlide(i); setVisible(true) }}
+                  className={`h-0.5 rounded-full transition-all duration-300 ${i === slide ? 'w-6 bg-white' : 'w-2 bg-white/30 hover:bg-white/60'}`}
                   aria-label={`Slide ${i + 1}`}
                 />
               ))}
             </div>
           </div>
-          <div className={`hidden lg:flex justify-center items-center transition-all duration-500 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`}>
-            <CurrentIllustration />
-          </div>
         </div>
       </div>
-      <div className="border-t border-zinc-200 bg-zinc-50">
+
+      {/* ── Bottom ticker ─────────────────────────────────────────────── */}
+      <div className="relative border-t border-white/10 bg-black/40 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex gap-8">
-          <div><p className="text-zinc-900 font-semibold text-sm">KRA PIN</p><p className="text-zinc-500 text-xs">Same day · KES 500</p></div>
-          <div><p className="text-zinc-900 font-semibold text-sm">Business Website</p><p className="text-zinc-500 text-xs">7–10 days · from KES 18,000</p></div>
-          <div className="hidden sm:block"><p className="text-zinc-900 font-semibold text-sm">Car Agreement</p><p className="text-zinc-500 text-xs">Same day · KES 800</p></div>
+          <div><p className="text-white font-semibold text-sm">KRA PIN</p><p className="text-white/50 text-xs">Same day · KES 500</p></div>
+          <div><p className="text-white font-semibold text-sm">Business Website</p><p className="text-white/50 text-xs">7–10 days · from KES 18,000</p></div>
+          <div className="hidden sm:block"><p className="text-white font-semibold text-sm">Car Agreement</p><p className="text-white/50 text-xs">Same day · KES 800</p></div>
         </div>
       </div>
+
     </section>
   )
 }

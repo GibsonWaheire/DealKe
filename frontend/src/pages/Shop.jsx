@@ -265,33 +265,44 @@ export default function Shop() {
                     <option value="name">Name: A-Z</option>
                   </select>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4">
+                <div className="border border-gray-100 rounded-2xl overflow-hidden bg-white divide-y divide-gray-100">
                   {visibleItems.map((item) => {
                     const badge = TYPE_BADGE[item.type]
                     return (
-                      <div key={item.name} className="bg-white border border-gray-100 rounded-2xl p-5 flex flex-col gap-3 hover:shadow-md hover:-translate-y-0.5 transition-all">
-                        <div className="flex items-start justify-between gap-2">
-                          <p className="text-slate-800 font-semibold text-sm leading-snug flex-1">{item.name}</p>
-                          <span className={`shrink-0 text-xs font-semibold px-2 py-0.5 rounded-full border ${badge.cls}`}>
+                      <div
+                        key={item.name}
+                        className="group flex items-center gap-4 px-5 py-4 border-l-2 border-transparent hover:border-emerald-400 hover:bg-slate-50 transition-all duration-200 cursor-pointer"
+                        onClick={() => buyNow(item)}
+                      >
+                        {/* Name + badge */}
+                        <div className="flex-1 min-w-0">
+                          <p className="text-slate-900 font-semibold text-sm leading-snug group-hover:text-emerald-700 transition-colors duration-200">
+                            {item.name}
+                          </p>
+                          <span className={`inline-block mt-1.5 text-xs font-medium px-2 py-0.5 rounded-full border ${badge.cls}`}>
                             {badge.label}
                           </span>
                         </div>
-                        <div className="mt-auto">
-                          <p className="text-slate-900 font-black text-lg mb-3">KES {item.price.toLocaleString()}</p>
-                          <div className="grid grid-cols-2 gap-2">
-                            <button
-                              onClick={() => addToCart(item)}
-                              className="inline-flex items-center justify-center border border-gray-200 hover:border-gray-400 text-slate-700 text-xs font-bold px-3 py-2 rounded-lg transition-colors"
-                            >
-                              Add to cart
-                            </button>
-                            <button
-                              onClick={() => buyNow(item)}
-                              className="inline-flex items-center justify-center bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-bold px-3 py-2 rounded-lg transition-colors"
-                            >
-                              Buy now
-                            </button>
-                          </div>
+
+                        {/* Price */}
+                        <p className="shrink-0 text-slate-900 font-bold text-sm hidden sm:block">
+                          KES {item.price.toLocaleString()}
+                        </p>
+
+                        {/* Actions */}
+                        <div className="shrink-0 flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+                          <button
+                            onClick={() => addToCart(item)}
+                            className="border border-gray-200 hover:border-slate-400 text-slate-600 hover:text-slate-900 text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors"
+                          >
+                            + Cart
+                          </button>
+                          <button
+                            onClick={() => buyNow(item)}
+                            className="bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors"
+                          >
+                            Buy →
+                          </button>
                         </div>
                       </div>
                     )

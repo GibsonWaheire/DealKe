@@ -65,6 +65,7 @@ const COUNTRIES = [
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
 
 const MIN_KES = 100
+const MAX_KES = 500_000
 
 export default function ClientPayPage() {
   // ── Step 1 state ────────────────────────────────────────────────────────────
@@ -101,7 +102,9 @@ export default function ClientPayPage() {
   const amountKES     = inputCurrency === 'KES' ? parsedInput : (rate ? parsedInput / rate : 0)
   const amountAED     = inputCurrency === 'AED' ? parsedInput : (rate ? parsedInput * rate : 0)
   const parsedPartial = parseFloat(partialAmount) || 0
-  const chargeKES     = paymentType === 'full' ? amountKES : parsedPartial
+  // Convert partial to KES using the same currency the user chose
+  const partialKES    = inputCurrency === 'KES' ? parsedPartial : (rate ? parsedPartial / rate : 0)
+  const chargeKES     = paymentType === 'full' ? amountKES : partialKES
 
   const fmt = (n, currency) =>
     new Intl.NumberFormat('en-KE', { style: 'currency', currency, maximumFractionDigits: 2 }).format(n)
@@ -125,11 +128,16 @@ export default function ClientPayPage() {
     if (!phoneLocal.trim())                               e.phone   = 'Enter your phone number'
     else if (phoneInvalid)                                e.phone   = `Invalid number for ${phoneCountry.name} — expected format: ${phoneCountry.placeholder}`
     if (chargeKES < MIN_KES)                              e.amount  = `Minimum is ${fmt(MIN_KES, 'KES')}`
+    if (amountKES > MAX_KES)                              e.amount  = `Maximum is ${fmt(MAX_KES, 'KES')} — contact us for larger projects`
     if (paymentType === 'partial') {
       if (parsedPartial <= 0)                             e.partial = 'Enter a deposit amount'
-      if (parsedPartial > amountKES)                      e.partial = `Cannot exceed ${fmt(amountKES, 'KES')}`
+      if (parsedPartial >= parsedInput)                   e.partial = `Cannot exceed ${fmt(parsedInput, inputCurrency)}`
     }
     if (hasAcademicKeyword(notes))                        e.notes   = 'Please use professional terms to describe your project.'
+    if (project === 'Custom / Other' && notes.trim().length < 20)
+                                                          e.notes   = 'Please describe your project in at least 20 characters so we can process it correctly.'
+    else if (notes.trim().length > 0 && notes.trim().length < 5)
+                                                          e.notes   = 'Add a bit more detail about your project.'
     if (!agreed)                                          e.agreed  = 'Please accept the terms to continue'
     return e
   }
@@ -249,13 +257,26 @@ export default function ClientPayPage() {
           {/* Notes */}
           <div>
             <label className="block text-sm font-semibold text-zinc-700 mb-1.5">
-              Description <span className="text-zinc-400 font-normal">(optional)</span>
+              Description{' '}
+              {project === 'Custom / Other'
+                ? <span className="text-red-400">*</span>
+                : <span className="text-zinc-400 font-normal">(optional)</span>
+              }
             </label>
+            {project === 'Custom / Other' && (
+              <p className="text-zinc-500 text-xs mb-1.5">
+                Tell us exactly what you need — the more detail, the faster we can process your order.
+              </p>
+            )}
             <textarea
               value={notes}
               onChange={e => { setNotes(e.target.value); setErrors(v => ({ ...v, notes: '' })) }}
-              placeholder="e.g. 5-page business website with contact form, or 10-slide pitch deck for a startup"
-              rows={2}
+              placeholder={
+                project === 'Custom / Other'
+                  ? 'e.g. Print design for a 2-sided A5 flyer, logo needed for a cleaning company, etc.'
+                  : 'e.g. 5-page business website with contact form, or 10-slide pitch deck for a startup'
+              }
+              rows={project === 'Custom / Other' ? 3 : 2}
               className={`w-full bg-white border rounded-lg px-4 py-2.5 text-zinc-900 placeholder-zinc-400 text-sm focus:outline-none focus:border-zinc-500 resize-none transition-colors ${
                 notesWarning || errors.notes ? 'border-red-400' : 'border-zinc-300'
               }`}
@@ -338,17 +359,17 @@ export default function ClientPayPage() {
               {paymentType === 'partial' && (
                 <div>
                   <p className="text-zinc-500 text-xs mb-1.5">
-                    Amount to pay now (KES) — max {fmt(amountKES, 'KES')}
+                    Amount to pay now ({inputCurrency}) — max {fmt(parsedInput, inputCurrency)}
                   </p>
                   <div className="relative">
-                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 text-sm font-medium">KES</span>
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 text-sm font-medium">{inputCurrency}</span>
                     <input
                       type="number"
-                      min={MIN_KES}
-                      max={amountKES}
+                      min={0}
+                      max={parsedInput}
                       value={partialAmount}
                       onChange={e => { setPartialAmount(e.target.value); setErrors(v => ({ ...v, partial: '' })) }}
-                      placeholder={`e.g. ${Math.round(amountKES * 0.5).toLocaleString()}`}
+                      placeholder={`e.g. ${(parsedInput * 0.5).toLocaleString()}`}
                       className={`w-full bg-white border rounded-lg pl-16 pr-4 py-2.5 text-zinc-900 text-sm focus:outline-none focus:border-zinc-500 ${errors.partial ? 'border-red-400' : 'border-zinc-300'}`}
                     />
                   </div>
@@ -454,6 +475,17 @@ export default function ClientPayPage() {
             {errMsg('agreed')}
           </div>
 
+          {/* Refund / dispute notice */}
+          <div className="bg-zinc-50 border border-zinc-200 rounded-lg px-4 py-3 text-xs text-zinc-500 space-y-1">
+            <p><span className="font-semibold text-zinc-700">Refunds:</span> Eligible within 48 hours if work has not started. See our{' '}
+              <Link to="/refund" target="_blank" className="underline text-zinc-700">Refund Policy</Link>.
+            </p>
+            <p><span className="font-semibold text-zinc-700">Disputes:</span> Email{' '}
+              <a href="mailto:help@draftit.co.ke" className="underline text-zinc-700">help@draftit.co.ke</a>{' '}
+              or <a href="https://wa.me/254726899113" target="_blank" rel="noreferrer" className="underline text-zinc-700">WhatsApp us</a> — we resolve all issues within 24 hours.
+            </p>
+          </div>
+
           {/* Continue button */}
           <button
             onClick={handleContinue}
@@ -463,7 +495,7 @@ export default function ClientPayPage() {
           </button>
 
           <p className="text-zinc-400 text-xs text-center">
-            Secured by Paystack &amp; Safaricom · Charges in KES
+            Payments secured by Paystack · Charges in KES
           </p>
 
         </div>

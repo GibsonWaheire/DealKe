@@ -21,6 +21,7 @@ import AdminBlog from './pages/AdminBlog'
 import OrderPage from './pages/OrderPage'
 import ClientPayPage from './pages/ClientPayPage'
 import PassportPhotoPage from './pages/PassportPhotoPage'
+import Jobs from './pages/Jobs'
 import NotFound from './pages/NotFound'
 
 const SITE = 'https://draftit.co.ke'
@@ -69,6 +70,10 @@ const pageMeta = {
   '/privacy':  { title: 'Privacy Policy | Draft-It', description: 'How Draft-It collects, uses, and protects your personal information.' },
   '/terms':    { title: 'Terms of Service | Draft-It', description: 'Terms and conditions for using Draft-It digital services in Kenya.' },
   '/refund':   { title: 'Refund Policy | Draft-It', description: 'Draft-It refund and cancellation policy for digital services.' },
+  '/jobs': {
+    title: 'Jobs in Kenya | Corporate, Casual, Freelance & Domestic — Draft-It',
+    description: 'Find jobs in Kenya — corporate office roles, casual work, freelance gigs, and domestic workers. Browse 1,200+ vacancies across Nairobi, Mombasa, Kisumu and more.',
+  },
 }
 
 const queryClient = new QueryClient({
@@ -116,6 +121,7 @@ const App = () => (
               <Route path="order" element={<OrderPage />} />
               <Route path="pay" element={<ClientPayPage />} />
               <Route path="passport-photo" element={<PassportPhotoPage />} />
+              <Route path="jobs" element={<Jobs />} />
             </Route>
             {/* Admin routes — outside Layout (no navbar/footer) */}
             <Route path="/admin-login" element={<AdminLogin />} />
