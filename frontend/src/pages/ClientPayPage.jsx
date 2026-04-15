@@ -275,7 +275,7 @@ export default function ClientPayPage() {
           <p className="text-zinc-500 text-sm mt-1">Fill in your details and choose how to pay.</p>
         </div>
 
-        <div className="bg-white border border-zinc-200 rounded-xl p-6 space-y-5">
+        <div className="bg-white border border-zinc-200 rounded-xl p-6 space-y-5" autoComplete="off">
 
           {/* Project */}
           <div id="field-project">
@@ -312,6 +312,7 @@ export default function ClientPayPage() {
             </p>
             <textarea
               value={notes}
+              autoComplete="off"
               onChange={e => {
                 setNotes(e.target.value)
                 setUserEditedNotes(true)
@@ -364,6 +365,7 @@ export default function ClientPayPage() {
               <input
                 type="number"
                 min="0"
+                autoComplete="off"
                 value={inputAmount}
                 onChange={e => { setInputAmount(e.target.value); setErrors(v => ({ ...v, amount: '' })) }}
                 placeholder="0.00"
@@ -443,6 +445,7 @@ export default function ClientPayPage() {
             </label>
             <input
               type="text"
+              autoComplete="off"
               value={name}
               onChange={e => { setName(e.target.value); setErrors(v => ({ ...v, name: '' })) }}
               placeholder="John Doe"
@@ -458,6 +461,7 @@ export default function ClientPayPage() {
             </label>
             <input
               type="email"
+              autoComplete="off"
               value={email}
               onChange={e => { setEmail(e.target.value); setErrors(v => ({ ...v, email: '' })) }}
               placeholder="your@email.com"
@@ -494,6 +498,7 @@ export default function ClientPayPage() {
               {/* Number input */}
               <input
                 type="tel"
+                autoComplete="off"
                 value={phoneLocal}
                 onChange={e => {
                   setPhoneLocal(e.target.value.replace(/[^\d\s]/g, ''))
