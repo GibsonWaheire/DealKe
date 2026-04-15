@@ -6,6 +6,7 @@ import { HelmetProvider, Helmet } from 'react-helmet-async'
 
 import Layout from './components/Layout'
 import CookieBanner from './components/CookieBanner'
+import ScrollToTop from './components/ScrollToTop'
 import Home from './pages/Home'
 import Packages from './pages/Packages'
 import Services from './pages/Services'
@@ -103,6 +104,7 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <HelmetProvider>
       <BrowserRouter>
+        <ScrollToTop />
         <SeoManager />
         <TooltipProvider>
           <Sonner />
