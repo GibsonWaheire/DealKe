@@ -1,5 +1,6 @@
 // src/pages/Jobs.jsx
 import { useState, useMemo, useRef } from 'react'
+import JobApplyModal from '../components/JobApplyModal'
 
 // ─── Mock data (replace with API calls later) ────────────────────────────────
 
@@ -74,19 +75,22 @@ const TYPE_LABEL = {
 
 // ─── JobCard ─────────────────────────────────────────────────────────────────
 
-export function JobCard({ job }) {
+export function JobCard({ job, onApply }) {
   const handleApply = (e) => {
     e.stopPropagation()
     if (job.redirect) {
       window.open(job.redirect, '_blank', 'noopener,noreferrer')
       return
     }
-    const msg = encodeURIComponent(`Hi, I'm interested in the ${job.title} role at ${job.company}.`)
-    window.open(`https://wa.me/254726899113?text=${msg}`, '_blank', 'noopener,noreferrer')
+    onApply(job)
   }
 
   const handleRowClick = () => {
-    if (job.redirect) window.open(job.redirect, '_blank', 'noopener,noreferrer')
+    if (job.redirect) {
+      window.open(job.redirect, '_blank', 'noopener,noreferrer')
+    } else {
+      onApply(job)
+    }
   }
 
   return (
@@ -179,6 +183,7 @@ export default function Jobs() {
   const [search, setSearch]           = useState('')
   const [sector, setSector]           = useState('All Sectors')
   const [location, setLocation]       = useState('All Locations')
+  const [applyJob, setApplyJob]       = useState(null)
   const gridRef                       = useRef(null)
 
   const scrollToGrid = () =>
@@ -205,6 +210,9 @@ export default function Jobs() {
 
   return (
     <div className="bg-white">
+      {applyJob && (
+        <JobApplyModal job={applyJob} onClose={() => setApplyJob(null)} />
+      )}
 
       {/* ── Hero ─────────────────────────────────────────────────────────── */}
       <section className="relative overflow-hidden bg-slate-900 py-20 md:py-28">
@@ -361,7 +369,7 @@ export default function Jobs() {
           {filtered.length > 0 ? (
             <div className="flex flex-col divide-y divide-gray-100 border border-gray-100 rounded-2xl overflow-hidden bg-white">
               {filtered.map((job) => (
-                <JobCard key={job.id} job={job} />
+                <JobCard key={job.id} job={job} onApply={setApplyJob} />
               ))}
             </div>
           ) : (
@@ -411,12 +419,10 @@ export default function Jobs() {
             and domestic vacancies welcome.
           </p>
           <a
-            href="https://wa.me/254726899113?text=Hi, I'd like to post a job vacancy on DealKe."
-            target="_blank"
-            rel="noopener noreferrer"
+            href="mailto:help@draftit.co.ke?subject=Job Posting Request&body=Hi, I'd like to post a job vacancy. Here are the details:"
             className="inline-block bg-emerald-500 hover:bg-emerald-600 text-white font-semibold px-8 py-3 rounded-xl transition-colors text-sm"
           >
-            Post a Job via WhatsApp →
+            Post a Job — Email Us →
           </a>
         </div>
       </section>
