@@ -176,7 +176,7 @@ export default function Shop() {
   }
 
   const buyNow = (item) => {
-    navigate('/order', {
+    navigate('/pay', {
       state: {
         serviceName: item.name,
         price: item.price,
@@ -188,7 +188,7 @@ export default function Shop() {
 
   const checkoutCart = () => {
     if (!cartTotal) return
-    navigate('/order', {
+    navigate('/pay', {
       state: {
         serviceName: `Shop Order (${cartCount} item${cartCount > 1 ? 's' : ''})`,
         price: cartTotal,

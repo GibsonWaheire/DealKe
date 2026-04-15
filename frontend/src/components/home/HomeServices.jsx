@@ -40,7 +40,7 @@ export default function HomeServices() {
                     <span className="text-zinc-900 font-bold text-sm text-right whitespace-nowrap">{svc.price}</span>
                     <span className="text-zinc-500 text-xs text-right whitespace-nowrap hidden sm:block">{svc.turnaround}</span>
                     <button
-                      onClick={() => navigate('/order', { state: { serviceName: svc.name, price: parsePrice(svc.price), currency: 'KES', category: 'Services' } })}
+                      onClick={() => navigate('/pay', { state: { serviceName: svc.name, price: parsePrice(svc.price), currency: 'KES', category: 'Services' } })}
                       className="inline-flex items-center gap-1 bg-green-500 hover:bg-green-600 text-white text-xs font-semibold px-2.5 py-1.5 rounded-lg transition-colors whitespace-nowrap"
                     >
                       Order →

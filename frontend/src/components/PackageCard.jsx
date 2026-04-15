@@ -14,7 +14,7 @@ export default function PackageCard({
   const navigate = useNavigate()
 
   const handleOrder = () => {
-    navigate('/order', {
+    navigate('/pay', {
       state: {
         serviceName: name,
         price: typeof price === 'number' ? price : parseInt(String(price).replace(/[^0-9]/g, ''), 10) || 0,

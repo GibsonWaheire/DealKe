@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import PaymentSheet from '../components/PaymentSheet'
 
 const PROJECTS = [
@@ -93,12 +93,23 @@ const MIN_KES = 100
 const MAX_KES = 500_000
 
 export default function ClientPayPage() {
+  const { state } = useLocation()
+
   // ── Step 1 state ────────────────────────────────────────────────────────────
-  const [project,         setProject]         = useState('')
-  const [notes,           setNotes]           = useState('')
-  const [userEditedNotes, setUserEditedNotes] = useState(false)
-  const [inputCurrency, setInputCurrency] = useState('KES')
-  const [inputAmount,   setInputAmount]   = useState('')
+  const [project, setProject] = useState(() => {
+    if (!state?.serviceName) return ''
+    return PROJECTS.includes(state.serviceName) ? state.serviceName : 'Custom / Other'
+  })
+  const [notes, setNotes] = useState(() => {
+    if (!state?.serviceName) return ''
+    if (PROJECTS.includes(state.serviceName)) return PROJECT_SUGGESTIONS[state.serviceName] || ''
+    return state.serviceName // unmatched service → put raw name in notes
+  })
+  const [userEditedNotes, setUserEditedNotes] = useState(
+    !!(state?.serviceName && !PROJECTS.includes(state.serviceName))
+  )
+  const [inputCurrency, setInputCurrency] = useState(state?.currency || 'KES')
+  const [inputAmount,   setInputAmount]   = useState(state?.price ? String(state.price) : '')
   const [paymentType,    setPaymentType]   = useState('full')
   const [partialPercent, setPartialPercent] = useState(50)
   const [name,          setName]          = useState('')
