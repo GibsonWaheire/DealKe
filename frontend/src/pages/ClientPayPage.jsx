@@ -73,8 +73,8 @@ export default function ClientPayPage() {
   const [notes,         setNotes]         = useState('')
   const [inputCurrency, setInputCurrency] = useState('KES')
   const [inputAmount,   setInputAmount]   = useState('')
-  const [paymentType,   setPaymentType]   = useState('full')
-  const [partialAmount, setPartialAmount] = useState('')
+  const [paymentType,    setPaymentType]   = useState('full')
+  const [partialPercent, setPartialPercent] = useState(50)
   const [name,          setName]          = useState('')
   const [email,         setEmail]         = useState('')
   const [phoneCountry,  setPhoneCountry]  = useState(COUNTRIES[0])
@@ -101,9 +101,7 @@ export default function ClientPayPage() {
   const parsedInput   = parseFloat(inputAmount) || 0
   const amountKES     = inputCurrency === 'KES' ? parsedInput : (rate ? parsedInput / rate : 0)
   const amountAED     = inputCurrency === 'AED' ? parsedInput : (rate ? parsedInput * rate : 0)
-  const parsedPartial = parseFloat(partialAmount) || 0
-  // Convert partial to KES using the same currency the user chose
-  const partialKES    = inputCurrency === 'KES' ? parsedPartial : (rate ? parsedPartial / rate : 0)
+  const partialKES    = amountKES * (partialPercent / 100)
   const chargeKES     = paymentType === 'full' ? amountKES : partialKES
 
   const fmt = (n, currency) =>
@@ -130,8 +128,7 @@ export default function ClientPayPage() {
     if (chargeKES < MIN_KES)                              e.amount  = `Minimum is ${fmt(MIN_KES, 'KES')}`
     if (amountKES > MAX_KES)                              e.amount  = `Maximum is ${fmt(MAX_KES, 'KES')} — contact us for larger projects`
     if (paymentType === 'partial') {
-      if (parsedPartial <= 0)                             e.partial = 'Enter a deposit amount'
-      if (parsedPartial >= parsedInput)                   e.partial = `Cannot exceed ${fmt(parsedInput, inputCurrency)}`
+      if (partialPercent <= 0 || partialPercent >= 100)   e.partial = 'Select a valid deposit percentage'
     }
     if (hasAcademicKeyword(notes))                        e.notes   = 'Please use professional terms to describe your project.'
     if (project === 'Custom / Other' && notes.trim().length < 20)
@@ -358,21 +355,30 @@ export default function ClientPayPage() {
               </div>
               {paymentType === 'partial' && (
                 <div>
-                  <p className="text-zinc-500 text-xs mb-1.5">
-                    Amount to pay now ({inputCurrency}) — max {fmt(parsedInput, inputCurrency)}
-                  </p>
-                  <div className="relative">
-                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 text-sm font-medium">{inputCurrency}</span>
-                    <input
-                      type="number"
-                      min={0}
-                      max={parsedInput}
-                      value={partialAmount}
-                      onChange={e => { setPartialAmount(e.target.value); setErrors(v => ({ ...v, partial: '' })) }}
-                      placeholder={`e.g. ${(parsedInput * 0.5).toLocaleString()}`}
-                      className={`w-full bg-white border rounded-lg pl-16 pr-4 py-2.5 text-zinc-900 text-sm focus:outline-none focus:border-zinc-500 ${errors.partial ? 'border-red-400' : 'border-zinc-300'}`}
-                    />
+                  <p className="text-zinc-500 text-xs mb-2">Choose how much to pay now:</p>
+                  <div className="flex gap-2">
+                    {[25, 50, 75].map(pct => (
+                      <button
+                        key={pct}
+                        type="button"
+                        onClick={() => { setPartialPercent(pct); setErrors(v => ({ ...v, partial: '' })) }}
+                        className={`flex-1 py-2.5 rounded-lg text-sm font-semibold border transition-colors ${
+                          partialPercent === pct
+                            ? 'bg-emerald-600 text-white border-emerald-600'
+                            : 'bg-white text-zinc-600 border-zinc-300 hover:border-zinc-500'
+                        }`}
+                      >
+                        {pct}%
+                      </button>
+                    ))}
                   </div>
+                  {parsedInput > 0 && (
+                    <p className="text-zinc-500 text-xs mt-2">
+                      Paying <span className="font-semibold text-zinc-800">{fmt(chargeKES, 'KES')}</span>
+                      {inputCurrency === 'AED' && <span> ≈ {fmt(parsedInput * (partialPercent / 100), 'AED')}</span>}
+                      {' '}now · remaining {fmt(amountKES - partialKES, 'KES')} due on delivery
+                    </p>
+                  )}
                   {errMsg('partial')}
                 </div>
               )}
