@@ -5,6 +5,7 @@ import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import { HelmetProvider, Helmet } from 'react-helmet-async'
 
 import Layout from './components/Layout'
+import CookieBanner from './components/CookieBanner'
 import Home from './pages/Home'
 import Packages from './pages/Packages'
 import Services from './pages/Services'
@@ -105,6 +106,7 @@ const App = () => (
         <SeoManager />
         <TooltipProvider>
           <Sonner />
+          <CookieBanner />
           <Routes>
             <Route path="/" element={<Layout />}>
               <Route index element={<Home />} />
