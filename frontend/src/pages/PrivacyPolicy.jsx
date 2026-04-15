@@ -7,7 +7,7 @@ export default function PrivacyPolicy() {
       <PageHeader
         label="Legal"
         title="Privacy Notice"
-        subtitle="Last updated: 16 March 2026"
+        subtitle="Last updated: 15 April 2026"
         images={[{ src: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1600&q=80', alt: 'Documents' }]}
       />
 
@@ -59,7 +59,21 @@ export default function PrivacyPolicy() {
             <p>
               We take reasonable precautions to protect your information. Communication through
               WhatsApp is end-to-end encrypted. We do not store payment card details at any time —
-              all payments are made through M-Pesa.
+              card and mobile payments are processed securely by Paystack, a PCI-DSS compliant
+              payment processor. M-Pesa transactions are handled by Safaricom. Draft-It never
+              has access to your raw card number or PIN.
+            </p>
+          </div>
+
+          <div>
+            <h2 className="text-slate-900 font-bold text-lg mb-3">5a. Payment data and refunds</h2>
+            <p>
+              We retain a record of your payment method type (e.g., card via Paystack, or M-Pesa)
+              and transaction reference solely for the purpose of processing refunds and resolving
+              disputes. If a refund is due, it will be returned only to the original payment method.
+              We do not retain full card numbers — only the last four digits and payment reference
+              as provided by Paystack. For international clients, your currency and the KES
+              equivalent at the time of payment are recorded for refund calculation purposes.
             </p>
           </div>
 

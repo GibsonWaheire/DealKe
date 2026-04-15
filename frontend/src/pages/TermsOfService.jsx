@@ -7,7 +7,7 @@ export default function TermsOfService() {
       <PageHeader
         label="Legal"
         title="Terms &amp; Conditions"
-        subtitle="Last updated: 16 March 2026"
+        subtitle="Last updated: 15 April 2026"
         images={[{ src: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1600&q=80', alt: 'Documents' }]}
       />
 
@@ -35,11 +35,25 @@ export default function TermsOfService() {
           <div>
             <h2 className="text-slate-900 font-bold text-lg mb-3">3. Payment</h2>
             <ul className="list-disc pl-5 space-y-1">
-              <li>Payment is accepted via M-Pesa, bank transfer, or cash (in-person).</li>
+              <li>Payment is accepted via Paystack (card, Apple Pay, M-Pesa) or direct M-Pesa transfer. All charges are processed in Kenyan Shillings (KES).</li>
+              <li>International clients (including UAE) may enter amounts in AED; these are converted to KES at the live exchange rate at the time of payment.</li>
               <li>Website projects require a 50% deposit before work begins; the balance is due on delivery.</li>
               <li>Government service fees (e.g., KRA application charges) are separate and not included in our service fee unless explicitly stated.</li>
               <li>Work will not commence until payment is confirmed.</li>
             </ul>
+          </div>
+
+          <div>
+            <h2 className="text-slate-900 font-bold text-lg mb-3">3a. Refund method</h2>
+            <p>
+              Where a refund is approved, it will be returned solely via the same payment method used
+              for the original transaction — back to the same Paystack channel (card or M-Pesa) or
+              M-Pesa number. Draft-It cannot redirect refunds to a different account or payment
+              instrument. International clients should note that currency conversion differences and
+              any fees charged by their card issuer or bank are outside Draft-It's control and are
+              non-reimbursable. See our full{' '}
+              <a href="/refund" className="text-emerald-600 underline">Refund Policy</a> for details.
+            </p>
           </div>
 
           <div>
