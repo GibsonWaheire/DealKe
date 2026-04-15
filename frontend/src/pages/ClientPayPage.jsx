@@ -136,7 +136,7 @@ export default function ClientPayPage() {
 
   // ── Derived amounts ──────────────────────────────────────────────────────────
   const parsedInput   = parseFloat(inputAmount) || 0
-  const amountKES     = inputCurrency === 'KES' ? parsedInput : (rate ? parsedInput / rate : 0)
+  const amountKES     = inputCurrency === 'KES' ? parsedInput : (rate ? Math.ceil(parsedInput / rate) : 0)
   const amountAED     = inputCurrency === 'AED' ? parsedInput : (rate ? parsedInput * rate : 0)
   const partialKES    = amountKES * (partialPercent / 100)
   const chargeKES     = paymentType === 'full' ? amountKES : partialKES
