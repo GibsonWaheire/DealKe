@@ -36,15 +36,12 @@ export default function CookieBanner() {
         <div className="flex-1 min-w-0">
           <p className="font-semibold text-sm mb-0.5">We use cookies &amp; third-party tools</p>
           <p className="text-slate-400 text-xs leading-relaxed">
-            We use cookies and third-party services to enhance your browsing experience, enable
-            secure payments, and protect your privacy. We do not use advertising or tracking cookies.{' '}
-            <Link to="/privacy" className="underline text-slate-300 hover:text-white transition-colors">
-              Privacy Notice
-            </Link>
+            We use cookies and third-party tools (including Google Analytics) to understand how
+            visitors use our site, enable secure payments, and improve your experience. No
+            advertising or social media tracking cookies are used.{' '}
+            <Link to="/privacy" className="underline text-slate-300 hover:text-white transition-colors">Privacy Notice</Link>
             {' '}·{' '}
-            <Link to="/terms" className="underline text-slate-300 hover:text-white transition-colors">
-              Terms
-            </Link>
+            <Link to="/terms" className="underline text-slate-300 hover:text-white transition-colors">Terms</Link>
           </p>
         </div>
 

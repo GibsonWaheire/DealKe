@@ -101,6 +101,13 @@ export default function PrivacyPolicy() {
               </p>
               <ul className="list-disc pl-5 space-y-1">
                 <li>
+                  <strong className="text-slate-800">Analytics (Google Analytics 4):</strong>{' '}
+                  We use Google Analytics to understand how visitors interact with our website —
+                  including pages visited, time on site, device type, and general location (country/city).
+                  This data is aggregated and anonymous; we cannot identify individual users. Google
+                  Analytics sets its own cookies governed by Google's Privacy Policy.
+                </li>
+                <li>
                   <strong className="text-slate-800">Functional cookies (third-party payment processors):</strong>{' '}
                   The payment processors we use may set session cookies strictly necessary for secure
                   checkout and fraud prevention. These cannot be disabled without disabling the payment
@@ -113,9 +120,9 @@ export default function PrivacyPolicy() {
                 </li>
               </ul>
               <p>
-                We do not use advertising cookies, social media tracking pixels, analytics scripts,
-                or any third-party behavioural tracking tools. You may withdraw consent at any time
-                by clearing your browser's cookies and local storage.
+                We do not use advertising cookies, social media tracking pixels, or behavioural
+                retargeting tools. You may withdraw consent at any time by clearing your browser's
+                cookies and local storage.
               </p>
             </Section>
 
