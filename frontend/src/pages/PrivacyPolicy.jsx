@@ -1,5 +1,6 @@
 // src/pages/PrivacyPolicy.jsx
 import PageHeader from '../components/PageHeader'
+import DownloadPolicyButton from '../components/DownloadPolicyButton'
 
 export default function PrivacyPolicy() {
   return (
@@ -12,7 +13,18 @@ export default function PrivacyPolicy() {
       />
 
       <section className="py-14 bg-white">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 prose-sm text-slate-600 space-y-8">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 policy-content">
+
+          <div className="hidden page-header-print">
+            <h1 className="text-2xl font-bold">Draft-It — Privacy Notice</h1>
+            <p className="text-sm text-slate-500">Last updated: 15 April 2026 · help@draftit.co.ke · +254 726 899 113</p>
+          </div>
+
+          <div className="flex justify-end mb-6 no-print">
+            <DownloadPolicyButton label="Download Privacy Notice" />
+          </div>
+
+        <div className="prose-sm text-slate-600 space-y-8">
 
           <div>
             <h2 className="text-slate-900 font-bold text-lg mb-3">1. Who we are</h2>
@@ -94,7 +106,8 @@ export default function PrivacyPolicy() {
             </p>
           </div>
 
-        </div>
+        </div>{/* end space-y-8 */}
+        </div>{/* end policy-content */}
       </section>
     </div>
   )
