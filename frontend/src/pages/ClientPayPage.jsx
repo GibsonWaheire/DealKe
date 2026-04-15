@@ -164,9 +164,9 @@ export default function ClientPayPage() {
           {/* Back to details */}
           <button
             onClick={() => setStep(1)}
-            className="text-zinc-500 hover:text-zinc-900 text-sm mb-6 flex items-center gap-1 transition-colors"
+            className="flex items-center gap-2 text-sm font-medium text-zinc-600 hover:text-zinc-900 bg-white border border-zinc-200 hover:border-zinc-400 px-4 py-2 rounded-lg transition-colors mb-6"
           >
-            ← Edit details
+            ← Back &amp; edit details
           </button>
 
           {/* Order summary */}
