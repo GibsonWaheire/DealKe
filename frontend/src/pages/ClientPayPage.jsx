@@ -64,13 +64,39 @@ const COUNTRIES = [
 
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
 
+const PROJECT_SUGGESTIONS = {
+  'Website — Landing Page':           'Single-page website for a product or service with contact form and mobile-responsive layout.',
+  'Website — Business Site':          'Multi-page business website with About, Services, and Contact sections.',
+  'Website — E-Commerce':             'Online store with product catalog, M-Pesa payment integration, and order management.',
+  'KRA PIN Registration':             'KRA PIN registration for an individual — ID details to be shared on WhatsApp.',
+  'eTIMS Registration':               'eTIMS setup for a business — company details to be confirmed on WhatsApp.',
+  'Business Name Registration':       'Business name registration via eCitizen — preferred names and owner details to follow.',
+  'NTSA Services':                    'NTSA request — specific service to be confirmed via WhatsApp.',
+  'eCitizen Services':                'eCitizen account service — specific request to be confirmed via WhatsApp.',
+  'Copywriting Services':             'Professional copy for website content, marketing materials, or product descriptions.',
+  'Business Proposal Writing':        'Business proposal for a company pitch, tender, or investor presentation.',
+  'Presentation Design (PPT/Slides)': 'Professional slide deck for a business or corporate presentation.',
+  'Technical Writing':                'Technical documentation or process guide for a business product or internal use.',
+  'CV / Resume Writing':              'Professional CV and cover letter for job applications.',
+  'Grant & Funding Proposal':         'Grant proposal for a business, NGO, or community project funding application.',
+  'Contract & Agreement Drafting':    'Contract or agreement for a business transaction or partnership.',
+  'Affidavit Drafting':               'Affidavit or statutory declaration for legal use — details to be confirmed.',
+  'Car Sale Agreement':               'Vehicle sale agreement between buyer and seller — car details to be shared.',
+  'IT Support':                       'IT support and troubleshooting for home or office equipment.',
+  'CCTV Installation':                'CCTV installation and setup — property and camera count to be confirmed.',
+  'POS System Setup':                 'POS system installation and training for a retail or food service business.',
+  'Odoo ERP':                         'Odoo ERP setup for business operations — modules to be confirmed on WhatsApp.',
+  'Custom / Other':                   '',
+}
+
 const MIN_KES = 100
 const MAX_KES = 500_000
 
 export default function ClientPayPage() {
   // ── Step 1 state ────────────────────────────────────────────────────────────
-  const [project,       setProject]       = useState('')
-  const [notes,         setNotes]         = useState('')
+  const [project,         setProject]         = useState('')
+  const [notes,           setNotes]           = useState('')
+  const [userEditedNotes, setUserEditedNotes] = useState(false)
   const [inputCurrency, setInputCurrency] = useState('KES')
   const [inputAmount,   setInputAmount]   = useState('')
   const [paymentType,    setPaymentType]   = useState('full')
@@ -131,8 +157,6 @@ export default function ClientPayPage() {
       if (partialPercent <= 0 || partialPercent >= 100)   e.partial = 'Select a valid deposit percentage'
     }
     if (hasAcademicKeyword(notes))                        e.notes   = 'Please use professional terms to describe your project.'
-    if (project === 'Custom / Other' && notes.trim().length < 20)
-                                                          e.notes   = 'Please describe your project in at least 20 characters so we can process it correctly.'
     else if (notes.trim().length > 0 && notes.trim().length < 5)
                                                           e.notes   = 'Add a bit more detail about your project.'
     if (!agreed)                                          e.agreed  = 'Please accept the terms to continue'
@@ -145,6 +169,13 @@ export default function ClientPayPage() {
     if (Object.keys(e).length === 0) {
       setStep(2)
       window.scrollTo({ top: 0, behavior: 'smooth' })
+    } else {
+      const fieldOrder = ['project', 'notes', 'amount', 'partial', 'name', 'email', 'phone', 'agreed']
+      const first = fieldOrder.find(f => e[f])
+      if (first) {
+        const el = document.getElementById(`field-${first}`)
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      }
     }
   }
 
@@ -236,13 +267,20 @@ export default function ClientPayPage() {
         <div className="bg-white border border-zinc-200 rounded-xl p-6 space-y-5">
 
           {/* Project */}
-          <div>
+          <div id="field-project">
             <label className="block text-sm font-semibold text-zinc-700 mb-1.5">
               Project type <span className="text-red-400">*</span>
             </label>
             <select
               value={project}
-              onChange={e => { setProject(e.target.value); setErrors(v => ({ ...v, project: '' })) }}
+              onChange={e => {
+                const val = e.target.value
+                setProject(val)
+                setErrors(v => ({ ...v, project: '', notes: '' }))
+                if (!userEditedNotes) {
+                  setNotes(PROJECT_SUGGESTIONS[val] ?? '')
+                }
+              }}
               className={inputClass('project')}
             >
               <option value="">Select a project…</option>
@@ -254,20 +292,20 @@ export default function ClientPayPage() {
           {/* Notes */}
           <div>
             <label className="block text-sm font-semibold text-zinc-700 mb-1.5">
-              Description{' '}
-              {project === 'Custom / Other'
-                ? <span className="text-red-400">*</span>
-                : <span className="text-zinc-400 font-normal">(optional)</span>
-              }
+              Description <span className="text-zinc-400 font-normal">(optional)</span>
             </label>
-            {project === 'Custom / Other' && (
-              <p className="text-zinc-500 text-xs mb-1.5">
-                Tell us exactly what you need — the more detail, the faster we can process your order.
-              </p>
-            )}
+            <p className="text-zinc-500 text-xs mb-1.5">
+              {project === 'Custom / Other'
+                ? 'Tell us exactly what you need — the more detail, the faster we can process your order.'
+                : 'Auto-filled based on your project. Edit freely or leave as is.'}
+            </p>
             <textarea
               value={notes}
-              onChange={e => { setNotes(e.target.value); setErrors(v => ({ ...v, notes: '' })) }}
+              onChange={e => {
+                setNotes(e.target.value)
+                setUserEditedNotes(true)
+                setErrors(v => ({ ...v, notes: '' }))
+              }}
               placeholder={
                 project === 'Custom / Other'
                   ? 'e.g. Print design for a 2-sided A5 flyer, logo needed for a cleaning company, etc.'
