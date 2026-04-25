@@ -9,8 +9,19 @@ const jobsRoutes  = require('./routes/jobs')
 const app  = express()
 const PORT = process.env.PORT || 4000
 
+const ALLOWED_ORIGINS = [
+  'http://localhost:5173',
+  'https://draftit.co.ke',
+  'https://www.draftit.co.ke',
+  process.env.FRONTEND_URL,
+].filter(Boolean)
+
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  origin: (origin, cb) => {
+    // allow server-to-server / curl (no origin) and whitelisted origins
+    if (!origin || ALLOWED_ORIGINS.includes(origin)) return cb(null, true)
+    cb(new Error(`CORS: ${origin} not allowed`))
+  },
   methods: ['GET', 'POST'],
 }))
 app.use(express.json())
