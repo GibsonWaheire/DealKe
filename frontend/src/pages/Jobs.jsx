@@ -1,46 +1,18 @@
 // src/pages/Jobs.jsx
-import { useState, useMemo, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import JobApplyModal from '../components/JobApplyModal'
+import { searchCareerjetJobs } from '../api/careerjet'
 
-// ─── Mock data (replace with API calls later) ────────────────────────────────
+// ─── Static domestic jobs (redirect to dedicated platform) ───────────────────
 
-const JOBS = [
-  // Corporate
-  { id: 1,  title: 'Software Developer',          company: 'TechHub Africa',      location: 'Nairobi',        type: 'corporate', sector: 'IT',             salary: 'KES 80,000 – 120,000/mo',   posted: '2 days ago',  featured: true },
-  { id: 2,  title: 'Accountant',                  company: 'Deloitte Kenya',      location: 'Nairobi',        type: 'corporate', sector: 'Finance',         salary: 'KES 60,000 – 90,000/mo',    posted: '1 day ago' },
-  { id: 3,  title: 'Sales Executive',             company: 'Safaricom PLC',       location: 'Mombasa',        type: 'corporate', sector: 'Sales',           salary: 'KES 40,000 + commission',   posted: '3 days ago' },
-  { id: 4,  title: 'Primary School Teacher',      company: 'Brookhouse School',   location: 'Nairobi',        type: 'corporate', sector: 'Education',       salary: 'KES 35,000 – 55,000/mo',    posted: '5 days ago' },
-  { id: 5,  title: 'ICU Nurse',                   company: 'Aga Khan Hospital',   location: 'Nairobi',        type: 'corporate', sector: 'Healthcare',      salary: 'KES 50,000 – 80,000/mo',    posted: '1 day ago',   featured: true },
-  { id: 6,  title: 'HR Officer',                  company: 'KCB Bank',            location: 'Nairobi',        type: 'corporate', sector: 'Human Resources', salary: 'KES 55,000 – 75,000/mo',    posted: '4 days ago' },
-  { id: 7,  title: 'Supply Chain Officer',        company: 'Unilever Kenya',      location: 'Nairobi',        type: 'corporate', sector: 'Logistics',       salary: 'KES 70,000 – 95,000/mo',    posted: '2 days ago' },
-  { id: 8,  title: 'Customer Service Agent',      company: 'Equity Bank',         location: 'Kisumu',         type: 'corporate', sector: 'Finance',         salary: 'KES 30,000 – 45,000/mo',    posted: '6 days ago' },
-  { id: 9,  title: 'Civil Engineer',              company: 'Kenya National Highways', location: 'Nairobi',    type: 'corporate', sector: 'Engineering',     salary: 'KES 90,000 – 130,000/mo',   posted: '3 days ago' },
-  { id: 10, title: 'Marketing Manager',           company: 'Coca-Cola Kenya',     location: 'Nairobi',        type: 'corporate', sector: 'Marketing',       salary: 'KES 100,000 – 150,000/mo',  posted: '1 day ago',   featured: true },
-
-  // Casual
-  { id: 11, title: 'Shopkeeper / Shop Assistant', company: 'Naivas Supermarket',  location: 'Nairobi',        type: 'casual',    sector: 'Retail',          salary: 'KES 15,000 – 20,000/mo',    posted: '1 day ago' },
-  { id: 12, title: 'Cashier',                     company: 'Carrefour Kenya',     location: 'Nakuru',         type: 'casual',    sector: 'Retail',          salary: 'KES 18,000/mo',             posted: '2 days ago' },
-  { id: 13, title: 'Waiter / Waitress',           company: 'Java House',          location: 'Nairobi',        type: 'casual',    sector: 'Hospitality',     salary: 'KES 16,000 + tips/mo',      posted: '3 days ago' },
-  { id: 14, title: 'Security Guard',              company: 'G4S Kenya',           location: 'Mombasa',        type: 'casual',    sector: 'Security',        salary: 'KES 18,000/mo',             posted: '1 day ago' },
-  { id: 15, title: 'Delivery Rider (Motorbike)',  company: 'Sendy Kenya',         location: 'Nairobi',        type: 'casual',    sector: 'Transport',       salary: 'KES 500 – 800/day',         posted: '2 days ago' },
-  { id: 16, title: 'Warehouse Picker & Packer',   company: 'Jumia Kenya',         location: 'Nairobi',        type: 'casual',    sector: 'Logistics',       salary: 'KES 16,000/mo',             posted: '4 days ago' },
-  { id: 17, title: 'Petrol Station Attendant',    company: 'Shell Kenya',         location: 'Nakuru',         type: 'casual',    sector: 'Retail',          salary: 'KES 14,000/mo',             posted: '5 days ago' },
-
-  // Freelance
-  { id: 18, title: 'React / Node.js Developer',   company: 'Remote Client (EU)',  location: 'Remote',         type: 'freelance', sector: 'IT',             salary: '$15 – $30/hr',              posted: '1 day ago',   featured: true },
-  { id: 19, title: 'Graphic Designer',            company: 'Creative Agency',     location: 'Remote',         type: 'freelance', sector: 'Design',          salary: 'KES 5,000 – 15,000/project', posted: '2 days ago' },
-  { id: 20, title: 'SEO Content Writer',          company: 'Digital Agency',      location: 'Remote',         type: 'freelance', sector: 'Writing',         salary: 'KES 3,000 – 8,000/article', posted: '3 days ago' },
-  { id: 21, title: 'Social Media Manager',        company: 'Various Clients',     location: 'Remote',         type: 'freelance', sector: 'Marketing',       salary: 'KES 20,000 – 40,000/mo',    posted: '4 days ago' },
-  { id: 22, title: 'Virtual Assistant',           company: 'Remote Client (US)',  location: 'Remote',         type: 'freelance', sector: 'Admin',           salary: '$8 – $15/hr',               posted: '1 day ago' },
-  { id: 23, title: 'Video Editor',                company: 'Content Creators Hub', location: 'Remote',        type: 'freelance', sector: 'Design',          salary: 'KES 8,000 – 25,000/project', posted: '5 days ago' },
-  { id: 24, title: 'Mobile App Developer',        company: 'Startup (Remote)',    location: 'Remote',         type: 'freelance', sector: 'IT',             salary: '$20 – $40/hr',              posted: '2 days ago' },
-
-  // Domestic → redirect to domestic-connect.co.ke
-  { id: 25, title: 'Nanny / Babysitter',          company: 'Private Family',      location: 'Nairobi',        type: 'domestic',  sector: 'Childcare',       salary: 'KES 12,000 – 20,000/mo',    posted: '1 day ago',   redirect: 'https://domestic-connect.co.ke' },
-  { id: 26, title: 'House Manager & Cook',        company: 'Private Household',   location: 'Karen, Nairobi', type: 'domestic',  sector: 'Domestic',        salary: 'KES 15,000 – 25,000/mo',    posted: '2 days ago',  redirect: 'https://domestic-connect.co.ke' },
-  { id: 27, title: 'Housekeeper',                 company: 'Private Family',      location: 'Westlands',      type: 'domestic',  sector: 'Domestic',        salary: 'KES 10,000 – 18,000/mo',    posted: '3 days ago',  redirect: 'https://domestic-connect.co.ke' },
-  { id: 28, title: 'Caregiver (Elderly)',         company: 'Private Client',      location: 'Runda, Nairobi', type: 'domestic',  sector: 'Childcare',       salary: 'KES 18,000 – 30,000/mo',    posted: '1 day ago',   redirect: 'https://domestic-connect.co.ke' },
+const DOMESTIC_JOBS = [
+  { id: 'd1', title: 'Nanny / Babysitter',    company: 'Private Family',    location: 'Nairobi',        type: 'domestic', sector: 'Childcare', salary: 'KES 12,000 – 20,000/mo', posted: 'New', redirect: 'https://domestic-connect.co.ke' },
+  { id: 'd2', title: 'House Manager & Cook',  company: 'Private Household', location: 'Karen, Nairobi', type: 'domestic', sector: 'Domestic',  salary: 'KES 15,000 – 25,000/mo', posted: 'New', redirect: 'https://domestic-connect.co.ke' },
+  { id: 'd3', title: 'Housekeeper',           company: 'Private Family',    location: 'Westlands',      type: 'domestic', sector: 'Domestic',  salary: 'KES 10,000 – 18,000/mo', posted: 'New', redirect: 'https://domestic-connect.co.ke' },
+  { id: 'd4', title: 'Caregiver (Elderly)',   company: 'Private Client',    location: 'Runda, Nairobi', type: 'domestic', sector: 'Childcare', salary: 'KES 18,000 – 30,000/mo', posted: 'New', redirect: 'https://domestic-connect.co.ke' },
 ]
+
+// ─── Constants ────────────────────────────────────────────────────────────────
 
 const TYPE_TABS = [
   { value: 'all',       label: 'All Jobs' },
@@ -50,14 +22,7 @@ const TYPE_TABS = [
   { value: 'domestic',  label: 'Domestic' },
 ]
 
-const SECTORS = [
-  'All Sectors',
-  'IT', 'Finance', 'Sales', 'Education', 'Healthcare', 'Human Resources',
-  'Logistics', 'Engineering', 'Marketing', 'Retail', 'Hospitality',
-  'Security', 'Transport', 'Design', 'Writing', 'Admin', 'Childcare', 'Domestic',
-]
-
-const LOCATIONS = ['All Locations', 'Nairobi', 'Mombasa', 'Kisumu', 'Nakuru', 'Remote']
+const LOCATIONS = ['All Locations', 'Nairobi', 'Mombasa', 'Kisumu', 'Nakuru', 'Eldoret', 'Remote']
 
 const TYPE_BADGE = {
   corporate: 'bg-blue-50 text-blue-700 border-blue-100',
@@ -73,7 +38,14 @@ const TYPE_LABEL = {
   domestic:  'Domestic',
 }
 
-// ─── JobCard ─────────────────────────────────────────────────────────────────
+const QUICK_CATS = [
+  { label: 'Corporate & Office', value: 'corporate' },
+  { label: 'Casual & Retail',    value: 'casual' },
+  { label: 'Freelance & Remote', value: 'freelance' },
+  { label: 'Domestic Help',      value: 'domestic' },
+]
+
+// ─── JobCard ──────────────────────────────────────────────────────────────────
 
 export function JobCard({ job, onApply }) {
   const handleApply = (e) => {
@@ -86,11 +58,8 @@ export function JobCard({ job, onApply }) {
   }
 
   const handleRowClick = () => {
-    if (job.redirect) {
-      window.open(job.redirect, '_blank', 'noopener,noreferrer')
-    } else {
-      onApply(job)
-    }
+    if (job.redirect) window.open(job.redirect, '_blank', 'noopener,noreferrer')
+    else onApply(job)
   }
 
   return (
@@ -115,14 +84,19 @@ export function JobCard({ job, onApply }) {
             </span>
           )}
         </div>
-        <p className="text-slate-400 text-xs mt-0.5">{job.company} · {job.location}</p>
+        <p className="text-slate-400 text-xs mt-0.5">
+          {job.company} · {job.location}
+          {job.site && <span className="text-slate-300"> · {job.site}</span>}
+        </p>
         <div className="flex flex-wrap gap-1.5 mt-1.5">
           <span className={`text-xs px-2 py-0.5 rounded-full border font-medium ${TYPE_BADGE[job.type]}`}>
             {TYPE_LABEL[job.type]}
           </span>
-          <span className="text-xs px-2 py-0.5 rounded-full border border-gray-100 bg-slate-50 text-slate-500">
-            {job.sector}
-          </span>
+          {job.sector && (
+            <span className="text-xs px-2 py-0.5 rounded-full border border-gray-100 bg-slate-50 text-slate-500">
+              {job.sector}
+            </span>
+          )}
         </div>
       </div>
 
@@ -143,7 +117,7 @@ export function JobCard({ job, onApply }) {
   )
 }
 
-// ─── DomesticBanner ──────────────────────────────────────────────────────────
+// ─── DomesticBanner ───────────────────────────────────────────────────────────
 
 export function DomesticBanner() {
   return (
@@ -167,46 +141,106 @@ export function DomesticBanner() {
   )
 }
 
-// ─── Quick category pills shown in hero ──────────────────────────────────────
+// ─── Skeleton loader ──────────────────────────────────────────────────────────
 
-const QUICK_CATS = [
-  { label: 'Corporate & Office', value: 'corporate' },
-  { label: 'Casual & Retail',    value: 'casual' },
-  { label: 'Freelance & Remote', value: 'freelance' },
-  { label: 'Domestic Help',      value: 'domestic' },
-]
+function JobSkeleton() {
+  return (
+    <div className="flex items-center gap-4 px-5 py-4 animate-pulse">
+      <div className="w-10 h-10 rounded-xl bg-slate-100 shrink-0" />
+      <div className="flex-1 space-y-2">
+        <div className="h-3.5 bg-slate-100 rounded w-2/5" />
+        <div className="h-3 bg-slate-100 rounded w-1/3" />
+        <div className="h-5 bg-slate-100 rounded-full w-20" />
+      </div>
+      <div className="hidden sm:block shrink-0 text-right space-y-2">
+        <div className="h-3.5 bg-slate-100 rounded w-28" />
+        <div className="h-3 bg-slate-100 rounded w-16 ml-auto" />
+      </div>
+      <div className="shrink-0 h-8 w-16 bg-slate-100 rounded-lg" />
+    </div>
+  )
+}
 
-// ─── Page ────────────────────────────────────────────────────────────────────
+// ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function Jobs() {
-  const [activeTab, setActiveTab]     = useState('all')
-  const [search, setSearch]           = useState('')
-  const [sector, setSector]           = useState('All Sectors')
-  const [location, setLocation]       = useState('All Locations')
-  const [applyJob, setApplyJob]       = useState(null)
-  const gridRef                       = useRef(null)
+  const [activeTab, setActiveTab] = useState('all')
+  const [search, setSearch]       = useState('')
+  const [location, setLocation]   = useState('All Locations')
+  const [applyJob, setApplyJob]   = useState(null)
+  const [page, setPage]           = useState(1)
+
+  const [jobs, setJobs]     = useState([])
+  const [hits, setHits]     = useState(0)
+  const [pages, setPages]   = useState(1)
+  const [loading, setLoading] = useState(false)
+  const [error, setError]   = useState(null)
+
+  const gridRef    = useRef(null)
+  const searchRef  = useRef(null) // debounce timer
 
   const scrollToGrid = () =>
     gridRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
 
   const pickCategory = (val) => {
     setActiveTab(val)
+    setPage(1)
     scrollToGrid()
   }
 
-  const filtered = useMemo(() => {
-    const q = search.toLowerCase()
-    return JOBS.filter((job) => {
-      if (activeTab !== 'all' && job.type !== activeTab) return false
-      if (sector !== 'All Sectors' && job.sector !== sector) return false
-      if (location !== 'All Locations' && !job.location.includes(location)) return false
-      if (q && !job.title.toLowerCase().includes(q) && !job.company.toLowerCase().includes(q)) return false
-      return true
-    })
-  }, [activeTab, search, sector, location])
+  // Fetch from API whenever tab / location / page change (immediate)
+  const fetchJobs = useCallback(async (kw, loc, tab, pg) => {
+    if (tab === 'domestic') return // domestic is static
+    setLoading(true)
+    setError(null)
+    try {
+      const result = await searchCareerjetJobs({ keywords: kw, location: loc, tab, page: pg })
+      setJobs(result.jobs)
+      setHits(result.hits)
+      setPages(result.pages)
+    } catch (err) {
+      console.error(err)
+      setError('Failed to load jobs. Please try again.')
+    } finally {
+      setLoading(false)
+    }
+  }, [])
 
-  const tabCount = (val) =>
-    val === 'all' ? JOBS.length : JOBS.filter((j) => j.type === val).length
+  // On tab / location / page change → fetch immediately
+  useEffect(() => {
+    if (activeTab === 'domestic') return
+    fetchJobs(search, location, activeTab, page)
+  }, [activeTab, location, page]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // On search input → debounce 400 ms then fetch from page 1
+  useEffect(() => {
+    if (activeTab === 'domestic') return
+    clearTimeout(searchRef.current)
+    searchRef.current = setTimeout(() => {
+      setPage(1)
+      fetchJobs(search, location, activeTab, 1)
+    }, 400)
+    return () => clearTimeout(searchRef.current)
+  }, [search]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const handleTabChange = (val) => {
+    setActiveTab(val)
+    setPage(1)
+  }
+
+  const handleLocationChange = (val) => {
+    setLocation(val)
+    setPage(1)
+  }
+
+  const clearFilters = () => {
+    setSearch('')
+    setLocation('All Locations')
+    setActiveTab('all')
+    setPage(1)
+  }
+
+  const displayJobs = activeTab === 'domestic' ? DOMESTIC_JOBS : jobs
 
   return (
     <div className="bg-white">
@@ -214,26 +248,21 @@ export default function Jobs() {
         <JobApplyModal job={applyJob} onClose={() => setApplyJob(null)} />
       )}
 
-      {/* ── Hero ─────────────────────────────────────────────────────────── */}
+      {/* ── Hero ──────────────────────────────────────────────────────────── */}
       <section className="relative overflow-hidden bg-slate-900 py-20 md:py-28">
-        {/* Background image — reduced opacity so text reads clearly */}
         <img
           src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1600&q=80"
           alt="People working in an office"
           className="absolute inset-0 w-full h-full object-cover opacity-25"
         />
-        {/* Left-to-right gradient: solid on left, fades on right */}
         <div className="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/90 to-slate-900/50" />
 
         <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-
-          {/* Headline */}
           <h1 className="text-4xl md:text-6xl font-bold text-white leading-tight mb-4 max-w-3xl">
             Find Work.<br />
             <span className="text-emerald-400">Any kind.</span>{' '}
             <span className="text-white/35">Anywhere.</span>
           </h1>
-
           <p className="text-white/55 text-base md:text-lg mb-8 max-w-xl leading-relaxed">
             Corporate offices, casual shifts, freelance gigs, and domestic roles —
             all in one place for Kenyans.
@@ -257,12 +286,10 @@ export default function Jobs() {
             <div className="hidden sm:block w-px bg-gray-100 my-1.5" />
             <select
               value={location}
-              onChange={(e) => setLocation(e.target.value)}
+              onChange={(e) => handleLocationChange(e.target.value)}
               className="sm:w-40 px-3 py-2.5 text-slate-700 text-sm bg-slate-50 rounded-xl outline-none"
             >
-              {LOCATIONS.map((l) => (
-                <option key={l}>{l}</option>
-              ))}
+              {LOCATIONS.map((l) => <option key={l}>{l}</option>)}
             </select>
             <button
               onClick={scrollToGrid}
@@ -288,10 +315,10 @@ export default function Jobs() {
           {/* Stats row */}
           <div className="flex flex-wrap gap-8">
             {[
-              { num: '1,200+', label: 'Jobs listed' },
-              { num: '340+',   label: 'Companies' },
-              { num: '4',      label: 'Job categories' },
-              { num: 'Free',   label: 'To apply' },
+              { num: '10,000+', label: 'Live jobs' },
+              { num: '4',       label: 'Job categories' },
+              { num: 'Kenya',   label: 'Focused' },
+              { num: 'Free',    label: 'To apply' },
             ].map((s) => (
               <div key={s.label}>
                 <p className="text-white font-bold text-xl leading-tight">{s.num}</p>
@@ -299,15 +326,13 @@ export default function Jobs() {
               </div>
             ))}
           </div>
-
         </div>
       </section>
 
-      {/* ── Main content ─────────────────────────────────────────────────── */}
+      {/* ── Main content ──────────────────────────────────────────────────── */}
       <section ref={gridRef} className="py-10 bg-slate-50 border-t border-gray-100 min-h-screen">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 
-          {/* Domestic banner — visible when domestic tab is active */}
           {activeTab === 'domestic' && <DomesticBanner />}
 
           {/* Category tabs */}
@@ -315,7 +340,7 @@ export default function Jobs() {
             {TYPE_TABS.map((tab) => (
               <button
                 key={tab.value}
-                onClick={() => setActiveTab(tab.value)}
+                onClick={() => handleTabChange(tab.value)}
                 className={`text-sm px-4 py-1.5 rounded-full border font-medium transition-colors ${
                   activeTab === tab.value
                     ? 'bg-slate-900 text-white border-slate-900'
@@ -323,36 +348,22 @@ export default function Jobs() {
                 }`}
               >
                 {tab.label}
-                <span className={`ml-1.5 text-xs ${activeTab === tab.value ? 'text-white/55' : 'text-slate-400'}`}>
-                  {tabCount(tab.value)}
-                </span>
               </button>
             ))}
           </div>
 
-          {/* Sector + location filter row */}
+          {/* Location filter */}
           <div className="flex flex-wrap gap-3 mb-5">
             <select
-              value={sector}
-              onChange={(e) => setSector(e.target.value)}
-              className="text-sm px-3 py-2 border border-gray-200 rounded-xl text-slate-700 bg-white outline-none"
-            >
-              {SECTORS.map((s) => (
-                <option key={s}>{s}</option>
-              ))}
-            </select>
-            <select
               value={location}
-              onChange={(e) => setLocation(e.target.value)}
+              onChange={(e) => handleLocationChange(e.target.value)}
               className="text-sm px-3 py-2 border border-gray-200 rounded-xl text-slate-700 bg-white outline-none"
             >
-              {LOCATIONS.map((l) => (
-                <option key={l}>{l}</option>
-              ))}
+              {LOCATIONS.map((l) => <option key={l}>{l}</option>)}
             </select>
-            {(sector !== 'All Sectors' || location !== 'All Locations' || search) && (
+            {(location !== 'All Locations' || search || activeTab !== 'all') && (
               <button
-                onClick={() => { setSector('All Sectors'); setLocation('All Locations'); setSearch('') }}
+                onClick={clearFilters}
                 className="text-xs text-slate-500 hover:text-slate-800 underline underline-offset-2"
               >
                 Clear filters
@@ -360,33 +371,78 @@ export default function Jobs() {
             )}
           </div>
 
-          {/* Result count */}
-          <p className="text-slate-400 text-xs mb-4">
-            {filtered.length} job{filtered.length !== 1 ? 's' : ''} found
-          </p>
+          {/* Result meta */}
+          {activeTab !== 'domestic' && !loading && !error && (
+            <p className="text-slate-400 text-xs mb-4">
+              {hits > 0 ? `${hits.toLocaleString()} jobs found` : 'No jobs found'}
+              {pages > 1 && ` · page ${page} of ${pages}`}
+            </p>
+          )}
 
-          {/* Job list */}
-          {filtered.length > 0 ? (
-            <div className="flex flex-col divide-y divide-gray-100 border border-gray-100 rounded-2xl overflow-hidden bg-white">
-              {filtered.map((job) => (
-                <JobCard key={job.id} job={job} onApply={setApplyJob} />
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-20">
-              <p className="text-slate-400 text-sm">No jobs match your current filters.</p>
+          {/* Error state */}
+          {error && (
+            <div className="text-center py-12">
+              <p className="text-slate-500 text-sm">{error}</p>
               <button
-                onClick={() => { setActiveTab('all'); setSector('All Sectors'); setLocation('All Locations'); setSearch('') }}
+                onClick={() => fetchJobs(search, location, activeTab, page)}
                 className="mt-3 text-emerald-600 text-sm font-medium underline underline-offset-2"
               >
-                Clear all filters
+                Retry
               </button>
             </div>
+          )}
+
+          {/* Job list */}
+          {!error && (
+            <>
+              {loading ? (
+                <div className="flex flex-col divide-y divide-gray-100 border border-gray-100 rounded-2xl overflow-hidden bg-white">
+                  {Array.from({ length: 6 }).map((_, i) => <JobSkeleton key={i} />)}
+                </div>
+              ) : displayJobs.length > 0 ? (
+                <div className="flex flex-col divide-y divide-gray-100 border border-gray-100 rounded-2xl overflow-hidden bg-white">
+                  {displayJobs.map((job) => (
+                    <JobCard key={job.id} job={job} onApply={setApplyJob} />
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-20">
+                  <p className="text-slate-400 text-sm">No jobs match your current filters.</p>
+                  <button
+                    onClick={clearFilters}
+                    className="mt-3 text-emerald-600 text-sm font-medium underline underline-offset-2"
+                  >
+                    Clear all filters
+                  </button>
+                </div>
+              )}
+
+              {/* Pagination */}
+              {!loading && activeTab !== 'domestic' && pages > 1 && (
+                <div className="flex items-center justify-center gap-2 mt-8">
+                  <button
+                    onClick={() => { setPage(p => p - 1); scrollToGrid() }}
+                    disabled={page === 1}
+                    className="px-4 py-2 text-sm rounded-xl border border-gray-200 bg-white text-slate-600 hover:border-slate-400 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                  >
+                    ← Prev
+                  </button>
+                  <span className="text-sm text-slate-500">Page {page} of {pages}</span>
+                  <button
+                    onClick={() => { setPage(p => p + 1); scrollToGrid() }}
+                    disabled={page >= pages}
+                    className="px-4 py-2 text-sm rounded-xl border border-gray-200 bg-white text-slate-600 hover:border-slate-400 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                  >
+                    Next →
+                  </button>
+                </div>
+              )}
+            </>
           )}
         </div>
       </section>
 
-      {/* ── Domestic CTA strip ───────────────────────────────────────────── */}
+      {/* ── Domestic CTA strip ────────────────────────────────────────────── */}
       <section className="bg-rose-50 border-y border-rose-100 py-12">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center gap-6 justify-between">
           <div>
@@ -407,7 +463,7 @@ export default function Jobs() {
         </div>
       </section>
 
-      {/* ── Employer CTA ─────────────────────────────────────────────────── */}
+      {/* ── Employer CTA ──────────────────────────────────────────────────── */}
       <section className="bg-slate-900 py-14 text-center">
         <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
           <p className="text-emerald-400 text-xs font-semibold uppercase tracking-widest mb-3">For Employers</p>
@@ -426,7 +482,6 @@ export default function Jobs() {
           </a>
         </div>
       </section>
-
     </div>
   )
 }
