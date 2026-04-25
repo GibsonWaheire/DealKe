@@ -426,4 +426,3 @@ export const SEED_POSTS = [
     `.trim(),
   },
 ]
-`,
