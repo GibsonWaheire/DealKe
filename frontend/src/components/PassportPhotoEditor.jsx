@@ -15,7 +15,7 @@ const BG_COLORS = [
   { label: 'Light Gray', value: '#f2f2f2' },
 ]
 
-async function getCroppedImg(imageSrc, pixelCrop, bgColor) {
+async function getCroppedImg(imageSrc, pixelCrop, bgColor, flipH = false) {
   return new Promise((resolve, reject) => {
     const image = new Image()
     image.onload = () => {
@@ -25,6 +25,10 @@ async function getCroppedImg(imageSrc, pixelCrop, bgColor) {
       const ctx = canvas.getContext('2d')
       ctx.fillStyle = bgColor
       ctx.fillRect(0, 0, PASSPORT_W, PASSPORT_H)
+      if (flipH) {
+        ctx.translate(PASSPORT_W, 0)
+        ctx.scale(-1, 1)
+      }
       ctx.drawImage(
         image,
         pixelCrop.x, pixelCrop.y, pixelCrop.width, pixelCrop.height,
@@ -63,6 +67,7 @@ export default function PassportPhotoEditor({ file, onCancel, onConfirm }) {
 
   const [previewBlob, setPreviewBlob]         = useState(null)
   const [isGenerating, setIsGenerating]       = useState(false)
+  const [flipH, setFlipH]                     = useState(false)
   const canvasRef = useRef(null)
 
   // ── Run background removal on mount ───────────────────────────────────────
@@ -117,7 +122,7 @@ export default function PassportPhotoEditor({ file, onCancel, onConfirm }) {
     if (!croppedAreaPixels) return
     setIsGenerating(true)
     try {
-      const blob = await getCroppedImg(bgRemovedUrl, croppedAreaPixels, bgColor)
+      const blob = await getCroppedImg(bgRemovedUrl, croppedAreaPixels, bgColor, flipH)
       setPreviewBlob(blob)
       setEditorStep('preview')
     } catch (err) {
@@ -196,9 +201,25 @@ export default function PassportPhotoEditor({ file, onCancel, onConfirm }) {
         )}
 
         <div>
-          <p className="text-sm font-medium text-slate-700 mb-2">
-            Drag to reposition · scroll or pinch to zoom
-          </p>
+          <div className="flex items-center justify-between mb-2">
+            <p className="text-sm font-medium text-slate-700">
+              Drag to reposition · scroll or pinch to zoom
+            </p>
+            <button
+              onClick={() => setFlipH(v => !v)}
+              title="Flip horizontally"
+              className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-xs font-medium transition-all ${
+                flipH
+                  ? 'border-emerald-500 bg-emerald-50 text-emerald-700'
+                  : 'border-zinc-200 text-slate-500 hover:border-zinc-300'
+              }`}
+            >
+              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
+              </svg>
+              Flip
+            </button>
+          </div>
           {/* react-easy-crop requires position:relative + explicit height on the parent */}
           <div className="relative h-72 rounded-xl overflow-hidden bg-zinc-100">
             {bgRemovedUrl && (
@@ -212,6 +233,13 @@ export default function PassportPhotoEditor({ file, onCancel, onConfirm }) {
                 onCropComplete={onCropComplete}
               />
             )}
+            {/* Face position guide */}
+            <div className="absolute inset-0 flex items-start justify-center pointer-events-none pt-4">
+              <div
+                className="border-2 border-white/50 rounded-[50%] opacity-70"
+                style={{ width: '38%', aspectRatio: '1/1.1' }}
+              />
+            </div>
           </div>
           <input
             type="range"
@@ -225,7 +253,7 @@ export default function PassportPhotoEditor({ file, onCancel, onConfirm }) {
         {/* Background colour */}
         <div>
           <p className="text-sm font-medium text-slate-700 mb-2">Background colour</p>
-          <div className="flex gap-2 flex-wrap">
+          <div className="flex gap-2 flex-wrap items-center">
             {BG_COLORS.map(c => (
               <button
                 key={c.value}
@@ -243,6 +271,27 @@ export default function PassportPhotoEditor({ file, onCancel, onConfirm }) {
                 {c.label}
               </button>
             ))}
+            {/* Custom colour picker */}
+            <label
+              className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border text-sm font-medium cursor-pointer transition-all ${
+                !BG_COLORS.some(c => c.value === bgColor)
+                  ? 'border-emerald-500 ring-2 ring-emerald-200 text-emerald-700'
+                  : 'border-zinc-200 text-slate-600 hover:border-zinc-300'
+              }`}
+              title="Custom colour"
+            >
+              <span
+                className="w-4 h-4 rounded-full border border-zinc-300 shrink-0"
+                style={{ backgroundColor: bgColor }}
+              />
+              Custom
+              <input
+                type="color"
+                value={bgColor}
+                onChange={e => setBgColor(e.target.value)}
+                className="sr-only"
+              />
+            </label>
           </div>
         </div>
 
