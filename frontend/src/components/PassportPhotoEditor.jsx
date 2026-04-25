@@ -231,6 +231,7 @@ export default function PassportPhotoEditor({ file, onCancel, onConfirm }) {
                 onCropChange={setCrop}
                 onZoomChange={setZoom}
                 onCropComplete={onCropComplete}
+                restrictPosition={false}
               />
             )}
             {/* Face position guide */}
