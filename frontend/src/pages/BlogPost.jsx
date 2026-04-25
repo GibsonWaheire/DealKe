@@ -1,6 +1,7 @@
 // src/pages/BlogPost.jsx
 import { useState, useEffect } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
+import { SEED_POSTS } from '../data/blogSeed'
 
 export default function BlogPost() {
   const { slug } = useParams()
@@ -10,12 +11,16 @@ export default function BlogPost() {
   useEffect(() => {
     try {
       const saved = localStorage.getItem('df_posts')
-      const all = saved ? JSON.parse(saved) : []
+      const local = saved ? JSON.parse(saved) : []
+      const localIds = new Set(local.map(p => p.id))
+      const all = [...local, ...SEED_POSTS.filter(p => !localIds.has(p.id))]
       const found = all.find(p => p.slug === slug && p.published)
       if (!found) navigate('/blog')
       else setPost(found)
     } catch {
-      navigate('/blog')
+      const found = SEED_POSTS.find(p => p.slug === slug && p.published)
+      if (!found) navigate('/blog')
+      else setPost(found)
     }
   }, [slug, navigate])
 
@@ -52,9 +57,24 @@ export default function BlogPost() {
           </div>
         </div>
 
-        <div className="prose prose-slate max-w-none mt-8 text-slate-700 leading-relaxed whitespace-pre-wrap text-base">
-          {post.content}
-        </div>
+        {post.isHtml ? (
+          <div
+            className="mt-8 text-base text-slate-700 leading-relaxed
+              [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:text-slate-900 [&_h2]:mt-10 [&_h2]:mb-4
+              [&_h3]:text-xl [&_h3]:font-semibold [&_h3]:text-slate-800 [&_h3]:mt-7 [&_h3]:mb-3
+              [&_p]:mb-5 [&_p]:leading-relaxed
+              [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:mb-5 [&_ul]:space-y-1
+              [&_li]:leading-relaxed
+              [&_a]:text-emerald-600 [&_a]:underline [&_a]:underline-offset-2 [&_a]:font-medium
+              [&_strong]:text-slate-900 [&_strong]:font-semibold
+              [&_code]:bg-slate-100 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded [&_code]:text-sm [&_code]:font-mono [&_code]:text-slate-800"
+            dangerouslySetInnerHTML={{ __html: post.content }}
+          />
+        ) : (
+          <div className="prose prose-slate max-w-none mt-8 text-slate-700 leading-relaxed whitespace-pre-wrap text-base">
+            {post.content}
+          </div>
+        )}
 
         <div className="mt-14 border-t border-gray-100 pt-8 text-center">
           <p className="text-slate-500 text-sm mb-4">Need help with a digital service? Pay directly and we get started immediately.</p>

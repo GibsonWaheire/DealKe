@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import PageHeader from '../components/PageHeader'
+import { SEED_POSTS } from '../data/blogSeed'
 
 const headerImages = [
   { src: 'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&w=1600&q=80', alt: 'Blog' },
@@ -13,10 +14,12 @@ export default function Blog() {
   useEffect(() => {
     try {
       const saved = localStorage.getItem('df_posts')
-      const all = saved ? JSON.parse(saved) : []
-      setPosts(all.filter(p => p.published).sort((a, b) => new Date(b.date) - new Date(a.date)))
+      const local = saved ? JSON.parse(saved) : []
+      const localIds = new Set(local.map(p => p.id))
+      const merged = [...local, ...SEED_POSTS.filter(p => !localIds.has(p.id))]
+      setPosts(merged.filter(p => p.published).sort((a, b) => new Date(b.date) - new Date(a.date)))
     } catch {
-      setPosts([])
+      setPosts(SEED_POSTS.filter(p => p.published))
     }
   }, [])
 
