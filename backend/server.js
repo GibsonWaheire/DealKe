@@ -4,6 +4,7 @@ const express = require('express')
 const cors    = require('cors')
 
 const mpesaRoutes = require('./routes/mpesa')
+const jobsRoutes  = require('./routes/jobs')
 
 const app  = express()
 const PORT = process.env.PORT || 4000
@@ -16,6 +17,7 @@ app.use(express.json())
 
 // ── Routes ───────────────────────────────────────────────
 app.use('/api/mpesa', mpesaRoutes)
+app.use('/api/jobs',  jobsRoutes)
 
 app.get('/health', (_req, res) => res.json({ status: 'ok', env: process.env.MPESA_ENV }))
 
