@@ -15,6 +15,30 @@ const BG_COLORS = [
   { label: 'Light Gray', value: '#f2f2f2' },
 ]
 
+// Remove shadow halos left by the AI — hard-thresholds the alpha channel.
+// Pixels with alpha < 200 → fully transparent; >= 200 → fully opaque.
+function cleanAlpha(blob) {
+  return new Promise((resolve) => {
+    const img = new Image()
+    const url = URL.createObjectURL(blob)
+    img.onload = () => {
+      const canvas = document.createElement('canvas')
+      canvas.width  = img.width
+      canvas.height = img.height
+      const ctx = canvas.getContext('2d')
+      ctx.drawImage(img, 0, 0)
+      URL.revokeObjectURL(url)
+      const raw = ctx.getImageData(0, 0, canvas.width, canvas.height)
+      for (let i = 3; i < raw.data.length; i += 4) {
+        raw.data[i] = raw.data[i] < 200 ? 0 : 255
+      }
+      ctx.putImageData(raw, 0, 0)
+      canvas.toBlob(resolve, 'image/png', 1.0)
+    }
+    img.src = url
+  })
+}
+
 async function getCroppedImg(imageSrc, pixelCrop, bgColor, flipH = false) {
   return new Promise((resolve, reject) => {
     const image = new Image()
@@ -23,17 +47,41 @@ async function getCroppedImg(imageSrc, pixelCrop, bgColor, flipH = false) {
       canvas.width  = PASSPORT_W
       canvas.height = PASSPORT_H
       const ctx = canvas.getContext('2d')
+      ctx.imageSmoothingEnabled = true
+      ctx.imageSmoothingQuality = 'high'
+
+      // Fill solid background first
       ctx.fillStyle = bgColor
       ctx.fillRect(0, 0, PASSPORT_W, PASSPORT_H)
+
       if (flipH) {
         ctx.translate(PASSPORT_W, 0)
         ctx.scale(-1, 1)
       }
-      ctx.drawImage(
-        image,
-        pixelCrop.x, pixelCrop.y, pixelCrop.width, pixelCrop.height,
-        0, 0, PASSPORT_W, PASSPORT_H,
-      )
+
+      // pixelCrop may extend outside the image when restrictPosition=false.
+      // Clamp source rect to actual image bounds, then compute where that
+      // visible portion lands in the passport frame — prevents stretching.
+      const sx  = pixelCrop.x
+      const sy  = pixelCrop.y
+      const sw  = pixelCrop.width
+      const sh  = pixelCrop.height
+
+      const csx  = Math.max(0, sx)
+      const csy  = Math.max(0, sy)
+      const csx2 = Math.min(image.naturalWidth,  sx + sw)
+      const csy2 = Math.min(image.naturalHeight, sy + sh)
+
+      if (csx2 > csx && csy2 > csy) {
+        const scaleX = PASSPORT_W / sw
+        const scaleY = PASSPORT_H / sh
+        const dx = (csx  - sx) * scaleX
+        const dy = (csy  - sy) * scaleY
+        const dw = (csx2 - csx) * scaleX
+        const dh = (csy2 - csy) * scaleY
+        ctx.drawImage(image, csx, csy, csx2 - csx, csy2 - csy, dx, dy, dw, dh)
+      }
+
       canvas.toBlob(
         blob => (blob ? resolve(blob) : reject(new Error('Canvas toBlob failed'))),
         'image/png',
@@ -91,7 +139,10 @@ export default function PassportPhotoEditor({ file, onCancel, onConfirm }) {
           model: 'medium',
           output: { format: 'image/png', quality: 1.0 },
         })
-        const url = URL.createObjectURL(result)
+        if (!mounted) return
+        setProgressLabel('Cleaning up edges…')
+        const cleaned = await cleanAlpha(result)
+        const url = URL.createObjectURL(cleaned)
         if (!mounted) { URL.revokeObjectURL(url); return }
         objectUrl = url
         setBgRemovedUrl(url)
