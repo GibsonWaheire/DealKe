@@ -21,6 +21,16 @@ app.use('/api/jobs',  jobsRoutes)
 
 app.get('/health', (_req, res) => res.json({ status: 'ok', env: process.env.MPESA_ENV }))
 
+app.get('/my-ip', async (_req, res) => {
+  try {
+    const r = await fetch('https://api.ipify.org?format=json')
+    const d = await r.json()
+    res.json(d)
+  } catch (e) {
+    res.status(500).json({ error: e.message })
+  }
+})
+
 // ── Start ────────────────────────────────────────────────
 app.listen(PORT, () => {
   console.log(`DealFlow backend running on http://localhost:${PORT}`)
