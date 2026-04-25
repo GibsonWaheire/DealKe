@@ -1,4 +1,5 @@
-// Handles: AI background removal, crop UI (react-easy-crop), watermarked preview.
+// Handles: crop UI first (react-easy-crop on original photo), then AI background
+// removal on the cropped result, then watermarked preview.
 // Props:
 //   file       — File object from the upload step
 //   onCancel   — called when user clicks Back/Cancel
@@ -15,8 +16,55 @@ const BG_COLORS = [
   { label: 'Light Gray', value: '#f2f2f2' },
 ]
 
+// Crop original photo to passport dimensions — no background applied yet.
+function cropToPassport(imageSrc, pixelCrop, flipH = false) {
+  return new Promise((resolve, reject) => {
+    const image = new Image()
+    image.onload = () => {
+      const canvas = document.createElement('canvas')
+      canvas.width  = PASSPORT_W
+      canvas.height = PASSPORT_H
+      const ctx = canvas.getContext('2d')
+      ctx.imageSmoothingEnabled = true
+      ctx.imageSmoothingQuality = 'high'
+      if (flipH) { ctx.translate(PASSPORT_W, 0); ctx.scale(-1, 1) }
+      ctx.drawImage(
+        image,
+        pixelCrop.x, pixelCrop.y, pixelCrop.width, pixelCrop.height,
+        0, 0, PASSPORT_W, PASSPORT_H,
+      )
+      canvas.toBlob(
+        blob => (blob ? resolve(blob) : reject(new Error('Canvas toBlob failed'))),
+        'image/png', 1.0,
+      )
+    }
+    image.onerror = reject
+    image.src = imageSrc
+  })
+}
+
+// Composite a transparent-bg PNG onto a solid background colour.
+function compositeOnBg(blob, bgColor) {
+  return new Promise((resolve, reject) => {
+    const img = new Image()
+    const url = URL.createObjectURL(blob)
+    img.onload = () => {
+      const canvas = document.createElement('canvas')
+      canvas.width  = img.width
+      canvas.height = img.height
+      const ctx = canvas.getContext('2d')
+      ctx.fillStyle = bgColor
+      ctx.fillRect(0, 0, canvas.width, canvas.height)
+      ctx.drawImage(img, 0, 0)
+      URL.revokeObjectURL(url)
+      canvas.toBlob(resolve, 'image/png', 1.0)
+    }
+    img.onerror = reject
+    img.src = url
+  })
+}
+
 // Remove shadow halos left by the AI — hard-thresholds the alpha channel.
-// Pixels with alpha < 200 → fully transparent; >= 200 → fully opaque.
 function cleanAlpha(blob) {
   return new Promise((resolve) => {
     const img = new Image()
@@ -39,60 +87,6 @@ function cleanAlpha(blob) {
   })
 }
 
-async function getCroppedImg(imageSrc, pixelCrop, bgColor, flipH = false) {
-  return new Promise((resolve, reject) => {
-    const image = new Image()
-    image.onload = () => {
-      const canvas = document.createElement('canvas')
-      canvas.width  = PASSPORT_W
-      canvas.height = PASSPORT_H
-      const ctx = canvas.getContext('2d')
-      ctx.imageSmoothingEnabled = true
-      ctx.imageSmoothingQuality = 'high'
-
-      // Fill solid background first
-      ctx.fillStyle = bgColor
-      ctx.fillRect(0, 0, PASSPORT_W, PASSPORT_H)
-
-      if (flipH) {
-        ctx.translate(PASSPORT_W, 0)
-        ctx.scale(-1, 1)
-      }
-
-      // pixelCrop may extend outside the image when restrictPosition=false.
-      // Clamp source rect to actual image bounds, then compute where that
-      // visible portion lands in the passport frame — prevents stretching.
-      const sx  = pixelCrop.x
-      const sy  = pixelCrop.y
-      const sw  = pixelCrop.width
-      const sh  = pixelCrop.height
-
-      const csx  = Math.max(0, sx)
-      const csy  = Math.max(0, sy)
-      const csx2 = Math.min(image.naturalWidth,  sx + sw)
-      const csy2 = Math.min(image.naturalHeight, sy + sh)
-
-      if (csx2 > csx && csy2 > csy) {
-        const scaleX = PASSPORT_W / sw
-        const scaleY = PASSPORT_H / sh
-        const dx = (csx  - sx) * scaleX
-        const dy = (csy  - sy) * scaleY
-        const dw = (csx2 - csx) * scaleX
-        const dh = (csy2 - csy) * scaleY
-        ctx.drawImage(image, csx, csy, csx2 - csx, csy2 - csy, dx, dy, dw, dh)
-      }
-
-      canvas.toBlob(
-        blob => (blob ? resolve(blob) : reject(new Error('Canvas toBlob failed'))),
-        'image/png',
-        1.0,
-      )
-    }
-    image.onerror = reject
-    image.src = imageSrc
-  })
-}
-
 const Spinner = () => (
   <svg className="w-4 h-4 animate-spin shrink-0" fill="none" viewBox="0 0 24 24">
     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
@@ -101,12 +95,11 @@ const Spinner = () => (
 )
 
 export default function PassportPhotoEditor({ file, onCancel, onConfirm }) {
-  // Internal steps: removing → cropping → preview
-  const [editorStep, setEditorStep]           = useState('removing')
-  const [bgRemovedUrl, setBgRemovedUrl]       = useState(null)
+  // Flow: cropping (original) → removing (AI) → preview
+  const [editorStep, setEditorStep]           = useState('cropping')
+  const [originalUrl, setOriginalUrl]         = useState(null)
   const [progress, setProgress]               = useState(0)
-  const [progressLabel, setProgressLabel]     = useState('Loading AI model…')
-  const [bgError, setBgError]                 = useState(null)
+  const [progressLabel, setProgressLabel]     = useState('Cropping…')
 
   const [crop, setCrop]                       = useState({ x: 0, y: 0 })
   const [zoom, setZoom]                       = useState(1)
@@ -114,72 +107,62 @@ export default function PassportPhotoEditor({ file, onCancel, onConfirm }) {
   const [bgColor, setBgColor]                 = useState('#ffffff')
 
   const [previewBlob, setPreviewBlob]         = useState(null)
-  const [isGenerating, setIsGenerating]       = useState(false)
+  const [isProcessing, setIsProcessing]       = useState(false)
   const [flipH, setFlipH]                     = useState(false)
   const canvasRef = useRef(null)
 
-  // ── Run background removal on mount ───────────────────────────────────────
+  // Create object URL for the original file so user edits on the real photo
   useEffect(() => {
-    let objectUrl = null
-    let mounted   = true
-
-    const run = async () => {
-      try {
-        const { removeBackground } = await import('@imgly/background-removal')
-        const result = await removeBackground(file, {
-          progress: (key, current, total) => {
-            if (!mounted) return
-            if (key.includes('fetch') || key.includes('load') || key.includes('model')) {
-              setProgressLabel('Loading AI model… (first time only, cached after)')
-            } else {
-              setProgressLabel('Removing background…')
-            }
-            if (total > 0) setProgress(Math.round((current / total) * 100))
-          },
-          model: 'medium',
-          output: { format: 'image/png', quality: 1.0 },
-        })
-        if (!mounted) return
-        setProgressLabel('Cleaning up edges…')
-        const cleaned = await cleanAlpha(result)
-        const url = URL.createObjectURL(cleaned)
-        if (!mounted) { URL.revokeObjectURL(url); return }
-        objectUrl = url
-        setBgRemovedUrl(url)
-        setEditorStep('cropping')
-      } catch (err) {
-        console.error('Background removal failed:', err)
-        if (!mounted) return
-        setBgError('Background removal failed — you can still crop your original photo.')
-        const url = URL.createObjectURL(file)
-        objectUrl = url
-        setBgRemovedUrl(url)
-        setEditorStep('cropping')
-      }
-    }
-
-    run()
-    return () => {
-      mounted = false
-      if (objectUrl) URL.revokeObjectURL(objectUrl)
-    }
+    const url = URL.createObjectURL(file)
+    setOriginalUrl(url)
+    return () => URL.revokeObjectURL(url)
   }, [file])
 
   const onCropComplete = useCallback((_, pixels) => {
     setCroppedAreaPixels(pixels)
   }, [])
 
+  // User is happy with the crop → crop first, then remove background
   const handleConfirmCrop = async () => {
-    if (!croppedAreaPixels) return
-    setIsGenerating(true)
+    if (!croppedAreaPixels || !originalUrl) return
+    setIsProcessing(true)
+    setEditorStep('removing')
+    setProgress(0)
     try {
-      const blob = await getCroppedImg(bgRemovedUrl, croppedAreaPixels, bgColor, flipH)
-      setPreviewBlob(blob)
+      // 1. Crop the original photo to passport dimensions
+      setProgressLabel('Cropping your photo…')
+      const cropped = await cropToPassport(originalUrl, croppedAreaPixels, flipH)
+
+      // 2. Remove background from the cropped passport image
+      setProgressLabel('Loading AI model…')
+      const { removeBackground } = await import('@imgly/background-removal')
+      const bgRemoved = await removeBackground(cropped, {
+        progress: (key, current, total) => {
+          if (key.includes('fetch') || key.includes('load') || key.includes('model')) {
+            setProgressLabel('Loading AI model… (first time only, cached after)')
+          } else {
+            setProgressLabel('Removing background…')
+          }
+          if (total > 0) setProgress(Math.round((current / total) * 100))
+        },
+        model: 'medium',
+        output: { format: 'image/png', quality: 1.0 },
+      })
+
+      // 3. Clean shadow halos from alpha edges
+      setProgressLabel('Cleaning up edges…')
+      const cleaned = await cleanAlpha(bgRemoved)
+
+      // 4. Composite onto chosen background colour
+      const final = await compositeOnBg(cleaned, bgColor)
+
+      setPreviewBlob(final)
       setEditorStep('preview')
     } catch (err) {
-      console.error('Crop failed:', err)
+      console.error('Processing failed:', err)
+      setEditorStep('cropping')
     } finally {
-      setIsGenerating(false)
+      setIsProcessing(false)
     }
   }
 
@@ -212,49 +195,14 @@ export default function PassportPhotoEditor({ file, onCancel, onConfirm }) {
     img.src = url
   }, [previewBlob, editorStep])
 
-  // ── Render: removing ──────────────────────────────────────────────────────
-  if (editorStep === 'removing') {
-    return (
-      <div className="flex flex-col items-center gap-6 py-10 px-2">
-        <div className="w-full">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-medium text-slate-600">{progressLabel}</span>
-            <span className="text-sm tabular-nums text-slate-400">{progress}%</span>
-          </div>
-          <div className="w-full h-2.5 bg-zinc-100 rounded-full overflow-hidden">
-            <div
-              className="h-2.5 bg-emerald-500 rounded-full transition-all duration-300"
-              style={{ width: `${Math.max(progress, 3)}%` }}
-            />
-          </div>
-          <p className="text-xs text-slate-400 mt-3 text-center">
-            Processed entirely in your browser — your photo is never uploaded.
-          </p>
-        </div>
-        <button
-          onClick={onCancel}
-          className="text-sm text-slate-400 hover:text-slate-600 underline transition-colors"
-        >
-          Cancel
-        </button>
-      </div>
-    )
-  }
-
-  // ── Render: cropping ──────────────────────────────────────────────────────
+  // ── Render: cropping — user frames the shot on the ORIGINAL photo ──────────
   if (editorStep === 'cropping') {
     return (
       <div className="flex flex-col gap-5">
-        {bgError && (
-          <div className="bg-amber-50 border border-amber-200 rounded-xl px-3 py-2.5 text-sm text-amber-700">
-            {bgError}
-          </div>
-        )}
-
         <div>
           <div className="flex items-center justify-between mb-2">
             <p className="text-sm font-medium text-slate-700">
-              Drag to reposition · scroll or pinch to zoom
+              Position &amp; zoom · drag anywhere · scroll to zoom
             </p>
             <button
               onClick={() => setFlipH(v => !v)}
@@ -271,28 +219,31 @@ export default function PassportPhotoEditor({ file, onCancel, onConfirm }) {
               Flip
             </button>
           </div>
-          {/* react-easy-crop requires position:relative + explicit height on the parent */}
-          <div className="relative h-72 rounded-xl overflow-hidden bg-zinc-100">
-            {bgRemovedUrl && (
+
+          {/* react-easy-crop requires position:relative + explicit height */}
+          <div className="relative rounded-xl overflow-hidden bg-zinc-100" style={{ height: 320 }}>
+            {originalUrl && (
               <Cropper
-                image={bgRemovedUrl}
+                image={originalUrl}
                 crop={crop}
                 zoom={zoom}
                 aspect={PASSPORT_W / PASSPORT_H}
                 onCropChange={setCrop}
                 onZoomChange={setZoom}
                 onCropComplete={onCropComplete}
-                restrictPosition={true}
+                restrictPosition={false}
               />
             )}
-            {/* Face position guide */}
-            <div className="absolute inset-0 flex items-start justify-center pointer-events-none pt-4">
+            {/* Face guide — centered oval, sits in the upper-middle third of the frame */}
+            <div className="absolute inset-0 pointer-events-none flex flex-col items-center justify-start pt-6">
               <div
-                className="border-2 border-white/50 rounded-[50%] opacity-70"
-                style={{ width: '38%', aspectRatio: '1/1.1' }}
+                className="border-2 border-white/60 rounded-[50%]"
+                style={{ width: '36%', aspectRatio: '1 / 1.25' }}
               />
+              <p className="text-white/70 text-[10px] mt-2">align face here</p>
             </div>
           </div>
+
           <input
             type="range"
             min={1} max={3} step={0.05}
@@ -323,7 +274,6 @@ export default function PassportPhotoEditor({ file, onCancel, onConfirm }) {
                 {c.label}
               </button>
             ))}
-            {/* Custom colour picker */}
             <label
               className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border text-sm font-medium cursor-pointer transition-all ${
                 !BG_COLORS.some(c => c.value === bgColor)
@@ -332,17 +282,9 @@ export default function PassportPhotoEditor({ file, onCancel, onConfirm }) {
               }`}
               title="Custom colour"
             >
-              <span
-                className="w-4 h-4 rounded-full border border-zinc-300 shrink-0"
-                style={{ backgroundColor: bgColor }}
-              />
+              <span className="w-4 h-4 rounded-full border border-zinc-300 shrink-0" style={{ backgroundColor: bgColor }} />
               Custom
-              <input
-                type="color"
-                value={bgColor}
-                onChange={e => setBgColor(e.target.value)}
-                className="sr-only"
-              />
+              <input type="color" value={bgColor} onChange={e => setBgColor(e.target.value)} className="sr-only" />
             </label>
           </div>
         </div>
@@ -356,11 +298,34 @@ export default function PassportPhotoEditor({ file, onCancel, onConfirm }) {
           </button>
           <button
             onClick={handleConfirmCrop}
-            disabled={isGenerating || !croppedAreaPixels}
+            disabled={isProcessing || !croppedAreaPixels}
             className="flex-1 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 disabled:opacity-60 text-white text-sm font-semibold transition-colors flex items-center justify-center gap-2"
           >
-            {isGenerating ? <><Spinner /> Generating…</> : 'Preview photo →'}
+            {isProcessing ? <><Spinner /> Processing…</> : 'Remove background →'}
           </button>
+        </div>
+      </div>
+    )
+  }
+
+  // ── Render: removing — AI processing after crop ───────────────────────────
+  if (editorStep === 'removing') {
+    return (
+      <div className="flex flex-col items-center gap-6 py-10 px-2">
+        <div className="w-full">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-sm font-medium text-slate-600">{progressLabel}</span>
+            <span className="text-sm tabular-nums text-slate-400">{progress}%</span>
+          </div>
+          <div className="w-full h-2.5 bg-zinc-100 rounded-full overflow-hidden">
+            <div
+              className="h-2.5 bg-emerald-500 rounded-full transition-all duration-300"
+              style={{ width: `${Math.max(progress, 3)}%` }}
+            />
+          </div>
+          <p className="text-xs text-slate-400 mt-3 text-center">
+            Processed entirely in your browser — your photo is never uploaded.
+          </p>
         </div>
       </div>
     )
@@ -385,7 +350,7 @@ export default function PassportPhotoEditor({ file, onCancel, onConfirm }) {
           onClick={() => setEditorStep('cropping')}
           className="flex-1 py-2.5 rounded-xl border border-zinc-200 text-slate-600 text-sm font-medium hover:border-zinc-300 transition-colors"
         >
-          ← Re-crop
+          ← Re-position
         </button>
         <button
           onClick={() => onConfirm(previewBlob)}
